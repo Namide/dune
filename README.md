@@ -1,4 +1,4 @@
 dune
 ====
 
-Framework for Haxe 2D games
+Microframework for Haxe 2D games

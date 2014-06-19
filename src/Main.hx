@@ -1,5 +1,6 @@
-package dune;
+package ;
 
+import dune.Game;
 import flash.display.StageAlign;
 import flash.display.StageScaleMode;
 import flash.Lib;
@@ -18,6 +19,8 @@ class Main
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
 		// entry point
+		
+		var game:Game = new Game();
 	}
 	
 }

@@ -16,7 +16,7 @@ dune/
 			type:uint = MOVABLE
 			vx:Float
 			vy:Float
-			moved:Bool
+			getMoved( restart:Bool = false ):Bool
 			
 		
 	
@@ -55,9 +55,7 @@ dune/
 	
 		System (abstract)
 			refresh(dt:Float):void
-			scene:Scene
 			
-		
 	Game
 		refresh()
-		
+		scene:Scene

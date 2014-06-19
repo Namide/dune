@@ -1,0 +1,63 @@
+To do
+-------------
+
+dune/
+
+	compBasic/
+		
+		Component (abstract)
+		
+		CompTransform -> Component
+			type:uint = STATIC
+			x:Float
+			y:Float
+			
+		CompMovable -> Transform
+			type:uint = MOVABLE
+			vx:Float
+			vy:Float
+			moved:Bool
+			
+		
+	
+	entities/
+	
+		Entity
+			transform:Transform
+			body:Body
+			display:*
+			input:Input
+	
+	systems/
+	
+		scene/
+			SysScene -> System
+				add( entity:Entity )
+				remove( entity:Entity )
+				
+				getAll()
+				getNear( entity:Entity )
+		
+		physic/
+			SysPhysic -> System
+			Components/
+				CompBody -> Component
+			
+		graphic/
+			SysGraphic -> System
+			
+		input/
+			SysInput -> System
+			Components/
+				CompInput -> Component
+				CompJoystick -> CompInput
+				CompIA -> CompInput
+	
+		System (abstract)
+			refresh(dt:Float):void
+			scene:Scene
+			
+		
+	Game
+		refresh()
+		

@@ -8,40 +8,58 @@ dune/
 		Component (abstract)
 		
 		CompTransform -> Component
-			type:uint = STATIC
 			x:Float
 			y:Float
-			
-		CompMovable -> Transform
-			type:uint = MOVABLE
 			vx:Float
 			vy:Float
-			getMoved( restart:Bool = false ):Bool
-			
-		
+			hasMoved( restart:Bool = false ):Bool
 	
 	entities/
 	
 		Entity
 			transform:Transform
-			body:Body
 			display:*
-			input:Input
+			inputs:Array<Input>
 	
 	systems/
 	
-		scene/
-			SysScene -> System
+		Space
+		
+		physic/
+			SysPhysic -> System
+				attachBody( entity, body )
+				
 				add( entity:Entity )
 				remove( entity:Entity )
 				
 				getAll()
-				getNear( entity:Entity )
-		
-		physic/
-			SysPhysic -> System
+				getNear( body:CompBody )
+				
+			SysPhysicSidescroll -> SysPhysic
 			Components/
-				CompBody -> Component
+				PhysBody
+					entity
+					shape
+					contacts:Array<PhysShape>
+					
+					type = MOVABLE | COLLIDER | SOLID | ITEM
+					solid_type = PLATFORM | LADDER | WALL
+					onBody:PhysBody
+				
+				PhysBodyAlive -> PhysBody
+					onCollide():Callback( PhysBody, PhysBody )
+				
+			Shapes
+				PhysShape
+					boundLeftX
+					boundLeftY
+					boundRightX
+					boundRightY
+					hitTestBounds( shape:Shape ):Bool
+					hitTest()
+				PhysShapeCircle -> PhysShape
+				PhysShapeRect -> PhysShape
+				PhysShapePoint -> PhysShape
 			
 		graphic/
 			SysGraphic -> System

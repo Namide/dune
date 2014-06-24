@@ -4,12 +4,13 @@ package dune.compBasic;
  * ...
  * @author Namide
  */
-class Component
+interface Component
 {
 
-	private function new() 
+	function clear();
+	/*private function new() 
 	{
 		
-	}
+	}*/
 	
 }

@@ -1,11 +1,12 @@
-package dune.system.scene;
+package dune.system;
 import dune.entities.Entity;
+import dune.system.System;
 
 /**
  * ...
  * @author Namide
  */
-class SysScene
+class SysManager implements System
 {
 
 	public function new() 
@@ -24,11 +25,6 @@ class SysScene
 	}
 	
 	public function getAll():Array<Entity>
-	{
-		return new Array<Entity>();
-	}
-	
-	public function getNear(  entity:Entity ):Array<Entity>
 	{
 		return new Array<Entity>();
 	}

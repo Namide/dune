@@ -4,15 +4,15 @@ package dune.system;
  * ...
  * @author Namide
  */
-class System
+interface System
 {
 
-	private function new() 
+	/*private function new() 
 	{
 		
-	}
+	}*/
 	
-	public function refresh( dt:Float ):Void
+	function refresh( dt:Float ):Void
 	{
 		
 	}

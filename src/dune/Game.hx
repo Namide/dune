@@ -1,6 +1,6 @@
 package dune;
 
-import dune.system.scene.SysScene;
+import dune.system.SysManager;
 
 /**
  * ...
@@ -9,11 +9,11 @@ import dune.system.scene.SysScene;
 class Game
 {
 
-	public var scene:SysScene;
+	public var scene:SysManager;
 	
 	public function new() 
 	{
-		scene = new SysScene();
+		scene = new SysManager();
 	}
 	
 	

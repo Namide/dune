@@ -1,15 +1,16 @@
-package dune.compBasic;
+package dune.system.physic.components;
+import dune.compBasic.CompTransform;
 
 /**
  * ...
  * @author Namide
  */
-class CompMovable extends CompTransform
+class CompTransformPhysic implements CompTransform
 {
-	public inline static var TYPE_MOVABLE:UInt = 1;
+	public inline static var TYPE_MOVABLE:UInt = 2;
 	
 	private var _moved:Bool;
-	public function getMoved( restart:Bool = false ):Bool
+	public inline function getMoved( restart:Bool = false ):Bool
 	{
 		if ( !restart ) return _moved;
 		if ( !_moved )	return false;
@@ -41,7 +42,7 @@ class CompMovable extends CompTransform
 	public function new() 
 	{
 		super();
-		_type = CompTransform.TYPE_MOVABLE;
+		_type = CompTransformPhysic.TYPE_MOVABLE;
 		_moved = false;
 		_vx = 0;
 		_vy = 0;

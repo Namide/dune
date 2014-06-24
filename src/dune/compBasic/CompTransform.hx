@@ -7,7 +7,7 @@ package dune.compBasic;
 class CompTransform
 {
 
-	public inline static var TYPE_STATIC:UInt = 0;
+	public inline static var TYPE_STATIC:UInt = 1;
 	
 	private var _type:UInt;
 	public inline function getType():UInt { return _type; }

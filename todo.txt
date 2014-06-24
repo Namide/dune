@@ -5,56 +5,65 @@ dune/
 
 	compBasic/
 		
-		Component (abstract)
+		Component (abstract || Interface)
+			clear()
 		
 		CompTransform -> Component
 			x:Float
 			y:Float
-			vx:Float
-			vy:Float
-			hasMoved( restart:Bool = false ):Bool
-	
+			
 	entities/
 	
 		Entity
 			transform:Transform
 			display:*
 			inputs:Array<Input>
+			clear()
 	
 	systems/
 	
-		Space
+		space
+			SysSpace
+				_actorList:Array<PhysBody>
+				_objectGrid:Array<Array<Array<PhysBody>>>
+				setSize( minX:Int, minY:Int, maxX:Int, maxY:Int, cellW:Int, cellH:Int )
+				
+				addBody( body:PhysBody )
+				addBodies( body:Array<PhysBody> )
+				removeBody( body:PhysBody )
+				removeBodies( bodies:Array<PhysBody> )
+				
 		
 		physic/
 			SysPhysic -> System
-				attachBody( entity, body )
-				
-				add( entity:Entity )
-				remove( entity:Entity )
-				
-				getAll()
-				getNear( body:CompBody )
-				
-			SysPhysicSidescroll -> SysPhysic
+				gX:Float
+				gY:Float
+			
 			Components/
-				PhysBody
+				CompTransformPhysic -> CompTransform
+					vx:Float
+					vy:Float
+					friction:Float
+					hasMoved( restart:Bool = false ):Bool
+					
+				PhysBody -> Component
 					entity
 					shape
-					contacts:Array<PhysShape>
+					contacts:Array<PhysBody>
 					
-					type = MOVABLE | COLLIDER | SOLID | ITEM
-					solid_type = PLATFORM | LADDER | WALL
-					onBody:PhysBody
+					collision_type = PASSIVE
+					solid_type = PLATFORM | LADDER | WALL | ITEM (life, ennemy...)
 				
-				PhysBodyAlive -> PhysBody
+				PhysBodyActive -> PhysBody
+					collision_type = ACTIVE
 					onCollide():Callback( PhysBody, PhysBody )
 				
 			Shapes
-				PhysShape
-					boundLeftX
-					boundLeftY
-					boundRightX
-					boundRightY
+				PhysShape [abstract]
+					aabbXMin
+					aabbXMax
+					aabbYMin
+					aabbYMax
 					hitTestBounds( shape:Shape ):Bool
 					hitTest()
 				PhysShapeCircle -> PhysShape
@@ -67,13 +76,23 @@ dune/
 		input/
 			SysInput -> System
 			Components/
-				CompInput -> Component
+				CompInput -> Input
+					execute(entity)
 				CompJoystick -> CompInput
 				CompIA -> CompInput
 	
 		System (abstract)
 			refresh(dt:Float):void
+		
+		SysManager
+			space:SysSpace -> System
+			graphic:SysGraphic
+			physic:SysPhysic
 			
+			add( entity:Entity )
+			remove( entity:Entity )
+		
+		
 	Game
 		refresh()
 		scene:Scene

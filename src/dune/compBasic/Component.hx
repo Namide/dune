@@ -7,7 +7,7 @@ package dune.compBasic;
 interface Component
 {
 
-	function clear();
+	public function clear():Void;
 	/*private function new() 
 	{
 		

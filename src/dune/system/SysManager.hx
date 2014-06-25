@@ -29,4 +29,10 @@ class SysManager implements System
 		return new Array<Entity>();
 	}
 	
+	/* INTERFACE dune.system.System */
+	
+	public function refresh(dt:Float):Void 
+	{
+		
+	}
 }

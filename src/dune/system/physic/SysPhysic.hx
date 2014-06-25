@@ -29,5 +29,4 @@ class SysPhysic implements System
 		
 	}
 	
-	
 }

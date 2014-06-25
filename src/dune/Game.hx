@@ -9,13 +9,11 @@ import dune.system.SysManager;
 class Game
 {
 
-	public var scene:SysManager;
+	public var systemManager:SysManager;
 	
 	public function new() 
 	{
-		scene = new SysManager();
+		systemManager = new SysManager();
 	}
-	
-	
 	
 }

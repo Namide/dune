@@ -4,12 +4,13 @@ package dune.system.input.components;
  * ...
  * @author Namide
  */
-class CompIA extends CompInput
+class CompMouse extends CompInput
 {
 
 	public function new() 
 	{
 		super();
+		
 	}
 	
 	/* INTERFACE dune.compBasic.Component */

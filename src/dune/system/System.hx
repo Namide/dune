@@ -12,9 +12,6 @@ interface System
 		
 	}*/
 	
-	function refresh( dt:Float ):Void
-	{
-		
-	}
+	function refresh( dt:Float ):Void;
 	
 }

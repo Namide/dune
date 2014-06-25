@@ -16,8 +16,8 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="C:\HaxeToolkit\haxe\lib\nape\2,0,16\zpp_nape" />
     <class path="C:\HaxeToolkit\haxe\lib\nape\2,0,16\nape" />
+    <class path="C:\HaxeToolkit\haxe\lib\nape\2,0,16\zpp_nape" />
   </classpaths>
   <!-- Build options -->
   <build>

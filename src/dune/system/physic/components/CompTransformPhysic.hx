@@ -9,43 +9,52 @@ class CompTransformPhysic implements CompTransform
 {
 	public inline static var TYPE_MOVABLE:UInt = 2;
 	
-	private var _moved:Bool;
-	public inline function getMoved( restart:Bool = false ):Bool
+	public var moved(get, null):Bool;
+	
+	
+	function get_moved():Bool 
 	{
-		if ( !restart ) return _moved;
-		if ( !_moved )	return false;
+		if ( !restart ) return moved;
+		if ( !moved )	return false;
 		
-		_moved = false;
+		moved = false;
 		return true;
 	}
 	
-	override public function setX(x:Float):Void 
+	override function set_x(value:Float):Float
 	{
-		if ( x != _x && !_moved ) _moved = true;
-		super.setX(x);
+		if ( value != x && !_moved ) _moved = true;
+		super.x = value;
 	}
 	
-	override public function setY(y:Float):Void 
+	override function set_y(value:Float):Float
 	{
-		if ( y != _y && !_moved ) _moved = true;
-		super.setY(y);
+		if ( value != y && !_moved ) _moved = true;
+		super.y = value;
 	}
 	
-	private var _vx:Float;
-	public inline function getVX():Float { return _vx; }
-	public inline function setVX( vx:Float ):Void { _vx = vx; }
 	
-	private var _vy:Float;
-	public inline function getVY():Float { return _vy; }
-	public inline function setVY( vy:Float ):Void { _vy = vy; }
+	
+	private var vx(get, set):Float;
+	function get_vx():Float { return vx; }
+	function set_vx(value:Float):Float { return vx = value; }
+	
+	private var vy(get, set):Float;
+	function get_vy():Float { return vy; }
+	function set_vy(value:Float):Float { return vy = value; }
 	
 	public function new() 
 	{
 		super();
-		_type = CompTransformPhysic.TYPE_MOVABLE;
+	}
+	
+	public override function clear()
+	{
+		super.clear();
+		type = CompTransformPhysic.TYPE_MOVABLE;
 		_moved = false;
-		_vx = 0;
-		_vy = 0;
+		vx = 0;
+		vy = 0;
 	}
 	
 }

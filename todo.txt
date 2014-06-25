@@ -64,12 +64,12 @@ dune/
 					aabbXMax
 					aabbYMin
 					aabbYMax
-					hitTestBounds( shape:Shape ):Bool
-					hitTest()
 				PhysShapeCircle -> PhysShape
 				PhysShapeRect -> PhysShape
 				PhysShapePoint -> PhysShape
-			
+				PhysShapeUtil
+					hitTest()
+				
 		graphic/
 			SysGraphic -> System
 			

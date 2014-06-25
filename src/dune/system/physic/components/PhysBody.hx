@@ -67,13 +67,14 @@ class PhysBody implements Component
 	
 	public function new() 
 	{
-		typeCollision = PhysBody.COLLISION_TYPE_PASSIVE;
+		
 	}
 	
 	/* INTERFACE dune.compBasic.Component */
 	
-	public function clear() 
+	public override function clear() 
 	{
-		
+		super.clear();
+		typeCollision = PhysBody.COLLISION_TYPE_PASSIVE;
 	}
 }

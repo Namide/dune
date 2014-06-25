@@ -14,7 +14,13 @@ class PhysBodyActive extends PhysBody
 	public function new() 
 	{
 		super();
-		typeOfCollision = PhysBodyActive.COLLISION_TYPE_ACTIVE;
 	}
 	
+	/* INTERFACE dune.compBasic.Component */
+	
+	public override function clear() 
+	{
+		super.clear();
+		typeOfCollision = PhysBodyActive.COLLISION_TYPE_ACTIVE;
+	}
 }

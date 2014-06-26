@@ -7,6 +7,11 @@ package dune.system.physic.components;
 class PhysBodyActive extends PhysBody
 {
 	/**
+	 * Like a signal, add to this array the functions called at a collision
+	 */
+	public var onCollide(default, default):Array < PhysBodyActive -> Void >;
+	
+	/**
 	 * This body test the collision with others bodies
 	 */
 	public inline static var COLLISION_TYPE_ACTIVE:UInt = 2;
@@ -22,5 +27,6 @@ class PhysBodyActive extends PhysBody
 	{
 		super.clear();
 		typeOfCollision = PhysBodyActive.COLLISION_TYPE_ACTIVE;
-	}
+		onCollide = [];
+	}	
 }

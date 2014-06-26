@@ -16,7 +16,7 @@ dune/
 	
 		Entity
 			transform:Transform
-			display:*
+			display:CompDisplay
 			inputs:Array<Input>
 			clear()
 	
@@ -33,6 +33,8 @@ dune/
 				removeBody( body:PhysBody )
 				removeBodies( bodies:Array<PhysBody> )
 				
+				update()
+				hitTestAndDispatch()
 		
 		physic/
 			SysPhysic -> System

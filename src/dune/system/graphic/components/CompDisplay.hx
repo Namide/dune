@@ -1,24 +1,15 @@
 package dune.system.graphic.components;
 
-import dune.compBasic.Component;
-
 /**
- * ...
- * @author namide.com
+ * @author Namide
  */
-class CompDisplay implements Component
-{
 
-	public function new() 
-	{
-		
-	}
+interface CompDisplay 
+{
 	
-	/* INTERFACE dune.compBasic.Component */
+	public function clear():Void;
 	
-	public function clear():Void 
-	{
-		
-	}
+	public var x:Float;
+	public var y:Float;
 	
 }

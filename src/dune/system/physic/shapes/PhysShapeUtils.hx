@@ -27,7 +27,7 @@ class PhysShapeUtils
 		return true;
 	}
 	
-	public inline static function hitTestAABB( a:PhysShape, b:PhysShape ):Bool
+	private inline static function hitTestAABB( a:PhysShape, b:PhysShape ):Bool
 	{
 		if (	a.aabbXMin >= b.aabbXMax &&
 				a.aabbXMax <= b.aabbXMin &&
@@ -40,7 +40,7 @@ class PhysShapeUtils
 		return false;
 	}
 	
-	public static function hitTestCircles( a:PhysShapeCircle, b:PhysShapeCircle ):Bool
+	private static function hitTestCircles( a:PhysShapeCircle, b:PhysShapeCircle ):Bool
 	{
 		var d1:Float = b.anchorX - a.anchorX;
 		var d2:Float = b.anchorY - a.anchorY;

@@ -22,6 +22,7 @@ class Entity
 	public function clear():Void
 	{
 		transform.clear();
+		display.clear();
 		for ( input in inputs )
 		{
 			input.clear();

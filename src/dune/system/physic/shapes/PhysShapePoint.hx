@@ -1,28 +1,6 @@
 package dune.system.physic.shapes;
 import dune.compBasic.CompTransform;
 
-enum PhysShapeType
-{
-	point;
-	circle;
-	rect;
-}
-/*
-package dune.system.physic.shapes;
-
-class PhysShapeType
-{
-	public inline static var POINT:UInt = 1;
-	public inline static var CIRCLE:UInt = 2;
-	public inline static var RECT:UInt = 4;
-	
-	public function new() 
-	{
-		
-	}
-}
-*/
-
 /**
  * ...
  * @author Namide
@@ -59,7 +37,7 @@ class PhysShapePoint
 	
 	private function new()
 	{
-		type = PhysShapeType.point;
+		type = PhysShapeType.POINT;
 		anchorX = 0;
 		anchorY = 0;
 	}

@@ -19,7 +19,7 @@ class PhysShapeRect extends PhysShapePoint
 	public function new() 
 	{
 		super();
-		type = PhysShapeType.rect;
+		type = PhysShapeType.RECT;
 		
 		w = 0.0;
 		h = 0.0;

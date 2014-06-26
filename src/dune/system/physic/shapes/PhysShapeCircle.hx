@@ -16,7 +16,7 @@ class PhysShapeCircle extends PhysShapePoint
 	public function new() 
 	{
 		super();
-		type = PhysShapeType.circle;
+		type = PhysShapeType.CIRCLE;
 		
 		radius = 0.0;
 	}

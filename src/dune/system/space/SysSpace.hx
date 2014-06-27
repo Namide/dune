@@ -53,13 +53,14 @@ class SysSpace implements System
 		var cGridWidth:Int = Math.floor( (_limitRight - _limitLeft) / _cellW );
 		var cGridHeight:Int = Math.floor( (_limitBottom - _limitTop) / _cellH );
 		
-		_grid = [ 
+		clear( _grid );
+		/*_grid = [ 
 					for (i in 0...cGridWidth)
 					[
 						for (j in 0...cGridHeight)
 							[]
 					]
-				];
+				];*/
 		
 		for ( physBody in _passive )
 		{
@@ -74,15 +75,17 @@ class SysSpace implements System
 				continue;
 			}
 
-			cXEntityMin = Math.floor( (pX - _limitLeft) / _cellW );
-			cXEntityMax = Math.floor( (physBody.shape.aabbXMax - _limitRight) / _cellW );
-			cYEntityMin = Math.floor( (pY - _limitTop) / _cellH );
-			cYEntityMax = Math.floor( (physBody.shape.aabbYMax - _limitTop) / _cellH );
+			var cXEntityMin:Int = Math.floor( (pX - _limitLeft) / _cellW );
+			var cXEntityMax:Int = Math.floor( (physBody.shape.aabbXMax - _limitRight) / _cellW );
+			var cYEntityMin:Int = Math.floor( (pY - _limitTop) / _cellH );
+			var cYEntityMax:Int = Math.floor( (physBody.shape.aabbYMax - _limitTop) / _cellH );
 
 			for ( cX in cXEntityMin...cXEntityMax )
 			{
 				for ( cY in cYEntityMin...cYEntityMax )
 				{
+					//if ( Lambda.empty(_grid, cX) ) _grid[cX] = Array();
+					//if ( Lambda.empty(_grid[cX], cY) ) _grid[cX] = Array();
 					_grid[cX][cY].push( physBody );
 				}
 			}
@@ -111,12 +114,15 @@ class SysSpace implements System
 				continue;
 			}
 
-			cXEntityMin = Math.floor( (pX - _limitLeft) / _cellW );
-			cXEntityMax = Math.floor( (physBody.shape.aabbXMax - _limitRight) / _cellW );
-			cYEntityMin = Math.floor( (pY - _limitTop) / _cellH );
-			cYEntityMax = Math.floor( (physBody.shape.aabbYMax - _limitTop) / _cellH );
-
-			physBody.contacts = [];
+			var cXEntityMin:Int = Math.floor( (pX - _limitLeft) / _cellW );
+			var cXEntityMax:Int = Math.floor( (physBody.shape.aabbXMax - _limitRight) / _cellW );
+			var cYEntityMin:Int = Math.floor( (pY - _limitTop) / _cellH );
+			var cYEntityMax:Int = Math.floor( (physBody.shape.aabbYMax - _limitTop) / _cellH );
+	
+			//http://old.haxe.org/doc/cross/lambda?lang=fr
+			//Lambda.
+			//physBody.contacts = [];
+			clear( physBody.contacts );
 			
 			for ( cX in cXEntityMin...cXEntityMax )
 			{
@@ -177,5 +183,12 @@ class SysSpace implements System
 		
 	}
 	
-	
+	private inline function clear( arr:Array<Dynamic> ):Void
+	{
+        #if (cpp||php)
+           arr.splice(0,arr.length);          
+        #else
+           untyped arr.length = 0;
+        #end
+    }
 }

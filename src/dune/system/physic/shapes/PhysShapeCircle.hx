@@ -1,6 +1,6 @@
 package dune.system.physic.shapes;
 import dune.compBasic.CompTransform;
-import dune.system.physic.shapes.PhysShape.PhysShapePoint;
+import dune.system.physic.shapes.PhysShapePoint;
 
 /**
  * ...
@@ -9,16 +9,14 @@ import dune.system.physic.shapes.PhysShape.PhysShapePoint;
 class PhysShapeCircle extends PhysShapePoint
 {
 
-	public var r(get, set):Float;
-	inline function get_r():Float { return r; }
-	inline function set_r(value:Float):Float { return r = value; }
+	public var r(default, default):Float;
 	
 	public function new() 
 	{
 		super();
 		type = PhysShapeType.CIRCLE;
 		
-		radius = 0.0;
+		r = 0.0;
 	}
 	
 	override public function updateAABB( pe:CompTransform ) 

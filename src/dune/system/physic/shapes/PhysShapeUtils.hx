@@ -12,14 +12,14 @@ class PhysShapeUtils
 		throw "This class can't be instancied";
 	}
 	
-	public inline static function hitTest( a:PhysShapePoint, b:PhysShapePoint ):Void
+	public inline static function hitTest( a:PhysShapePoint, b:PhysShapePoint ):Bool
 	{
 		if ( hitTestAABB( a, b ) )
 		{
 			return false;
 		}
 		
-		if ( a.type == PhysShapeType.circle && b.type == PhysShapeType.circle )
+		if ( a.type == PhysShapeType.CIRCLE && b.type == PhysShapeType.CIRCLE )
 		{
 			return hitTestCircles( cast( a, PhysShapeCircle ), cast( b, PhysShapeCircle ) );
 		}
@@ -27,7 +27,7 @@ class PhysShapeUtils
 		return true;
 	}
 	
-	private inline static function hitTestAABB( a:PhysShape, b:PhysShape ):Bool
+	private inline static function hitTestAABB( a:PhysShapePoint, b:PhysShapePoint ):Bool
 	{
 		if (	a.aabbXMin >= b.aabbXMax &&
 				a.aabbXMax <= b.aabbXMin &&
@@ -44,7 +44,7 @@ class PhysShapeUtils
 	{
 		var d1:Float = b.anchorX - a.anchorX;
 		var d2:Float = b.anchorY - a.anchorY;
-		var d3:Float = a.radius + b.radius;
+		var d3:Float = a.r + b.r;
 		
 		return ( d1 * d1 - d2 * d2  <= d3 * d3 );
 	}

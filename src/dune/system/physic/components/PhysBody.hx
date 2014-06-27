@@ -2,7 +2,7 @@ package dune.system.physic.components;
 
 import dune.compBasic.Component;
 import dune.entities.Entity;
-import dune.system.physic.shapes.PhysShape;
+import dune.system.physic.shapes.PhysShapePoint;
 
 /**
  * ...
@@ -39,31 +39,21 @@ class PhysBody implements Component
 	/**
 	 * Entity attached to the body
 	 */
-	public var entity(get, set):Entity;
-	inline function get_entity():Entity { return _entity; }
-	inline function set_entity(value:Entity):Entity { return _entity = value; }
+	public var entity(default, default):Entity;
 	
 	/**
 	 * Delimit the shape of this body
 	 */
-	public var shape(get, set):PhysShape;
-	inline function get_shape():PhysShape { return _shape; }
-	inline function set_shape(value:PhysShape):PhysShape { return _shape = value; }
+	public var shape(default, default):PhysShapePoint;
 	
 	/**
 	 * Other body in contact with this one
 	 */
-	public var contacts(get, set):Array<PhysBody>;
-	inline function get_contacts():Array<PhysBody> { return _contacts; }
-	inline function set_contacts(value:Array<PhysBody>):Array<PhysBody> { return _contacts = value; }
+	public var contacts(default, null):Array<PhysBody>;
 	
-	public var typeOfCollision(get, null):UInt;
-	inline function get_typeOfCollision():UInt { return typeOfCollision; }
-	inline function set_typeOfCollision(value:UInt):UInt { return typeOfCollision = value; }
+	public var typeOfCollision(default, null):UInt;
 	
-	public var typeOfSolid(get, set):UInt;
-	inline function get_typeOfSolid():UInt { return typeOfSolid; }
-	inline function set_typeOfSolid(value:UInt):UInt { return typeOfSolid = value; }
+	public var typeOfSolid(default, default):UInt;
 	
 	public function new() 
 	{
@@ -72,9 +62,8 @@ class PhysBody implements Component
 	
 	/* INTERFACE dune.compBasic.Component */
 	
-	public override function clear() 
+	public function clear() 
 	{
-		super.clear();
-		typeCollision = PhysBody.COLLISION_TYPE_PASSIVE;
+		typeOfCollision = PhysBody.COLLISION_TYPE_PASSIVE;
 	}
 }

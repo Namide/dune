@@ -20,6 +20,7 @@ class Main
 		stage.align = StageAlign.TOP_LEFT;
 		// entry point
 		
+		
 		var game:Game = new Game();
 	}
 	

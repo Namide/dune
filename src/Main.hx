@@ -1,27 +1,67 @@
 package ;
 
 import dune.Game;
-import flash.display.StageAlign;
-import flash.display.StageScaleMode;
+import flash.display.Sprite;
+import flash.events.Event;
 import flash.Lib;
 
 /**
  * ...
- * @author Namide
+ * @author namide.com
  */
 
-class Main 
+class Main extends Sprite 
 {
+	var inited:Bool;
+
+	/* ENTRY POINT */
 	
-	static function main() 
+	function resize(e) 
 	{
-		var stage = Lib.current.stage;
-		stage.scaleMode = StageScaleMode.NO_SCALE;
-		stage.align = StageAlign.TOP_LEFT;
-		// entry point
-		
-		
-		var game:Game = new Game();
+		if (!inited) init();
+		// else (resize or orientation change)
 	}
 	
+	function init() 
+	{
+		if (inited) return;
+		inited = true;
+
+		// (your code here)
+		
+		var game:Game = new Game();
+		
+		// Stage:
+		// stage.stageWidth x stage.stageHeight @ stage.dpiScale
+		
+		// Assets:
+		// nme.Assets.getBitmapData("img/assetname.jpg");
+	}
+
+	/* SETUP */
+
+	public function new() 
+	{
+		super();	
+		addEventListener(Event.ADDED_TO_STAGE, added);
+	}
+
+	function added(e) 
+	{
+		removeEventListener(Event.ADDED_TO_STAGE, added);
+		stage.addEventListener(Event.RESIZE, resize);
+		#if ios
+		haxe.Timer.delay(init, 100); // iOS 6
+		#else
+		init();
+		#end
+	}
+	
+	public static function main() 
+	{
+		// static entry point
+		Lib.current.stage.align = flash.display.StageAlign.TOP_LEFT;
+		Lib.current.stage.scaleMode = flash.display.StageScaleMode.NO_SCALE;
+		Lib.current.addChild(new Main());
+	}
 }

@@ -39,7 +39,7 @@ class PhysBodyType
 	
 	public function new() 
 	{
-		throw "You can't instancied a static class"
+		throw "You can't instancied a static class";
 	}
 	
 }

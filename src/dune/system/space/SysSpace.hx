@@ -64,7 +64,7 @@ class SysSpace implements System
 		}
 	}
 	
-	private inline function addBodyInGrid( body:PhysBody ):Void
+	private inline function addBodyInGrid( physBody:PhysBody ):Void
 	{
 		var pX:Float = physBody.shape.aabbXMin;
 		var pY:Float = physBody.shape.aabbYMin;
@@ -86,8 +86,9 @@ class SysSpace implements System
 		{
 			for ( cY in entityGridYMin...entityGridYMax )
 			{
-				if ( _grid[cX] == null ) _grid[cX] = [];
-				if ( _grid[cX][cY] ) == null ) _grid[cX][cY] = [];
+				if ( _grid[cX] == null ) { _grid[cX] = []; }
+				if ( _grid[cX][cY] == null ) { _grid[cX][cY] = []; }
+				
 				_grid[cX][cY].push( physBody );
 			}
 		}
@@ -127,16 +128,14 @@ class SysSpace implements System
 				{
 					for ( physBodyPassive in _grid[cX][cY] )
 					{
-						if ( physBody.contacts.indexOf( physBodyPassive ) < 0 )
+						if ( 	physBody.contacts.indexOf( physBodyPassive ) < 0 &&
+								PhysShapeUtils.hitTest( physBody.shape, physBodyPassive.shape ) )
 						{
-							if ( PhysShapeUtils.hitTest( physBody.shape, physBodyPassive.shape ) )
+							physBody.contacts.push( physBodyPassive );
+							if ( !isAffected )
 							{
-								physBody.contacts.push( physBodyPassive );
-								if ( !isAffected )
-								{
-									isAffected = true;
-									affected.push(physBody);
-								}
+								isAffected = true;
+								affected.push( physBody );
 							}
 						}
 					}
@@ -166,7 +165,7 @@ class SysSpace implements System
 		if ( body.typeOfCollision == PhysBodyType.COLLISION_TYPE_PASSIVE )
 		{
 			_passive.push( body );
-			if ( addNowInGrid ) { addBodyInGrid( body ) };
+			if ( addNowInGrid ) { addBodyInGrid( body ); };
 		}
 		else
 		{

@@ -19,14 +19,14 @@ class CompTransformPhysic extends CompTransform
 		super();
 	}
 	
-	override function set_x(value:Float):Float
+	override function set_x( value:Float ):Float
 	{
 		if ( value != x && !moved ) moved = true;
 		super.x = value;
 		return value;
 	}
 	
-	override function set_y(value:Float):Float
+	override function set_y( value:Float ):Float
 	{
 		if ( value != y && !moved ) moved = true;
 		super.y = value;

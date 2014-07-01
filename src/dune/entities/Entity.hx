@@ -1,7 +1,6 @@
 package dune.entities;
 import dune.compBasic.CompAnimation;
 import dune.compBasic.CompTransform;
-import dune.system.graphic.components.CompDisplay;
 import dune.system.input.components.CompInput;
 
 /**
@@ -10,12 +9,10 @@ import dune.system.input.components.CompInput;
  */
 class Entity
 {
-
-	public var transform:CompTransform;
-	public var display:CompDisplay;
-	public var inputs:Array<CompInput>;
+	public var type:UInt;
 	
-	public var animation:CompAnimation;
+	public var transform:CompTransform;
+	public var inputs:Array<CompInput>;
 	
 	public function new() 
 	{
@@ -24,14 +21,13 @@ class Entity
 	
 	public function clear():Void
 	{
+		type = EntityType.SIMPLE;
+		
 		transform.clear();
-		display.clear();
 		for ( input in inputs )
 		{
 			input.clear();
 		}
-		animation.clear();
-		animation = null;
 	}
 	
 }

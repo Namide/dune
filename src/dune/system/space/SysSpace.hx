@@ -1,7 +1,7 @@
 package dune.system.space;
 
-import dune.system.physic.components.PhysBody;
-import dune.system.physic.components.PhysBodyType;
+import dune.system.physic.components.CompBody;
+import dune.system.physic.components.CompBodyType;
 import dune.system.physic.shapes.PhysShapeUtils;
 import dune.system.System;
 
@@ -12,10 +12,10 @@ import dune.system.System;
 class SysSpace implements System
 {
 
-	public var _active(default, null):Array<PhysBody>;
-	public var _passive(default, null):Array<PhysBody>;
+	public var _active(default, null):Array<CompBody>;
+	public var _passive(default, null):Array<CompBody>;
 	
-	private var _grid:Array<Array<Array<PhysBody>>>;
+	private var _grid:Array<Array<Array<CompBody>>>;
 	
 	public var _limitLeft(default, null):Int;
 	public var _limitTop(default, null):Int;
@@ -64,7 +64,7 @@ class SysSpace implements System
 		}
 	}
 	
-	private inline function addBodyInGrid( physBody:PhysBody ):Void
+	private inline function addBodyInGrid( physBody:CompBody ):Void
 	{
 		var pX:Float = physBody.shape.aabbXMin;
 		var pY:Float = physBody.shape.aabbYMin;
@@ -94,9 +94,9 @@ class SysSpace implements System
 		}
 	}
 	
-	public function hitTest( dispatch:Bool = false ):Array<PhysBody>
+	public function hitTest( dispatch:Bool = false ):Array<CompBody>
 	{
-		var affected:Array<PhysBody> = [];
+		var affected:Array<CompBody> = [];
 		
 		/*_gridTilesW = Math.floor( (_limitRight - _limitLeft) / _cellW );
 		_gridTilesH = Math.floor( (_limitBottom - _limitTop) / _cellH );*/
@@ -160,9 +160,9 @@ class SysSpace implements System
 		return affected;
 	}
 	
-	public function addBody( body:PhysBody, addNowInGrid:Bool = true ):Void
+	public function addBody( body:CompBody, addNowInGrid:Bool = true ):Void
 	{
-		if ( body.typeOfCollision == PhysBodyType.COLLISION_TYPE_PASSIVE )
+		if ( body.typeOfCollision == CompBodyType.COLLISION_TYPE_PASSIVE )
 		{
 			_passive.push( body );
 			if ( addNowInGrid ) { addBodyInGrid( body ); };
@@ -173,9 +173,9 @@ class SysSpace implements System
 		}
 	}
 	
-	public function removeBody( body:PhysBody, rebuildGrid:Bool = false ):Void
+	public function removeBody( body:CompBody, rebuildGrid:Bool = false ):Void
 	{
-		if ( body.typeOfCollision == PhysBodyType.COLLISION_TYPE_PASSIVE )
+		if ( body.typeOfCollision == CompBodyType.COLLISION_TYPE_PASSIVE )
 		{
 			_passive.remove( body );
 			if ( rebuildGrid ) { refresh( 0 ); }

@@ -27,7 +27,6 @@ class SysGraphic implements System
 		s2d = new h2d.Scene();
 		
 		s3d.addPass(s2d);
-		
 	}
 
 	function onResize()
@@ -40,6 +39,7 @@ class SysGraphic implements System
 	public function refresh(dt:Float):Void 
 	{
 		engine.render(s3d);
+		//engine.begin(); ... render objects ... engine.end()
 	}
 	
 }

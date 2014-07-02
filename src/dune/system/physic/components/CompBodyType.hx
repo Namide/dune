@@ -4,7 +4,7 @@ package dune.system.physic.components;
  * ...
  * @author namide.com
  */
-class PhysBodyType
+class CompBodyType
 {
 	/**
 	 * This body don't test the collision but the actives bodies tests the collision with this one

@@ -2,6 +2,7 @@ package dune.entities;
 import dune.compBasic.CompAnimation;
 import dune.compBasic.CompTransform;
 import dune.system.input.components.CompInput;
+import dune.system.physic.components.CompBody;
 
 /**
  * ...
@@ -12,7 +13,9 @@ class Entity
 	public var type:UInt;
 	
 	public var transform:CompTransform;
-	public var inputs:Array<CompInput>;
+	public var inputs(default, null):Array<CompInput>;
+	public var bodies(default, null):Array<CompBody>;
+	
 	
 	public function new() 
 	{
@@ -21,13 +24,26 @@ class Entity
 	
 	public function clear():Void
 	{
-		type = EntityType.SIMPLE;
+		type = 0;
 		
 		transform.clear();
-		for ( input in inputs )
-		{
-			input.clear();
-		}
+		
+		if ( inputs == null ) { inputs = []; }
+		if ( bodies == null ) { bodies = []; }
+		
+		for ( input in inputs )	{ input.clear(); }
+		for ( body in bodies ) { body.clear(); }
 	}
 	
+	public function addBody( body:CompBody ):Void
+	{
+		body.entity = this;
+		bodies.push( body );
+	}
+	
+	public function addInput( input:CompInput ):Void
+	{
+		input.entity = this;
+		inputs.push( input );
+	}
 }

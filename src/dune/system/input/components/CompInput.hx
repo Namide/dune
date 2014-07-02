@@ -9,13 +9,17 @@ import dune.entities.Entity;
  */
 class CompInput implements Component
 {
-
+	/**
+	 * Entity attached to the body
+	 */
+	public var entity(default, default):Entity;
+	
 	private function new() 
 	{
 		
 	}
 	
-	public function execute( entity:Entity ):Void
+	public function execute():Void
 	{
 		
 	}

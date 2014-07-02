@@ -8,7 +8,7 @@ import dune.system.physic.shapes.PhysShapePoint;
  * ...
  * @author Namide
  */
-class PhysBody implements Component
+class CompBody implements Component
 {
 	/**
 	 * Entity attached to the body
@@ -23,7 +23,7 @@ class PhysBody implements Component
 	/**
 	 * Other body in contact with this one
 	 */
-	public var contacts(default, null):Array<PhysBody>;
+	public var contacts(default, null):Array<CompBody>;
 	
 	public var typeOfCollision(default, default):UInt;
 	
@@ -32,7 +32,7 @@ class PhysBody implements Component
 	/**
 	 * Like a signal, add to this array the functions called at a collision
 	 */
-	public var onCollide(default, default):Array < PhysBody -> Void >;
+	public var onCollide(default, default):Array < CompBody -> Void >;
 	
 	
 	
@@ -45,7 +45,12 @@ class PhysBody implements Component
 	
 	public function clear() 
 	{
-		typeOfCollision = PhysBodyType.COLLISION_TYPE_PASSIVE;
+		typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
+		typeOfSolid = 0;
+		
+		contacts = [];
 		onCollide = [];
+		entity = null;
+		shape = null;
 	}
 }

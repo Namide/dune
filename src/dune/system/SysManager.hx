@@ -1,5 +1,7 @@
 package dune.system;
 import dune.entities.Entity;
+import dune.system.graphic.SysGraphic;
+import dune.system.physic.SysPhysic;
 import dune.system.space.SysSpace;
 import dune.system.System;
 
@@ -11,25 +13,14 @@ class SysManager implements System
 {
 
 	public var space(default, default):SysSpace;
+	public var physic(default, default):SysPhysic;
+	public var graphic(default, default):SysGraphic;
 	
 	public function new() 
 	{
-		//space = new SysSpace();
-	}
-	
-	public function add( entity:Entity ):Entity
-	{
-		return entity;
-	}
-	
-	public function remove( entity:Entity ):Entity
-	{
-		return entity;
-	}
-	
-	public function getAll():Array<Entity>
-	{
-		return new Array<Entity>();
+		space = new SysSpace();
+		graphic = new SysGraphic();
+		physic = new SysPhysic();
 	}
 	
 	/* INTERFACE dune.system.System */

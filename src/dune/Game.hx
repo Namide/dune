@@ -19,6 +19,8 @@ class Game
 		
 		var e1:Entity = new Entity();
 		e1.transform = new CompTransformPhysic();
+		
+		trace(1);
 	}
 	
 }

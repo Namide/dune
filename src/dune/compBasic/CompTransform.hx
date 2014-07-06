@@ -4,12 +4,12 @@ package dune.compBasic;
  * ...
  * @author Namide
  */
-class CompTransform implements Component
+class CompTransform implements ComponentBasic
 {
 
 	public inline static var TYPE_STATIC:UInt = 1;
 	
-	var type(default, null):UInt;
+	public var type(default, null):UInt;
 	
 	public var x(default, set):Float;
 	function set_x(value:Float):Float { return x = value; }
@@ -19,6 +19,7 @@ class CompTransform implements Component
 	
 	public function new() 
 	{
+		type = ComponentType.TRANSFORM;
 		clear();
 	}
 	

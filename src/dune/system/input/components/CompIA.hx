@@ -7,6 +7,8 @@ package dune.system.input.components;
 class CompIA extends CompInput
 {
 
+	var type(default, null):UInt;
+	
 	public function new() 
 	{
 		super();

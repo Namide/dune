@@ -1,6 +1,6 @@
 package dune.system.physic.components;
 
-import dune.compBasic.Component;
+import dune.compBasic.ComponentBasic;
 import dune.entities.Entity;
 import dune.system.physic.shapes.PhysShapePoint;
 
@@ -8,12 +8,14 @@ import dune.system.physic.shapes.PhysShapePoint;
  * ...
  * @author Namide
  */
-class CompBody implements Component
+class CompBody implements ComponentBasic
 {
 	/**
 	 * Entity attached to the body
 	 */
 	public var entity(default, default):Entity;
+	
+	public var type(default, null):UInt;
 	
 	/**
 	 * Delimit the shape of this body

@@ -7,6 +7,8 @@ package dune.system.input.components;
 class CompJoystick extends CompInput
 {
 
+	var type(default, null):UInt;
+	
 	public function new() 
 	{
 		super();

@@ -15,7 +15,7 @@ class SysGraphic implements System
 	
 	public function new() 
 	{
-		var engine = new h3d.Engine();
+		engine = new h3d.Engine();
 		engine.onReady = init;
 		engine.init();
 	}
@@ -34,12 +34,20 @@ class SysGraphic implements System
 		
 	}
 	
-	/* INTERFACE dune.system.System */
-	
 	public function refresh(dt:Float):Void 
 	{
 		engine.render(s3d);
 		//engine.begin(); ... render objects ... engine.end()
 	}
+	
+	/*public function begin():Void
+	{
+		engine.begin();
+	}
+	
+	public function end():Void
+	{
+		engine.end();
+	}*/
 	
 }

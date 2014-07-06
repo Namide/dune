@@ -1,29 +1,26 @@
 package dune.system.graphic.components;
 
-import dune.compBasic.Component;
+import dune.compBasic.ComponentBasic;
+import dune.compBasic.ComponentType;
 import h2d.Sprite;
 
 /**
  * ...
  * @author Namide
  */
-class CompDisplay2dSprite implements Component, CompDisplay
+class CompDisplay2dSprite implements ComponentDisplay
 {
 
 	function _graphic:Sprite;
 	
+	public var type(default, null):UInt;
+	
 	public function new( graphic:Sprite ) 
 	{
+		type = ComponentType.DISPLAY_2D;
 		_graphic = graphic;
 	}
-	
-	/* INTERFACE dune.system.graphic.components.CompDisplay */
-	
-	public inline function setAnim( anim:UInt ):Void
-	{
-		return;
-	}
-	
+
 	public inline function setX( val:Float ):Void
 	{
 		_graphic.x = val;
@@ -32,9 +29,7 @@ class CompDisplay2dSprite implements Component, CompDisplay
 	{
 		_graphic.y = val;
 	}
-	
-	/* INTERFACE dune.compBasic.Component */
-	
+
 	public function clear():Void 
 	{
 		

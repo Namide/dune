@@ -1,18 +1,20 @@
 package dune.system.input.components;
 
-import dune.compBasic.Component;
+import dune.compBasic.ComponentBasic;
 import dune.entities.Entity;
 
 /**
  * ...
  * @author Namide
  */
-class CompInput implements Component
+class CompInput implements ComponentBasic
 {
 	/**
 	 * Entity attached to the body
 	 */
 	public var entity(default, default):Entity;
+	
+	public var type(default, null):UInt;
 	
 	private function new() 
 	{

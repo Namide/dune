@@ -4,15 +4,20 @@ package dune.compBasic;
  * ...
  * @author namide.com
  */
-class CompAnimation implements Component
+class CompAnimation implements ComponentBasic
 {
 	
-	public static inline var TYPE_STAND:UInt = 0;
-	public static inline var TYPE_WALK:UInt = 1;
-	public static inline var TYPE_RUN:UInt = 2;
-	public static inline var TYPE_JUMP:UInt = 3;
-	public static inline var TYPE_CLIMB:UInt = 4;
+	public static inline var STAND:UInt = 0;
+	public static inline var WALK:UInt = 1;
+	public static inline var RUN:UInt = 2;
+	public static inline var JUMP:UInt = 3;
+	public static inline var CLIMB:UInt = 4;
 	
+	public var type(default, null):UInt;
+	
+	/**
+	 * Direction of the element
+	 */
 	public var dirRight(default, set):Bool;
 	function set_dirRight(value:Bool):Bool 
 	{
@@ -24,18 +29,25 @@ class CompAnimation implements Component
 		return dirRight = value;
 	}
 	
-	public var type(default, set):UInt;
-	function set_type(value:UInt):UInt 
+	/**
+	 * Actual animation
+	 */
+	public var state(default, set):UInt;
+	function set_state(value:UInt):UInt 
 	{
-		if ( value != type ) 
+		if ( value != state ) 
 		{
-			type = value;
+			state = value;
 			onChange();
 		}
-		return type = value;
+		return state = value;
 	}
 	
-	
+	public function new() 
+	{
+		type = ComponentType.ANIMATION;
+		clear();
+	}
 	
 	/**
 	 * called at the animation changed
@@ -45,19 +57,13 @@ class CompAnimation implements Component
 		
 	}
 	
-	
-	public function new() 
-	{
-		clear();
-	}
-	
 	/* INTERFACE dune.compBasic.Component */
 	
 	public function clear():Void 
 	{
 		onChange = function():Void {  };
 		dirRight = true;
-		type = CompAnimation.TYPE_STAND;
+		state = CompAnimation.STAND;
 	}
 	
 	

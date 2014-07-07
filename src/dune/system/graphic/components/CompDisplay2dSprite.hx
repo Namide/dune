@@ -10,10 +10,14 @@ import h2d.Sprite;
  */
 class CompDisplay2dSprite implements ComponentDisplay
 {
-
-	function _graphic:Sprite;
+	var _graphic:Sprite;
 	
 	public var type(default, null):UInt;
+	
+	public inline function getObject():Sprite
+	{
+		return _graphic;
+	}
 	
 	public function new( graphic:Sprite ) 
 	{

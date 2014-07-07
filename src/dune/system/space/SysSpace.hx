@@ -98,9 +98,6 @@ class SysSpace implements System
 	{
 		var affected:Array<CompBody> = [];
 		
-		/*_gridTilesW = Math.floor( (_limitRight - _limitLeft) / _cellW );
-		_gridTilesH = Math.floor( (_limitBottom - _limitTop) / _cellH );*/
-		
 		for ( physBody in _active )
 		{
 			var isAffected:Bool = false;

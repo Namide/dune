@@ -1,6 +1,7 @@
 package dune.entities;
 import dune.compBasic.CompAnimation;
 import dune.compBasic.CompTransform;
+import dune.system.graphic.components.ComponentDisplay;
 import dune.system.input.components.CompInput;
 import dune.system.physic.components.CompBody;
 
@@ -15,7 +16,7 @@ class Entity
 	public var transform:CompTransform;
 	public var inputs(default, null):Array<CompInput>;
 	public var bodies(default, null):Array<CompBody>;
-	
+	public var display(default, default):ComponentDisplay;
 	
 	public function new() 
 	{

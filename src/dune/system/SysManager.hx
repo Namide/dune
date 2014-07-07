@@ -65,7 +65,7 @@ class SysManager implements System
 			rest -= FRAME_DELAY;
 		}
 		
-		sysGraphic.refresh( FRAME_DELAY );
+		sysGraphic.refresh( FRAME_DELAY, sysPhysic.space. );
 		_time = realTime - rest;
 	}
 }

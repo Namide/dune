@@ -7,8 +7,8 @@ package dune.compBasic;
 class CompTransform implements ComponentBasic
 {
 
-	public inline static var TYPE_STATIC:UInt = 1;
-	public inline static var TYPE_MOVABLE:UInt = 2;
+	/*public inline static var TYPE_STATIC:UInt = 1;
+	public inline static var TYPE_MOVABLE:UInt = 2;*/
 	
 	public var type(default, null):UInt;
 	
@@ -39,7 +39,7 @@ class CompTransform implements ComponentBasic
 	
 	public function new() 
 	{
-		type = ComponentType.TRANSFORM;
+		//type = ComponentType.TRANSFORM;
 		clear();
 	}
 	

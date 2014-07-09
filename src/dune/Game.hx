@@ -30,11 +30,10 @@ class Game
 		spr.x = systemManager.sysGraphic.s2d.width >> 1;
 		spr.y = systemManager.sysGraphic.s2d.height >> 1;
 
-		var tile = hxd.Res.hxlogo.toTile();
+		var tile = hxd.Res.mainChar128x128.toTile();
 		var bmp = new h2d.Bitmap(tile, spr);
 		
 		e1.display = new CompDisplay2dSprite( spr );
-		e1.transform = new CompTransform();
 		
 		systemManager.addEntity( e1 );
 		

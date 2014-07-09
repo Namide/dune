@@ -16,8 +16,6 @@
   <!-- Other classes to be compiled into your SWF -->
   <classpaths>
     <class path="src" />
-    <class path="C:\HaxeToolkit\haxe\lib\heaps\git" />
-    <class path="C:\HaxeToolkit\haxe\lib\format\3,0,5" />
   </classpaths>
   <!-- Build options -->
   <build>
@@ -26,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
-    <option additional="-D resourcesPath=assets" />
+    <option additional="-D resourcesPath=assets&#xA;-lib h3d" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

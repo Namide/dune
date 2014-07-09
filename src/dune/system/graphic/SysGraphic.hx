@@ -2,17 +2,14 @@ package dune.system.graphic;
 
 import dune.compBasic.ComponentType;
 import dune.entities.Entity;
-import dune.system.System;
+import h2d.Sprite;
 
 /**
  * ...
  * @author Namide
  */
-class SysGraphic implements System
+class SysGraphic
 {
-
-	var _movables:Array<Entity>;
-	
 	public var engine : h3d.Engine;
 	public var s3d : h3d.scene.Scene;
 	public var s2d : h2d.Scene;
@@ -23,19 +20,27 @@ class SysGraphic implements System
 		engine.onReady = init;
 		engine.init();
 		
-		_movables = [];
+		
+		
+		
 	}
 	
 	function init()
 	{
-		engine.onResized = onResize;
 		s3d = new h3d.scene.Scene();
 		s2d = new h2d.Scene();
-		
 		s3d.addPass(s2d);
+		
+		engine.onResized = function() { onResize(); };
+		onInit();
+	}
+	
+	public dynamic function onInit()
+	{
+		
 	}
 
-	function onResize()
+	public dynamic function onResize()
 	{
 		
 	}
@@ -43,12 +48,6 @@ class SysGraphic implements System
 	public function add( entity:Entity ):Void
 	{
 		if ( entity.display == null ) return;
-		
-		if ( entity.display.type | ComponentType.TRANSFORM_MOVABLE == ComponentType.TRANSFORM_MOVABLE )
-		{
-			_movables.push( engine );
-		}
-		
 		if ( entity.display.type | ComponentType.DISPLAY_2D == ComponentType.DISPLAY_2D   )
 		{
 			s2d.addChild( entity.display.getObject() );
@@ -57,16 +56,13 @@ class SysGraphic implements System
 		{
 			s3d.addChild( entity.display.getObject() );
 		}
+		
+		
 	}
 	
 	public function remove( entity:Entity ):Void
 	{
 		if ( entity.display == null ) return;
-		
-		if ( entity.display.type | ComponentType.TRANSFORM_MOVABLE == ComponentType.TRANSFORM_MOVABLE )
-		{
-			_movables.remove( engine );
-		}
 		
 		if ( entity.display.type | ComponentType.DISPLAY_2D == ComponentType.DISPLAY_2D   )
 		{
@@ -78,11 +74,12 @@ class SysGraphic implements System
 		}
 	}
 	
-	public function refresh( dt:Float ):Void 
+	public function refresh( entities:Array<Entity> ):Void 
 	{
-		for ( entity in _movables )
+		for ( entity in entities )
 		{
-			if ( entity.transform )
+			entity.display.setPos( entity.transform.x, entity.transform.y );
+			entity.transform.moved = false;
 		}
 		
 		engine.render(s3d);

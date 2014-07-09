@@ -1,13 +1,12 @@
 package dune.system.physic;
 
 import dune.system.space.SysSpace;
-import dune.system.System;
 
 /**
  * ...
  * @author Namide
  */
-class SysPhysic implements System
+class SysPhysic
 {
 	public var space(default, null):SysSpace;
 	
@@ -22,7 +21,7 @@ class SysPhysic implements System
 	
 	/* INTERFACE dune.system.System */
 	
-	public function refresh(dt:Float):Void 
+	public function refresh():Void 
 	{
 		
 	}

@@ -1,13 +1,12 @@
 package dune.system.input;
 
 import dune.system.input.components.CompInput;
-import dune.system.System;
 
 /**
  * ...
  * @author Namide
  */
-class SysInput implements System
+class SysInput
 {
 
 	private var _inputs:Array<CompInput>;
@@ -29,7 +28,7 @@ class SysInput implements System
 	
 	/* INTERFACE dune.system.System */
 	
-	public inline function refresh(dt:Float):Void 
+	public inline function refresh():Void 
 	{
 		for ( input in _inputs )
 		{

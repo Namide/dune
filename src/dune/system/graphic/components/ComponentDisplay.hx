@@ -8,11 +8,12 @@ import h3d.scene.Object;
 
 interface ComponentDisplay 
 {
-	public function getObject();
+	public function getObject():Dynamic;
 	
 	public var type(default, null):UInt;
 	public function clear():Void;
 	
 	public function setX( val:Float ):Void;
 	public function setY( val:Float ):Void;
+	public function setPos( x:Float, y:Float ):Void;
 }

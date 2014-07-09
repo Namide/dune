@@ -8,14 +8,34 @@ class CompTransform implements ComponentBasic
 {
 
 	public inline static var TYPE_STATIC:UInt = 1;
+	public inline static var TYPE_MOVABLE:UInt = 2;
 	
 	public var type(default, null):UInt;
 	
 	public var x(default, set):Float;
-	function set_x(value:Float):Float { return x = value; }
+	inline function set_x( value:Float ):Float
+	{
+		if ( value != x && !moved )
+		{
+			moved = true;
+			onMoved();
+		}
+		return x = value;
+	}
 	
 	public var y(default, set):Float;
-	function set_y(value:Float):Float { return y = value; }
+	inline function set_y( value:Float ):Float
+	{
+		if ( value != y && !moved )
+		{
+			moved = true;
+			onMoved();
+		}
+		return y = value;
+	}
+	
+	public var moved(default, default):Bool;
+	public dynamic function onMoved():Void { }
 	
 	public function new() 
 	{
@@ -25,9 +45,9 @@ class CompTransform implements ComponentBasic
 	
 	public function clear()
 	{
-		type = CompTransform.TYPE_STATIC;
 		x = 0.0;
 		y = 0.0;
+		moved = false;
 	}
 	
 }

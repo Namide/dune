@@ -40,6 +40,10 @@ class CompDisplay2dAnim implements ComponentDisplay, ComponentAnim
 		_anims[i + 1] = frameEnd;
 	}
 	
+	public inline function setPos( x:Float, y:Float ):Void
+	{
+		_graphic.setPos( x, y );
+	}
 	public inline function setX( val:Float ):Void
 	{
 		_graphic.x = val;

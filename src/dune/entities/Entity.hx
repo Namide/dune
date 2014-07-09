@@ -20,14 +20,15 @@ class Entity
 	
 	public function new() 
 	{
-		
+		clear();
 	}
 	
 	public function clear():Void
 	{
 		type = 0;
 		
-		transform.clear();
+		if ( transform == null ) transform = new CompTransform();
+		else transform.clear();
 		
 		if ( inputs == null ) { inputs = []; }
 		if ( bodies == null ) { bodies = []; }

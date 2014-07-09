@@ -24,7 +24,12 @@ class CompDisplay2dSprite implements ComponentDisplay
 		type = ComponentType.DISPLAY_2D;
 		_graphic = graphic;
 	}
-
+	
+	public inline function setPos( x:Float, y:Float ):Void
+	{
+		_graphic.setPos( x, y );
+	}
+	
 	public inline function setX( val:Float ):Void
 	{
 		_graphic.x = val;

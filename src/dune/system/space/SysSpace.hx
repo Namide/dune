@@ -3,13 +3,12 @@ package dune.system.space;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
 import dune.system.physic.shapes.PhysShapeUtils;
-import dune.system.System;
 
 /**
  * ...
  * @author Namide
  */
-class SysSpace implements System
+class SysSpace
 {
 
 	public var _active(default, null):Array<CompBody>;

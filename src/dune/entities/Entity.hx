@@ -11,11 +11,13 @@ import dune.system.physic.components.CompBody;
  */
 class Entity
 {
-	public var type:UInt;
+	public var type(default, default):UInt;
 	
-	public var transform:CompTransform;
+	public var transform(default, null):CompTransform;
+	
 	public var inputs(default, null):Array<CompInput>;
 	public var bodies(default, null):Array<CompBody>;
+	
 	public var display(default, default):ComponentDisplay;
 	
 	public function new() 
@@ -27,14 +29,14 @@ class Entity
 	{
 		type = 0;
 		
-		if ( transform == null ) transform = new CompTransform();
-		else transform.clear();
+		if ( transform == null )	{ transform = new CompTransform(); }
+		else 						{ transform.clear(); }
 		
 		if ( inputs == null ) { inputs = []; }
 		if ( bodies == null ) { bodies = []; }
 		
 		for ( input in inputs )	{ input.clear(); }
-		for ( body in bodies ) { body.clear(); }
+		for ( body in bodies ) 	{ body.clear(); }
 	}
 	
 	public function addBody( body:CompBody ):Void

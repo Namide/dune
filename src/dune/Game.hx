@@ -4,6 +4,8 @@ import dune.compBasic.CompTransform;
 import dune.entities.Entity;
 import dune.system.graphic.components.CompDisplay2dSprite;
 import dune.system.SysManager;
+import hxd.Stage;
+import hxd.System;
 
 /**
  * ...
@@ -11,7 +13,10 @@ import dune.system.SysManager;
  */
 class Game
 {
+	
 	public var systemManager:SysManager;
+	
+	private var _entity1:Entity;
 	
 	public function new() 
 	{
@@ -25,18 +30,26 @@ class Game
 	public function run()
 	{
 		
-		var e1:Entity = new Entity();
+		_entity1 = new Entity();
 		var spr = new h2d.Sprite( systemManager.sysGraphic.s2d );
-		spr.x = systemManager.sysGraphic.s2d.width >> 1;
-		spr.y = systemManager.sysGraphic.s2d.height >> 1;
+		//spr.x = systemManager.sysGraphic.s2d.width >> 1;
+		//spr.y = systemManager.sysGraphic.s2d.height >> 1;
 
 		var tile = hxd.Res.mainChar128x128.toTile();
 		var bmp = new h2d.Bitmap(tile, spr);
 		
-		e1.display = new CompDisplay2dSprite( spr );
+		_entity1.display = new CompDisplay2dSprite( spr );
 		
-		systemManager.addEntity( e1 );
+		systemManager.addEntity( _entity1 );
 		
 		systemManager.refresh(0);
+		hxd.System.setLoop( refresh );
+	}
+	
+	private function refresh()
+	{
+		_entity1.transform.x += 5;
+		systemManager.refresh(0);
+		
 	}
 }

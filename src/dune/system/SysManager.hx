@@ -71,8 +71,8 @@ class SysManager
 		
 		while ( rest+1 > FRAME_DELAY )
 		{
-			sysInput.refresh();
-			sysPhysic.refresh();
+			sysInput.refresh( FRAME_DELAY );
+			sysPhysic.refresh( FRAME_DELAY );
 			rest -= FRAME_DELAY;
 		}
 		

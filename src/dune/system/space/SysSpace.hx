@@ -29,9 +29,22 @@ class SysSpace
 	
 	public function new() 
 	{
-		
+		_active = [];
+		_passive = [];
+		_grid = [];
 	}
 	
+	/**
+	 * Change the size of the grid.
+	 * The better tile size is the same that all the objects sizes.
+	 * 
+	 * @param	minX		Left position of the scene
+	 * @param	minY		Top position of the scene
+	 * @param	maxX		Right position of the scene
+	 * @param	maxY		Bottom position of the scene
+	 * @param	cellW		With of the tile
+	 * @param	cellH		Height of the tile
+	 */
 	public function setSize( minX:Int, minY:Int, maxX:Int, maxY:Int, cellW:Int, cellH:Int ):Void
 	{
 		_limitLeft = minX;
@@ -45,15 +58,10 @@ class SysSpace
 		_gridTilesH = Math.floor( (_limitBottom - _limitTop) / _cellH );
 	}
 	
-	
-	/* INTERFACE dune.system.System */
-	
 	/**
-	 * Update the grid
-	 * 
-	 * @param	dt
+	 * Refresh the grid and add all the passives bodies in it.
 	 */
-	public function refresh(dt:Float):Void 
+	public function refreshGrid():Void 
 	{
 		clear( _grid );
 		
@@ -63,7 +71,7 @@ class SysSpace
 		}
 	}
 	
-	private inline function addBodyInGrid( physBody:CompBody ):Void
+	private function addBodyInGrid( physBody:CompBody ):Void
 	{
 		var pX:Float = physBody.shape.aabbXMin;
 		var pY:Float = physBody.shape.aabbYMin;
@@ -93,6 +101,12 @@ class SysSpace
 		}
 	}
 	
+	/**
+	 * Hit test for all entities and fill contacts in physic body
+	 * 
+	 * @param	dispatch		Dispatch or not the events for the collides
+	 * @return					Entities collides
+	 */
 	public function hitTest( dispatch:Bool = false ):Array<CompBody>
 	{
 		var affected:Array<CompBody> = [];
@@ -143,19 +157,29 @@ class SysSpace
 		{
 			for ( physBody in affected )
 			{
-				for ( physBodyPassive in physBody.contacts )
+				for ( fct in physBody.onCollide )
+				{
+					fct.bind( physBody.contacts );
+				}
+				/*for ( physBodyPassive in physBody.contacts )
 				{
 					for ( fct in physBody.onCollide )
 					{
 						fct.bind( physBodyPassive );
 					}
-				}
+				}*/
 			}
 		}
 		
 		return affected;
 	}
 	
+	/**
+	 * Add a body in this system
+	 * 
+	 * @param	body			Body to add in the system
+	 * @param	addNowInGrid	Add the body in the grid (you must add only for the first adding)
+	 */
 	public function addBody( body:CompBody, addNowInGrid:Bool = true ):Void
 	{
 		if ( body.typeOfCollision == CompBodyType.COLLISION_TYPE_PASSIVE )
@@ -169,12 +193,18 @@ class SysSpace
 		}
 	}
 	
+	/**
+	 * Remove the body of the system
+	 * 
+	 * @param	body			Body to add
+	 * @param	rebuildGrid		Clear the grid and buid it
+	 */
 	public function removeBody( body:CompBody, rebuildGrid:Bool = false ):Void
 	{
 		if ( body.typeOfCollision == CompBodyType.COLLISION_TYPE_PASSIVE )
 		{
 			_passive.remove( body );
-			if ( rebuildGrid ) { refresh( 0 ); }
+			if ( rebuildGrid ) { refreshGrid(); }
 		}
 		else
 		{

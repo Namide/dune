@@ -34,7 +34,7 @@ class CompBody implements ComponentBasic
 	/**
 	 * Like a signal, add to this array the functions called at a collision
 	 */
-	public var onCollide(default, default):Array < CompBody -> Void >;
+	public var onCollide(default, default):Array < Array<CompBody> -> Void >;
 	
 	
 	
@@ -42,8 +42,6 @@ class CompBody implements ComponentBasic
 	{
 		clear();
 	}
-	
-	/* INTERFACE dune.compBasic.Component */
 	
 	public function clear() 
 	{

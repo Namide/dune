@@ -26,9 +26,7 @@ class SysInput
 		_inputs.remove(input);
 	}
 	
-	/* INTERFACE dune.system.System */
-	
-	public inline function refresh():Void 
+	public inline function refresh( dt:Float ):Void 
 	{
 		for ( input in _inputs )
 		{

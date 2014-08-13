@@ -9,12 +9,10 @@ class CompJoystick extends CompInput
 
 	var type(default, null):UInt;
 	
-	public function new() 
+	private function new() 
 	{
 		super();
 	}
-	
-	/* INTERFACE dune.compBasic.Component */
 	
 	public function clear() 
 	{

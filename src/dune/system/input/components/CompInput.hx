@@ -21,12 +21,10 @@ class CompInput implements ComponentBasic
 		
 	}
 	
-	public function execute():Void
+	public function execute( dt:UInt ):Void
 	{
 		
 	}
-	
-	/* INTERFACE dune.compBasic.Component */
 	
 	public function clear() 
 	{

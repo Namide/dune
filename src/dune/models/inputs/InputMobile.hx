@@ -1,23 +1,23 @@
 package dune.models.inputs;
 
-import dune.system.input.components.CompIA;
+import dune.system.input.components.CompInput;
 
 /**
  * @author Namide
  */
-class InputMobile extends CompIA
+class InputMobile extends CompInput
 {
 	
 	public static var TYPE_LINEAR:UInt = 0;
-	public static var TYPE_SIN:UInt = 0;
-	public static var TYPE_COS:UInt = 0;
+	public static var TYPE_SIN:UInt = 1;
+	public static var TYPE_COS:UInt = 2;
 	
-	private static inline var PI2:Float = Math.PI * 2;
+	private static inline var PI2:Float = 2 * 3.14159265359;
 	
-	public var anchorX(default, default):Float;
-	public var anchorY(default, default):Float;
+	public var anchorX(default, default):Float = 0;
+	public var anchorY(default, default):Float = 0;
 	
-	public var moveTypeX(default, default):UInt = CompIA.TYPE_LINEAR;
+	public var moveTypeX(default, default):UInt = InputMobile.TYPE_LINEAR;
 	public var moveDistX(default, default):Float = 0;
 	public var moveTimeX(default, default):Float = 0;
 	public var movePauseX(default, default):Float = 0;
@@ -30,46 +30,52 @@ class InputMobile extends CompIA
 		super();
 	}
 	
-	override public function execute( dt:Float ):Void 
+	public function initX( type:UInt, x:Float, dist:UInt, time:UInt, pause:Float = 0, loop:Bool = true ):Void
+	{
+		anchorX = x;
+		moveTypeX = type;
+		moveDistX = dist;
+		moveTimeX = time;
+		movePauseX = pause;
+		moveLoopX = loop;
+		time = 0;
+	}
+	
+	override public function execute( dt:UInt ):Void 
 	{
 		time += dt;
-		var x:Float, y:Float;
+		var x:Float = 0, y:Float = 0;
 		
 		var allTimeMove:Float = moveTimeX + movePauseX;
 		
 		switch ( moveTypeX )
 		{
-			case CompIA.TYPE_LINEAR :
+			case InputMobile.TYPE_LINEAR :
 				x = ( time % allTimeMove ) / moveTimeX;
 				x = ( x > moveTimeX ) ? x = moveTimeX : x;
 				x = calculateLoop( x, moveLoopX );
-				break;
 				
-			case CompIA.TYPE_SIN :
+			case InputMobile.TYPE_SIN :
 				if ( time % allTimeMove > moveTimeX ) { x = 1; }
-				else { x = Math.sin( time * CompIA.PI2 / allTimeMove ); }
-				x = calculateLoop( x, !moveLoopX );
-				break;
+				else { x = Math.sin( time * InputMobile.PI2 / allTimeMove ) * 0.5 + 0.5; }
 				
-			case CompIA.TYPE_COS :
-				if ( time % allTimeMove > moveTimeX ) { x = 1; }
-				else { x = Math.cos( time * CompIA.PI2 / allTimeMove ); }
 				x = calculateLoop( x, !moveLoopX );
-				break;
+				
+			case InputMobile.TYPE_COS :
+				if ( time % allTimeMove > moveTimeX ) { x = 1; }
+				else { x = Math.cos( time * InputMobile.PI2 / allTimeMove ) * 0.5 + 0.5; }
+				x = calculateLoop( x, !moveLoopX );
 		}
 		
 		this.entity.transform.x = anchorX + x * moveDistX / moveTimeX;
-		super.execute();
+		trace( this.entity.transform.x );
+		super.execute( dt );
 	}
 	
 	private inline function calculateLoop( x:Float, loop:Bool ):Float
 	{
 		var allMoveTime:Float = moveTimeX + movePauseX;
-		return ( loop && (time % (allMoveTime + allMoveTime) ) > allMoveTime) ) ? moveTimeX - x : x;
+		return ( loop && (time % (allMoveTime + allMoveTime) ) > allMoveTime ) ? moveTimeX - x : x;
 	}
 	
-	private inline function calculatePause( x:Float ):Float
-	{
-		return 
-	}
 }

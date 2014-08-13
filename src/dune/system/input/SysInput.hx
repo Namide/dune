@@ -26,11 +26,11 @@ class SysInput
 		_inputs.remove(input);
 	}
 	
-	public inline function refresh( dt:Float ):Void 
+	public inline function refresh( dt:UInt ):Void 
 	{
 		for ( input in _inputs )
 		{
-			input.execute();
+			input.execute( dt );
 		}
 	}
 	

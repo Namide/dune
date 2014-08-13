@@ -9,13 +9,10 @@ class CompMouse extends CompInput
 
 	var type(default, null):UInt;
 	
-	public function new() 
+	private function new() 
 	{
-		super();
-		
+		super(Z);
 	}
-	
-	/* INTERFACE dune.compBasic.Component */
 	
 	public function clear() 
 	{

@@ -14,8 +14,6 @@ class CompIA extends CompInput
 		super();
 	}
 	
-	/* INTERFACE dune.compBasic.Component */
-	
 	public function clear() 
 	{
 		super.clear();

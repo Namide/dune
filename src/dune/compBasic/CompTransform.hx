@@ -35,6 +35,10 @@ class CompTransform implements ComponentBasic
 	}
 	
 	public var moved(default, default):Bool;
+	
+	/**
+	 * Used in the system manager, don't change it
+	 */
 	public dynamic function onMoved():Void { }
 	
 	public function new() 

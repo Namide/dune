@@ -36,7 +36,7 @@ class Game
 		var tile = hxd.Res.mainChar128x128.toTile();
 		var bmp = new h2d.Bitmap(tile, spr);
 		var i:InputMobile = new InputMobile();
-		i.initX( InputMobile.TYPE_LINEAR, 50, 100, 1000 );
+		i.initX( InputMobile.TYPE_COS, 50, 100, 1000 );
 		_entity1.addInput( i );
 		_entity1.display = new CompDisplay2dSprite( spr );
 		systemManager.addEntity( _entity1 );
@@ -45,10 +45,10 @@ class Game
 		var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
 		var bmp2 = new h2d.Bitmap(tile, spr2);
 		var i2:InputMobile = new InputMobile();
-		i2.initX( InputMobile.TYPE_COS, 50, 100, 1000 );
+		i2.initX( InputMobile.TYPE_LINEAR, 50, 100, 1000 );
 		i2.anchorY = 200;
 		e2.addInput( i2 );
-		e2.display = new CompDisplay2dSprite( spr );
+		e2.display = new CompDisplay2dSprite( spr2 );
 		systemManager.addEntity( e2 );
 		
 		systemManager.refresh(0);

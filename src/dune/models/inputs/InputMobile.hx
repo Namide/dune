@@ -103,8 +103,6 @@ class InputMobile extends CompInput
 		this.entity.transform.x = anchorX + x * moveDistX;
 		this.entity.transform.y = anchorY + y * moveDistY;
 		
-		trace( this.entity.transform.x );
-		
 		super.execute( dt );
 	}
 	

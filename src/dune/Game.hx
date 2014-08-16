@@ -4,6 +4,7 @@ import dune.compBasic.CompTransform;
 import dune.entities.Entity;
 import dune.models.inputs.InputMobile;
 import dune.system.graphic.components.CompDisplay2dSprite;
+import dune.system.input.components.CompKeyboard;
 import dune.system.SysManager;
 import hxd.Stage;
 import hxd.System;
@@ -50,6 +51,18 @@ class Game
 		e2.addInput( i2 );
 		e2.display = new CompDisplay2dSprite( spr2 );
 		systemManager.addEntity( e2 );
+		
+		var e3 = new Entity();
+		var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
+		var bmp3 = new h2d.Bitmap(tile, spr3);
+		var i3:CompKeyboard = new CompKeyboard();
+		i3.onTop = function ( e:Entity ):Void { e.transform.y -= 1; }
+		i3.onRight = function ( e:Entity ):Void { e.transform.x += 1; }
+		i3.onBottom = function ( e:Entity ):Void { e.transform.y += 1; }
+		i3.onLeft = function ( e:Entity ):Void { e.transform.x -= 1; }
+		e3.addInput( i3 );
+		e3.display = new CompDisplay2dSprite( spr3 );
+		systemManager.addEntity( e3 );
 		
 		systemManager.refresh(0);
 		hxd.System.setLoop( refresh );

@@ -2,10 +2,12 @@ package dune;
 
 import dune.compBasic.CompTransform;
 import dune.entities.Entity;
+import dune.models.inputs.InputGravity;
 import dune.models.inputs.InputMobile;
 import dune.system.graphic.components.CompDisplay2dSprite;
 import dune.system.input.components.CompKeyboard;
 import dune.system.SysManager;
+import h2d.comp.Input;
 import hxd.Stage;
 import hxd.System;
 
@@ -60,6 +62,8 @@ class Game
 		i3.onRight = 	function ( e:Entity ):Void 	{ e.transform.x += 5; }
 		i3.onBottom = 	function ( e:Entity ):Void 	{ e.transform.y += 5; }
 		i3.onLeft = 	function ( e:Entity ):Void 	{ e.transform.x -= 5; }
+		var g3:InputGravity = new InputGravity();
+		e3.addInput( new InputGravity() );
 		e3.addInput( i3 );
 		e3.display = new CompDisplay2dSprite( spr3 );
 		systemManager.addEntity( e3 );

@@ -16,12 +16,12 @@ class SysPhysic
 	/**
 	 * Gravity in X axis
 	 */
-	public var gX(default, default):Float = 0;
+	//public var gX(default, default):Float = 0;
 	
 	/**
 	 * Gravity in Y axis
 	 */
-	public var gY(default, default):Float = 9;
+	//public var gY(default, default):Float = 9;
 	
 	public function new() 
 	{

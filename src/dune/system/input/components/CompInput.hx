@@ -12,13 +12,19 @@ class CompInput implements ComponentBasic
 	/**
 	 * Entity attached to the body
 	 */
-	public var entity(default, default):Entity;
+	public var entity(default, set):Entity;
+	function set_entity(value:Entity):Entity 
+	{
+		return entity = value;
+	}
 	
 	public var type(default, null):UInt;
 	
+	
+	
 	private function new() 
 	{
-		
+		clear();
 	}
 	
 	public function execute( dt:UInt ):Void

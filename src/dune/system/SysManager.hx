@@ -36,7 +36,7 @@ class SysManager
 	
 	public function addEntity( entity:Entity ):Void
 	{
-		_entities.push(entity);
+		_entities.push( entity );
 		for ( i in entity.inputs ) { sysInput.addInput( i ); }
 		for ( b in entity.bodies ) { sysPhysic.space.addBody( b ); }
 		sysGraphic.add( entity );
@@ -49,7 +49,7 @@ class SysManager
 	
 	public function removeEntity( entity:Entity ):Void
 	{
-		_entities.remove(entity);
+		_entities.remove( entity );
 		for ( i in entity.inputs ) { sysInput.removeInput( i ); }
 		for ( b in entity.bodies ) { sysPhysic.space.removeBody( b ); }
 		sysGraphic.remove( entity );

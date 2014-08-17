@@ -3,7 +3,9 @@ dune
 
 Microframework for Haxe 2D games
 
-Use the library [H3D and H2D](https://github.com/ncannasse/h3d)
+Dependencies:
+* [H3D and H2D](https://github.com/ncannasse/h3d)
+
 
 todo list
 ----
@@ -19,3 +21,4 @@ todo list
 	* mouse
 * helpers
 	* platform-player
+	

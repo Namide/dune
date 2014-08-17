@@ -12,6 +12,28 @@ class CompTransform implements ComponentBasic
 	
 	public var type(default, null):UInt;
 	
+	/**
+	 * If v (velocity) is activated,
+	 * the position is updated by the velocity.
+	 * Without, you must use vX and vY to storage.
+	 */
+	public var vActive(default, default):Bool;
+	
+	/**
+	 * Velocity in X-axis.
+	 * Used if the entitie is physic dependant
+	 */
+	public var vX(default, default):Float;
+	
+	/**
+	 * Velocity in Y-axis.
+	 * Used if the entitie is physic dependant
+	 */
+	public var vY(default, default):Float;
+	
+	/**
+	 * X-axis position
+	 */
 	public var x(default, set):Float;
 	inline function set_x( value:Float ):Float
 	{
@@ -23,6 +45,9 @@ class CompTransform implements ComponentBasic
 		return x = value;
 	}
 	
+	/**
+	 * Y-axis position
+	 */
 	public var y(default, set):Float;
 	inline function set_y( value:Float ):Float
 	{
@@ -51,6 +76,8 @@ class CompTransform implements ComponentBasic
 	{
 		x = 0.0;
 		y = 0.0;
+		vX = 0.0;
+		vY = 0.0;
 		moved = false;
 	}
 	

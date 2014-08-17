@@ -56,10 +56,10 @@ class Game
 		var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
 		var bmp3 = new h2d.Bitmap(tile, spr3);
 		var i3:CompKeyboard = new CompKeyboard();
-		i3.onTop = function ( e:Entity ):Void { e.transform.y -= 1; }
-		i3.onRight = function ( e:Entity ):Void { e.transform.x += 1; }
-		i3.onBottom = function ( e:Entity ):Void { e.transform.y += 1; }
-		i3.onLeft = function ( e:Entity ):Void { e.transform.x -= 1; }
+		i3.onTop = 		function ( e:Entity ):Void 	{ e.transform.y -= 5; }
+		i3.onRight = 	function ( e:Entity ):Void 	{ e.transform.x += 5; }
+		i3.onBottom = 	function ( e:Entity ):Void 	{ e.transform.y += 5; }
+		i3.onLeft = 	function ( e:Entity ):Void 	{ e.transform.x -= 5; }
 		e3.addInput( i3 );
 		e3.display = new CompDisplay2dSprite( spr3 );
 		systemManager.addEntity( e3 );

@@ -21,8 +21,11 @@ class InputGravity extends CompInput
 	 * For a similar to "time dependant", you must do like the following:
 	 * X = 10 / SysManager.FRAME_DELAY;
 	 */
-	public static var Y(default, default):Float = 9 / SysManager.FRAME_DELAY;
+	public static var Y(default, default):Float = 6 / SysManager.FRAME_DELAY;
 	
+	/**
+	 * Position on the X-axis
+	 */
 	public var x(default, set):Float = 1;
 	function set_x(val:Float):Float 
 	{
@@ -30,6 +33,9 @@ class InputGravity extends CompInput
 		return x = val;
 	}
 	
+	/**
+	 * Position on the Y-axis
+	 */
 	public var y(default, set):Float = 1;
 	function set_y(val:Float):Float 
 	{

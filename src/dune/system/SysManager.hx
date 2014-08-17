@@ -14,6 +14,7 @@ class SysManager
 	public static inline var FRAME_DELAY:UInt = 20;
 	
 	public var _entities:Array<Entity>;
+	public var _entitiesVelocity:Array<Entity>;
 	public var _entitiesMoved:Array<Entity>;
 	
 	public var sysInput(default, default):SysInput;
@@ -25,6 +26,7 @@ class SysManager
 	public function new() 
 	{
 		_entities = [];
+		_entitiesVelocity = [];
 		_entitiesMoved = [];
 		
 		sysInput = new SysInput();
@@ -37,6 +39,8 @@ class SysManager
 	public function addEntity( entity:Entity ):Void
 	{
 		_entities.push( entity );
+		if ( entity.transform.vActive ) { _entitiesVelocity.push( entity ); }
+		
 		for ( i in entity.inputs ) { sysInput.addInput( i ); }
 		for ( b in entity.bodies ) { sysPhysic.space.addBody( b ); }
 		sysGraphic.add( entity );
@@ -50,6 +54,8 @@ class SysManager
 	public function removeEntity( entity:Entity ):Void
 	{
 		_entities.remove( entity );
+		if ( _entitiesVelocity.indexOf( entity ) > -1 ) { _entitiesVelocity.remove( entity ); }
+		
 		for ( i in entity.inputs ) { sysInput.removeInput( i ); }
 		for ( b in entity.bodies ) { sysPhysic.space.removeBody( b ); }
 		sysGraphic.remove( entity );
@@ -71,6 +77,12 @@ class SysManager
 		
 		while ( rest >= FRAME_DELAY )
 		{
+			for ( e in _entitiesVelocity )
+			{
+				e.transform.x += e.transform.vX;
+				e.transform.y += e.transform.vY;
+			}
+			
 			sysInput.refresh( FRAME_DELAY );
 			sysPhysic.refresh( FRAME_DELAY );
 			rest -= FRAME_DELAY;

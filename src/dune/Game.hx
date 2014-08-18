@@ -6,6 +6,10 @@ import dune.models.inputs.InputGravity;
 import dune.models.inputs.InputMobile;
 import dune.system.graphic.components.CompDisplay2dSprite;
 import dune.system.input.components.CompKeyboard;
+import dune.system.physic.components.CompBody;
+import dune.system.physic.components.CompBodyType;
+import dune.system.physic.shapes.PhysShapeRect;
+import dune.system.physic.shapes.PhysShapeType;
 import dune.system.SysManager;
 import h2d.comp.Input;
 import hxd.Stage;
@@ -44,29 +48,77 @@ class Game
 		_entity1.display = new CompDisplay2dSprite( spr );
 		systemManager.addEntity( _entity1 );
 		
+		
+		
+		
 		var e2 = new Entity();
-		var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
-		var bmp2 = new h2d.Bitmap(tile, spr2);
-		var i2:InputMobile = new InputMobile();
-		i2.initX( InputMobile.TYPE_LINEAR, 50, 100, 1000 );
-		i2.anchorY = 200;
-		e2.addInput( i2 );
-		e2.display = new CompDisplay2dSprite( spr2 );
+		
+			// graphic
+			
+				var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
+				var bmp2 = new h2d.Bitmap(tile, spr2);
+				e2.display = new CompDisplay2dSprite( spr2 );
+				
+			// move
+			
+				var i2:InputMobile = new InputMobile();
+				i2.initX( InputMobile.TYPE_LINEAR, 0, 100, 1000 );
+				i2.anchorY = 300;
+				e2.addInput( i2 );
+				
+			// collision
+			
+				var b2:CompBody = new CompBody();
+				var psr2:PhysShapeRect = new PhysShapeRect();
+				psr2.w = 256;
+				psr2.h = 256;
+				b2.shape = psr2;
+				b2.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
+				b2.typeOfSolid = CompBodyType.SOLID_TYPE_PLATFORM;
+				e2.addBody( b2 );
+				
 		systemManager.addEntity( e2 );
 		
+		
+		
+		
 		var e3 = new Entity();
-		var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
-		var bmp3 = new h2d.Bitmap(tile, spr3);
-		var i3:CompKeyboard = new CompKeyboard();
-		i3.onTop = 		function ( e:Entity ):Void 	{ e.transform.y -= 5; }
-		i3.onRight = 	function ( e:Entity ):Void 	{ e.transform.x += 5; }
-		i3.onBottom = 	function ( e:Entity ):Void 	{ e.transform.y += 5; }
-		i3.onLeft = 	function ( e:Entity ):Void 	{ e.transform.x -= 5; }
-		var g3:InputGravity = new InputGravity();
-		e3.addInput( new InputGravity() );
-		e3.addInput( i3 );
-		e3.display = new CompDisplay2dSprite( spr3 );
+		
+			// graphic
+			
+				var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
+				var bmp3 = new h2d.Bitmap(tile, spr3);
+				e3.display = new CompDisplay2dSprite( spr3 );
+				
+			// Keyboard
+			
+				var i3:CompKeyboard = new CompKeyboard();
+				i3.onTop = 		function ( e:Entity ):Void 	{ e.transform.y -= 5; }
+				i3.onRight = 	function ( e:Entity ):Void 	{ e.transform.x += 5; }
+				i3.onBottom = 	function ( e:Entity ):Void 	{ e.transform.y += 5; }
+				i3.onLeft = 	function ( e:Entity ):Void 	{ e.transform.x -= 5; }
+				
+			// gravity
+			
+				var g3:InputGravity = new InputGravity();
+				e3.addInput( new InputGravity() );
+				e3.addInput( i3 );
+				
+			// collision
+			
+				var b3:CompBody = new CompBody();
+				b3.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
+				var psr3:PhysShapeRect = new PhysShapeRect();
+				psr3.w = 256;
+				psr3.h = 256;
+				b3.shape = psr3;
+				e3.addBody( b3 );
+				
 		systemManager.addEntity( e3 );
+		
+		
+		
+		
 		
 		systemManager.refresh(0);
 		hxd.System.setLoop( refresh );

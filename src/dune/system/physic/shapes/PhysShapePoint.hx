@@ -8,18 +8,14 @@ import dune.compBasic.CompTransform;
 class PhysShapePoint
 {
 	
-	public var aabbXMin(default, default):Float;
-	
-	public var aabbXMax(default, default):Float;
-	
-	public var aabbYMin(default, default):Float;
-	
-	public var aabbYMax(default, default):Float;
+	public var aabbXMin(default, null):Float;
+	public var aabbXMax(default, null):Float;
+	public var aabbYMin(default, null):Float;
+	public var aabbYMax(default, null):Float;
 	
 	public var type(default, null):UInt;
 	
 	public var anchorX(default, default):Float;
-	
 	public var anchorY(default, default):Float;
 	
 	private function new()

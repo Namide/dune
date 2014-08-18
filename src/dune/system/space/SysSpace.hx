@@ -16,13 +16,13 @@ class SysSpace
 	
 	private var _grid:Array<Array<Array<CompBody>>>;
 	
-	public var _limitLeft(default, null):Int;
-	public var _limitTop(default, null):Int;
-	public var _limitRight(default, null):Int;
-	public var _limitBottom(default, null):Int;
+	public var _limitLeft(default, null):Int = 0;
+	public var _limitTop(default, null):Int = 0;
+	public var _limitRight(default, null):Int = 1024;
+	public var _limitBottom(default, null):Int = 1024;
 	
-	public var _cellW(default, null):Int;
-	public var _cellH(default, null):Int;
+	public var _cellW(default, null):Int = 64;
+	public var _cellH(default, null):Int = 64;
 	
 	private var _gridTilesW:UInt;
 	private var _gridTilesH:UInt;
@@ -73,6 +73,8 @@ class SysSpace
 	
 	private function addBodyInGrid( physBody:CompBody ):Void
 	{
+		physBody.shape.updateAABB( physBody.entity.transform );
+		
 		var pX:Float = physBody.shape.aabbXMin;
 		var pY:Float = physBody.shape.aabbYMin;
 		
@@ -85,7 +87,7 @@ class SysSpace
 		}
 
 		var entityGridXMin:Int = Math.floor( (pX - _limitLeft) / _cellW );
-		var entityGridXMax:Int = Math.floor( (physBody.shape.aabbXMax - _limitRight) / _cellW );
+		var entityGridXMax:Int = Math.floor( (physBody.shape.aabbXMax - _limitLeft) / _cellW );
 		var entityGridYMin:Int = Math.floor( (pY - _limitTop) / _cellH );
 		var entityGridYMax:Int = Math.floor( (physBody.shape.aabbYMax - _limitTop) / _cellH );
 
@@ -95,7 +97,6 @@ class SysSpace
 			{
 				if ( _grid[cX] == null ) { _grid[cX] = []; }
 				if ( _grid[cX][cY] == null ) { _grid[cX][cY] = []; }
-				
 				_grid[cX][cY].push( physBody );
 			}
 		}
@@ -113,6 +114,11 @@ class SysSpace
 		
 		for ( physBody in _active )
 		{
+			physBody.shape.updateAABB( physBody.entity.transform );
+		}
+		
+		for ( physBody in _active )
+		{
 			var isAffected:Bool = false;
 			var pX:Float = physBody.shape.aabbXMin;
 			var pY:Float = physBody.shape.aabbYMin;
@@ -126,7 +132,7 @@ class SysSpace
 			}
 
 			var entityGridXMin:Int = Math.floor( (pX - _limitLeft) / _cellW );
-			var entityGridXMax:Int = Math.floor( (physBody.shape.aabbXMax - _limitRight) / _cellW );
+			var entityGridXMax:Int = Math.floor( (physBody.shape.aabbXMax - _limitLeft) / _cellW );
 			var entityGridYMin:Int = Math.floor( (pY - _limitTop) / _cellH );
 			var entityGridYMax:Int = Math.floor( (physBody.shape.aabbYMax - _limitTop) / _cellH );
 	
@@ -136,16 +142,22 @@ class SysSpace
 			{
 				for ( cY in entityGridYMin...entityGridYMax )
 				{
-					for ( physBodyPassive in _grid[cX][cY] )
+					if ( 	cX < _grid.length &&
+							_grid[cX] != null &&
+							cY < _grid[cX].length &&
+							_grid[cX][cY] != null )
 					{
-						if ( 	physBody.contacts.indexOf( physBodyPassive ) < 0 &&
-								PhysShapeUtils.hitTest( physBody.shape, physBodyPassive.shape ) )
+						for ( physBodyPassive in _grid[cX][cY] )
 						{
-							physBody.contacts.push( physBodyPassive );
-							if ( !isAffected )
+							if ( 	physBody.contacts.indexOf( physBodyPassive ) < 0 &&
+									PhysShapeUtils.hitTest( physBody.shape, physBodyPassive.shape ) )
 							{
-								isAffected = true;
-								affected.push( physBody );
+								physBody.contacts.push( physBodyPassive );
+								if ( !isAffected )
+								{
+									isAffected = true;
+									affected.push( physBody );
+								}
 							}
 						}
 					}
@@ -159,7 +171,8 @@ class SysSpace
 			{
 				for ( fct in physBody.onCollide )
 				{
-					fct.bind( physBody.contacts );
+					//fct.bind( physBody.contacts );
+					fct( physBody.contacts );
 				}
 				/*for ( physBodyPassive in physBody.contacts )
 				{

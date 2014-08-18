@@ -27,7 +27,7 @@ class InputGravity extends CompInput
 	 * Position on the X-axis
 	 */
 	public var x(default, set):Float = 1;
-	function set_x(val:Float):Float 
+	inline function set_x(val:Float):Float 
 	{
 		xFinal = InputGravity.X * val;
 		return x = val;
@@ -37,7 +37,7 @@ class InputGravity extends CompInput
 	 * Position on the Y-axis
 	 */
 	public var y(default, set):Float = 1;
-	function set_y(val:Float):Float 
+	inline function set_y(val:Float):Float 
 	{
 		yFinal = InputGravity.Y * val;
 		return y = val;

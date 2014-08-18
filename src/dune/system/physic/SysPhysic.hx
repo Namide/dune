@@ -1,5 +1,6 @@
 package dune.system.physic;
 
+import dune.system.physic.components.CompBody;
 import dune.system.space.SysSpace;
 
 /**
@@ -31,7 +32,19 @@ class SysPhysic
 	public function refresh( dt:Float ):Void 
 	{
 		space.refreshGrid();
-		space.hitTest( true );
+		var list:Array<CompBody> = space.hitTest( true );
+		
+		for ( b in list )
+		{
+			if ( b.contacts.length > 0 )
+			{
+				for ( c in b.contacts )
+				{
+					// TODO
+				}
+			}
+		}
+		
 	}
 	
 }

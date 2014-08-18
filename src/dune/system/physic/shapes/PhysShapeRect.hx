@@ -8,13 +8,8 @@ import dune.compBasic.CompTransform;
 class PhysShapeRect extends PhysShapePoint
 {
 
-	public var w(get, set):Float;
-	inline function get_w():Float { return w; 	}
-	inline function set_w(value:Float):Float { return w = value; }
-	
-	public var h(get, set):Float;
-	inline function get_h():Float { return h; }
-	inline function set_h(value:Float):Float { return h = value; }
+	public var w(default, default):Float;
+	public var h(default, default):Float;
 	
 	public function new() 
 	{

@@ -20,13 +20,13 @@ class CompTransform implements ComponentBasic
 	public var vActive(default, default):Bool;
 	
 	/**
-	 * Velocity in X-axis.
+	 * Velocity in X-axis (in pixel per frame).
 	 * Used if the entitie is physic dependant
 	 */
 	public var vX(default, default):Float;
 	
 	/**
-	 * Velocity in Y-axis.
+	 * Velocity in Y-axis (in pixel per frame).
 	 * Used if the entitie is physic dependant
 	 */
 	public var vY(default, default):Float;

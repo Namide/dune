@@ -27,15 +27,21 @@ class CompKeyboard extends CompInput
 		
 	}
 	
+	override function set_entity(value:Entity):Entity 
+	{
+		value.transform.vActive = true;
+		return entity = value;
+	}
+	
 	public override function execute( dt:UInt ):Void
 	{
 		var kh:KeyboardHandler = KeyboardHandler.getInstance();
 		
-		if ( kh.getKeyPressed( keyLeft ) ) { onLeft(entity); }
-		if ( kh.getKeyPressed( keyRight ) ) { onRight(entity); }
-		if ( kh.getKeyPressed( keyTop ) ) { onTop(entity); }
-		if ( kh.getKeyPressed( keyBottom ) ) { onBottom(entity); }
-		if ( kh.getKeyPressed( keyAction ) ) { onAction(entity); }
+		if ( kh.getKeyPressed( keyLeft ) ) 		{ onLeft(entity); }
+		if ( kh.getKeyPressed( keyRight ) ) 	{ onRight(entity); }
+		if ( kh.getKeyPressed( keyTop ) ) 		{ onTop(entity); }
+		if ( kh.getKeyPressed( keyBottom ) ) 	{ onBottom(entity); }
+		if ( kh.getKeyPressed( keyAction ) ) 	{ onAction(entity); }
 	}
 	
 	public override function clear():Void

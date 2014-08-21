@@ -77,13 +77,14 @@ class SysManager
 		
 		while ( rest >= FRAME_DELAY )
 		{
+			sysInput.refresh( FRAME_DELAY );
+			
 			for ( e in _entitiesVelocity )
 			{
 				e.transform.x += e.transform.vX;
 				e.transform.y += e.transform.vY;
 			}
 			
-			sysInput.refresh( FRAME_DELAY );
 			sysPhysic.refresh( FRAME_DELAY );
 			rest -= FRAME_DELAY;
 		}

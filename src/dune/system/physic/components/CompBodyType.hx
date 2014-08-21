@@ -12,7 +12,7 @@ class CompBodyType
 	public inline static var COLLISION_TYPE_PASSIVE:UInt = 1;
 	
 	/**
-	 * This body test the collision with others bodies
+	 * This body test the collision with the passives bodies
 	 */
 	public inline static var COLLISION_TYPE_ACTIVE:UInt = 2;
 	
@@ -36,6 +36,17 @@ class CompBodyType
 	 * It's usable for life, ennemy, ammo...
 	 */
 	public inline static var SOLID_TYPE_ITEM: UInt = 8;
+	
+	/**
+	 * Your solid reacts with passives bodies (platform, wall, ladder)
+	 */
+	public inline static var SOLID_TYPE_MOVER:UInt = 16;
+	
+	/**
+	 * Your solid reacts with passives bodies (item)
+	 */
+	public inline static var SOLID_TYPE_EATER:UInt = 32;
+	
 	
 	public function new() 
 	{

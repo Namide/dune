@@ -10,9 +10,6 @@ Dependencies:
 todo list
 ----
 
-* physic
-	* gravity
-	* collides -> reactions
 * animation
 	* from MovieClip from SWC or SWF
 	* composition to control animation

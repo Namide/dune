@@ -25,7 +25,7 @@ class CompBody implements ComponentBasic
 	/**
 	 * Other body in contact with this one
 	 */
-	public var contacts(default, null):Array<CompBody>;
+	public var contacts(default, null):ContactBodies;
 	
 	public var typeOfCollision(default, default):UInt;
 	
@@ -34,12 +34,13 @@ class CompBody implements ComponentBasic
 	/**
 	 * Like a signal, add to this array the functions called at a collision
 	 */
-	public var onCollide(default, default):Array < Array<CompBody> -> Void >;
+	public var onCollide(default, default):Array < CompBody -> Void >;
 	
 	
 	
 	public function new() 
 	{
+		contacts = new ContactBodies( this );
 		clear();
 	}
 	
@@ -48,7 +49,7 @@ class CompBody implements ComponentBasic
 		typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
 		typeOfSolid = 0;
 		
-		contacts = [];
+		contacts.clear();
 		onCollide = [];
 		entity = null;
 		shape = null;

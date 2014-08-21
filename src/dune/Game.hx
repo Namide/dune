@@ -43,7 +43,7 @@ class Game
 		var tile = hxd.Res.mainChar128x128.toTile();
 		var bmp = new h2d.Bitmap(tile, spr);
 		var i:InputMobile = new InputMobile();
-		i.initX( InputMobile.TYPE_COS, 50, 100, 1000 );
+		i.initX( InputMobile.TYPE_LINEAR, 50, 100, 1000 );
 		_entity1.addInput( i );
 		_entity1.display = new CompDisplay2dSprite( spr );
 		systemManager.addEntity( _entity1 );
@@ -58,11 +58,11 @@ class Game
 				var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
 				var bmp2 = new h2d.Bitmap(tile, spr2);
 				e2.display = new CompDisplay2dSprite( spr2 );
-				
+			
 			// move
 			
 				var i2:InputMobile = new InputMobile();
-				i2.initX( InputMobile.TYPE_LINEAR, 0, 100, 1000 );
+				i2.initX( InputMobile.TYPE_COS, 0, 100, 1000 );
 				i2.anchorY = 300;
 				e2.addInput( i2 );
 				
@@ -70,8 +70,8 @@ class Game
 			
 				var b2:CompBody = new CompBody();
 				var psr2:PhysShapeRect = new PhysShapeRect();
-				psr2.w = 256;
-				psr2.h = 256;
+				psr2.w = 128;
+				psr2.h = 128;
 				b2.shape = psr2;
 				b2.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
 				b2.typeOfSolid = CompBodyType.SOLID_TYPE_PLATFORM;
@@ -90,36 +90,43 @@ class Game
 				var bmp3 = new h2d.Bitmap(tile, spr3);
 				e3.display = new CompDisplay2dSprite( spr3 );
 				
-			// Keyboard
 			
-				var i3:CompKeyboard = new CompKeyboard();
-				i3.onTop = 		function ( e:Entity ):Void 	{ e.transform.y -= 5; }
-				i3.onRight = 	function ( e:Entity ):Void 	{ e.transform.x += 5; }
-				i3.onBottom = 	function ( e:Entity ):Void 	{ e.transform.y += 5; }
-				i3.onLeft = 	function ( e:Entity ):Void 	{ e.transform.x -= 5; }
-				
 			// gravity
 			
 				var g3:InputGravity = new InputGravity();
 				e3.addInput( new InputGravity() );
-				e3.addInput( i3 );
 				
 			// collision
 			
 				var b3:CompBody = new CompBody();
 				b3.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
+				b3.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER;
 				var psr3:PhysShapeRect = new PhysShapeRect();
-				psr3.w = 256;
-				psr3.h = 256;
+				psr3.w = 128;
+				psr3.h = 128;
 				b3.shape = psr3;
 				e3.addBody( b3 );
+			
+			// Keyboard
+			
+				var i3:CompKeyboard = new CompKeyboard();
+				//i3.onTop = 		function ( e:Entity ):Void 	{ e.transform.vY = -5; }
+				i3.onRight = function ( e:Entity ):Void 
+				{
+					//var vGround:Float = (b3.contacts.bottom.length > 0)?b3.contacts.bottom[0].entity.transform.vX:0;
+					e.transform.vX = 5 /*+ vGround*/;
+				}
+				//i3.onBottom = 	function ( e:Entity ):Void 	{ e.transform.y += 5; }
+				i3.onLeft = function ( e:Entity ):Void 
+				{
+					//var vGround:Float = (b3.contacts.bottom.length > 0)?b3.contacts.bottom[0].entity.transform.vX:0;
+					e.transform.vX = /*vGround*/ - 5;
+				}
+				e3.addInput( i3 );
 				
 		systemManager.addEntity( e3 );
 		
-		
-		
-		
-		
+		systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );
 		systemManager.refresh(0);
 		hxd.System.setLoop( refresh );
 	}

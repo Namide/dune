@@ -105,10 +105,9 @@ class SysSpace
 	/**
 	 * Hit test for all entities and fill contacts in physic body
 	 * 
-	 * @param	dispatch		Dispatch or not the events for the collides
 	 * @return					Entities collides
 	 */
-	public function hitTest( dispatch:Bool = false ):Array<CompBody>
+	public function hitTest( /*dispatch:Bool = false*/ ):Array<CompBody>
 	{
 		var affected:Array<CompBody> = [];
 		
@@ -132,12 +131,11 @@ class SysSpace
 			}
 
 			var entityGridXMin:Int = Math.floor( (pX - _limitLeft) / _cellW );
-			var entityGridXMax:Int = Math.floor( (physBody.shape.aabbXMax - _limitLeft) / _cellW );
+			var entityGridXMax:Int = Math.ceil( (physBody.shape.aabbXMax - _limitLeft) / _cellW );
 			var entityGridYMin:Int = Math.floor( (pY - _limitTop) / _cellH );
-			var entityGridYMax:Int = Math.floor( (physBody.shape.aabbYMax - _limitTop) / _cellH );
-	
-			clear( physBody.contacts );
+			var entityGridYMax:Int = Math.ceil( (physBody.shape.aabbYMax - _limitTop) / _cellH );
 			
+			physBody.contacts.clear();
 			for ( cX in entityGridXMin...entityGridXMax )
 			{
 				for ( cY in entityGridYMin...entityGridYMax )
@@ -149,7 +147,7 @@ class SysSpace
 					{
 						for ( physBodyPassive in _grid[cX][cY] )
 						{
-							if ( 	physBody.contacts.indexOf( physBodyPassive ) < 0 &&
+							if ( 	physBody.contacts.all.indexOf( physBodyPassive ) < 0 &&
 									PhysShapeUtils.hitTest( physBody.shape, physBodyPassive.shape ) )
 							{
 								physBody.contacts.push( physBodyPassive );
@@ -165,24 +163,16 @@ class SysSpace
 			}
 		}
 		
-		if ( dispatch )
+		/*if ( dispatch )
 		{
 			for ( physBody in affected )
 			{
 				for ( fct in physBody.onCollide )
 				{
-					//fct.bind( physBody.contacts );
 					fct( physBody.contacts );
 				}
-				/*for ( physBodyPassive in physBody.contacts )
-				{
-					for ( fct in physBody.onCollide )
-					{
-						fct.bind( physBodyPassive );
-					}
-				}*/
 			}
-		}
+		}*/
 		
 		return affected;
 	}

@@ -11,6 +11,73 @@ class PhysShapeUtils
 		throw "This class can't be instancied";
 	}
 	
+	public static function getPosToTop( a:PhysShapePoint ):Float
+	{
+		if ( a.type == PhysShapeType.CIRCLE )
+		{
+			return -( cast( a, PhysShapeCircle ).r + a.anchorY );
+		}
+		return - a.anchorY;
+	}
+	public static function getPosToLeft( a:PhysShapePoint ):Float
+	{
+		if ( a.type == PhysShapeType.CIRCLE )
+		{
+			return -( cast( a, PhysShapeCircle ).r + a.anchorX );
+		}
+		return - a.anchorX;
+	}
+	public static function getPosToBottom( a:PhysShapePoint ):Float
+	{
+		if ( a.type == PhysShapeType.CIRCLE )
+		{
+			return cast( a, PhysShapeCircle ).r - a.anchorY;
+		}
+		else if ( a.type == PhysShapeType.RECT )
+		{
+			return cast( a, PhysShapeRect ).h - a.anchorY;
+		}
+		return 0;
+	}
+	public static function getPosToRight( a:PhysShapePoint ):Float
+	{
+		if ( a.type == PhysShapeType.CIRCLE )
+		{
+			return cast( a, PhysShapeCircle ).r - a.anchorX;
+		}
+		else if ( a.type == PhysShapeType.RECT )
+		{
+			return cast( a, PhysShapeRect ).w - a.anchorX;
+		}
+		return 0;
+	}
+	
+	public static function getW( a:PhysShapePoint ):Float
+	{
+		if ( a.type == PhysShapeType.CIRCLE )
+		{
+			return cast( a, PhysShapeCircle ).r * 2;
+		}
+		else if ( a.type == PhysShapeType.RECT )
+		{
+			return cast( a, PhysShapeRect ).w;
+		}
+		return 0;
+	}
+	
+	public static function getH( a:PhysShapePoint ):Float
+	{
+		if ( a.type == PhysShapeType.CIRCLE )
+		{
+			return cast( a, PhysShapeCircle ).r * 2;
+		}
+		else if ( a.type == PhysShapeType.RECT )
+		{
+			return cast( a, PhysShapeRect ).h;
+		}
+		return 0;
+	}
+	
 	public static function hitTest( a:PhysShapePoint, b:PhysShapePoint ):Bool
 	{
 		if ( !hitTestAABB( a, b ) )

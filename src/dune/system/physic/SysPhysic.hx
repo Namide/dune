@@ -32,17 +32,10 @@ class SysPhysic
 	public function refresh( dt:Float ):Void 
 	{
 		space.refreshGrid();
-		var list:Array<CompBody> = space.hitTest( true );
-		
+		var list:Array<CompBody> = space.hitTest();
 		for ( b in list )
 		{
-			if ( b.contacts.length > 0 )
-			{
-				for ( c in b.contacts )
-				{
-					// TODO
-				}
-			}
+			b.contacts.moveAndDispatch();
 		}
 		
 	}

@@ -1,4 +1,5 @@
 package dune.compBasic;
+import dune.entities.Entity;
 
 /**
  * ...
@@ -11,6 +12,11 @@ class CompTransform implements ComponentBasic
 	public inline static var TYPE_MOVABLE:UInt = 2;*/
 	
 	public var type(default, null):UInt;
+	
+	/**
+	 * Entity attached to the transform component
+	 */
+	public var entity(default, null):Entity;
 	
 	/**
 	 * If v (velocity) is activated,
@@ -30,6 +36,25 @@ class CompTransform implements ComponentBasic
 	 * Used if the entitie is physic dependant
 	 */
 	public var vY(default, default):Float;
+	
+	public function getAbsVx():Float
+	{
+		var v:Float = vX;
+		for ( e in entity.attachedTo )
+		{
+			v += e.transform.vX;
+		}
+		return v;
+	}
+	public function getAbsVy():Float
+	{
+		var v:Float = vY;
+		for ( e in entity.attachedTo )
+		{
+			v += e.transform.vY;
+		}
+		return v;
+	}
 	
 	/**
 	 * X-axis position
@@ -66,8 +91,9 @@ class CompTransform implements ComponentBasic
 	 */
 	public dynamic function onMoved():Void { }
 	
-	public function new() 
+	public function new( parent:Entity ) 
 	{
+		entity = parent;
 		//type = ComponentType.TRANSFORM;
 		clear();
 	}

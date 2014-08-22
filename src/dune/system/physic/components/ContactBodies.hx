@@ -1,4 +1,5 @@
 package dune.system.physic.components;
+import dune.helpers.core.ArrayUtils;
 import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.PhysShapeType;
@@ -73,12 +74,12 @@ class ContactBodies
 	
 	public function clear()
 	{
-		clearArray( all );
+		ArrayUtils.clear( all );
 		
-		clearArray( bottom );
-		clearArray( right );
-		clearArray( left );
-		clearArray( top );
+		ArrayUtils.clear( bottom );
+		ArrayUtils.clear( right );
+		ArrayUtils.clear( left );
+		ArrayUtils.clear( top );
 		//clearArray( over );
 	}
 	
@@ -97,10 +98,14 @@ class ContactBodies
 		
 		var dataActivated:Bool = all.length > 1;
 		
+		var absVX:Float = parent.entity.transform.getAbsVx();
+		var absVY:Float = parent.entity.transform.getAbsVy();
+		ArrayUtils.clear( parent.entity.attachedTo );
+		
 		for ( cp in all )
 		{
-			var dX:Float = cp.entity.transform.vX - parent.entity.transform.vX;
-			var dY:Float = cp.entity.transform.vY - parent.entity.transform.vY;
+			var dX:Float = cp.entity.transform.getAbsVx() - absVX;
+			var dY:Float = cp.entity.transform.getAbsVy() - absVY;
 			
 			if ( dataActivated )
 			{
@@ -293,7 +298,7 @@ class ContactBodies
 	 */
 	function calculateChainReaction( dataList:Array<ContactBodiesData> ):Void
 	{
-		clearArray( all );
+		ArrayUtils.clear( all );
 		for ( data in dataList )
 		{
 			if ( PhysShapeUtils.hitTest( parent.shape, data.body.shape ) )
@@ -331,10 +336,18 @@ class ContactBodies
 			{
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
 				
-				parent.entity.transform.vX = 0;//body.entity.transform.vX;
-				parent.entity.transform.vY = 0;//body.entity.transform.vY;
-				parent.entity.transform.x += body.entity.transform.vX;
-				parent.entity.transform.y += body.entity.transform.vY;
+				if ( parent.entity.attachedTo.indexOf( body.entity ) < 0 )
+				{
+					parent.entity.attachedTo.push( body.entity );
+				}
+				
+				//parent.entity.transform.vX += body.entity.transform.vX;
+				if ( parent.entity.transform.vY > body.entity.transform.vY )
+				{
+					parent.entity.transform.vY = body.entity.transform.vY;
+				}
+				//parent.entity.transform.x += body.entity.transform.vX;
+				//parent.entity.transform.y += body.entity.transform.vY;
 			}
 			else if (	reac == TOP &&
 						body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
@@ -348,10 +361,16 @@ class ContactBodies
 				parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
 				//parent.entity.transform.vX = body.entity.transform.vX;
 				
-				parent.entity.transform.vX = 0;//body.entity.transform.vX;
-				parent.entity.transform.vY = 0;//body.entity.transform.vY;
-				parent.entity.transform.x += body.entity.transform.vX;
-				parent.entity.transform.y += body.entity.transform.vY;
+				//parent.entity.transform.vX = 0;
+				//parent.entity.transform.vY = body.entity.transform.vY;
+				
+				if ( parent.entity.transform.vX > body.entity.transform.vX )
+				{
+					parent.entity.transform.vX = body.entity.transform.vX;
+				}
+				
+				//parent.entity.transform.x += body.entity.transform.vX;
+				//parent.entity.transform.y += body.entity.transform.vY;
 			}
 			else if ( 	reac == LEFT &&
 						body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
@@ -359,23 +378,26 @@ class ContactBodies
 				parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
 				//parent.entity.transform.vX = body.entity.transform.vX;
 				
-				parent.entity.transform.vX = 0;//body.entity.transform.vX;
-				parent.entity.transform.vY = 0;//body.entity.transform.vY;
-				parent.entity.transform.x += body.entity.transform.vX;
-				parent.entity.transform.y += body.entity.transform.vY;
+				//parent.entity.transform.vX = 0;
+				//parent.entity.transform.vY = body.entity.transform.vY;
+				
+				if ( parent.entity.transform.vX < body.entity.transform.vX )
+				{
+					parent.entity.transform.vX = body.entity.transform.vX;
+				}
 			}
 		}
 		
 		
 	}
 	
-	private inline function clearArray( arr:Array<Dynamic> ):Void
+	/*private inline function clearArray( arr:Array<Dynamic> ):Void
 	{
         #if (cpp||php)
            arr.splice(0,arr.length);          
         #else
            untyped arr.length = 0;
         #end
-    }
+    }*/
 	
 }

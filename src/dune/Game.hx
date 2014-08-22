@@ -2,10 +2,10 @@ package dune;
 
 import dune.compBasic.CompTransform;
 import dune.entities.Entity;
+import dune.models.inputs.CompKeyboard;
 import dune.models.inputs.InputGravity;
 import dune.models.inputs.InputMobile;
 import dune.system.graphic.components.CompDisplay2dSprite;
-import dune.system.input.components.CompKeyboard;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
 import dune.system.physic.shapes.PhysShapeRect;
@@ -110,21 +110,13 @@ class Game
 			// Keyboard
 			
 				var i3:CompKeyboard = new CompKeyboard();
-				//i3.onTop = 		function ( e:Entity ):Void 	{ e.transform.vY = -5; }
-				i3.onRight = function ( e:Entity ):Void 
-				{
-					//var vGround:Float = (b3.contacts.bottom.length > 0)?b3.contacts.bottom[0].entity.transform.vX:0;
-					e.transform.vX = 5 /*+ vGround*/;
-				}
-				//i3.onBottom = 	function ( e:Entity ):Void 	{ e.transform.y += 5; }
-				i3.onLeft = function ( e:Entity ):Void 
-				{
-					//var vGround:Float = (b3.contacts.bottom.length > 0)?b3.contacts.bottom[0].entity.transform.vX:0;
-					e.transform.vX = /*vGround*/ - 5;
-				}
+				i3.groundVX = 5;
 				e3.addInput( i3 );
 				
 		systemManager.addEntity( e3 );
+		
+		
+		
 		
 		systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );
 		systemManager.refresh(0);

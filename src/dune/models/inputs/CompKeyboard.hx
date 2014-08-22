@@ -1,6 +1,8 @@
-package dune.system.input.components;
+package dune.models.inputs;
 import dune.entities.Entity;
+import dune.helpers.core.ArrayUtils;
 import dune.helpers.keyboard.KeyboardHandler;
+import dune.system.input.components.CompInput;
 import flash.ui.Keyboard;
 
 /**
@@ -15,11 +17,7 @@ class CompKeyboard extends CompInput
 	public var keyBottom(default, default):UInt = Keyboard.DOWN;
 	public var keyAction(default, default):UInt = Keyboard.SPACE;
 	
-	public dynamic function onLeft(entity:Entity):Void { };
-	public dynamic function onTop(entity:Entity):Void { };
-	public dynamic function onRight(entity:Entity):Void { };
-	public dynamic function onBottom(entity:Entity):Void { };
-	public dynamic function onAction(entity:Entity):Void { };
+	public var groundVX(default, default):Float = 5;
 	
 	public function new() 
 	{
@@ -37,11 +35,16 @@ class CompKeyboard extends CompInput
 	{
 		var kh:KeyboardHandler = KeyboardHandler.getInstance();
 		
-		if ( kh.getKeyPressed( keyLeft ) ) 		{ onLeft(entity); }
-		if ( kh.getKeyPressed( keyRight ) ) 	{ onRight(entity); }
-		if ( kh.getKeyPressed( keyTop ) ) 		{ onTop(entity); }
-		if ( kh.getKeyPressed( keyBottom ) ) 	{ onBottom(entity); }
-		if ( kh.getKeyPressed( keyAction ) ) 	{ onAction(entity); }
+		
+		if ( kh.getKeyPressed( keyLeft ) ) 			{ entity.transform.vX = -groundVX; }
+		else if ( kh.getKeyPressed( keyRight ) ) 	{ entity.transform.vX = groundVX; }
+		else 										{ entity.transform.vX = 0; }
+		
+		/*if ( kh.getKeyPressed( keyTop ) ) 			{ onTop(entity); }
+		else if ( kh.getKeyPressed( keyBottom ) ) 	{ onBottom(entity); }
+		else 										{ offTop(entity); }*/
+		
+		
 	}
 	
 	public override function clear():Void

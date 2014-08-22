@@ -18,7 +18,7 @@ class CompDisplay2dAnim implements ComponentDisplay, ComponentAnim
 	
 	public function new( graphic:Anim ) 
 	{
-		type = ComponentType.DISPLAY_2D;
+		type = ComponentType.DISPLAY_2D | ComponentType.ANIMATION;
 		_graphic = graphic;
 	}
 

@@ -1,4 +1,4 @@
-package dune.system.graphic.components;
+package dune.compBasic;
 
 /**
  * @author Namide

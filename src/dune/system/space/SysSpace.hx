@@ -1,5 +1,6 @@
 package dune.system.space;
 
+import dune.helpers.core.ArrayUtils;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
 import dune.system.physic.shapes.PhysShapeUtils;
@@ -63,7 +64,7 @@ class SysSpace
 	 */
 	public function refreshGrid():Void 
 	{
-		clear( _grid );
+		ArrayUtils.clear( _grid );
 		
 		for ( physBody in _passive )
 		{
@@ -215,12 +216,12 @@ class SysSpace
 		}
 	}
 	
-	private inline function clear( arr:Array<Dynamic> ):Void
+	/*private inline function clear( arr:Array<Dynamic> ):Void
 	{
         #if (cpp||php)
            arr.splice(0,arr.length);          
         #else
            untyped arr.length = 0;
         #end
-    }
+    }*/
 }

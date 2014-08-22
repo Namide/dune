@@ -2,6 +2,7 @@ package dune.system.physic.components;
 
 import dune.compBasic.ComponentBasic;
 import dune.entities.Entity;
+import dune.helpers.core.ArrayUtils;
 import dune.system.physic.shapes.PhysShapePoint;
 
 /**
@@ -41,6 +42,7 @@ class CompBody implements ComponentBasic
 	public function new() 
 	{
 		contacts = new ContactBodies( this );
+		onCollide = [];
 		clear();
 	}
 	
@@ -50,7 +52,7 @@ class CompBody implements ComponentBasic
 		typeOfSolid = 0;
 		
 		contacts.clear();
-		onCollide = [];
+		ArrayUtils.clear( onCollide );
 		entity = null;
 		shape = null;
 	}

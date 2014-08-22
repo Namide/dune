@@ -1,5 +1,6 @@
 package dune.system;
 import dune.entities.Entity;
+import dune.helpers.core.ArrayUtils;
 import dune.system.graphic.SysGraphic;
 import dune.system.input.SysInput;
 import dune.system.physic.SysPhysic;
@@ -78,14 +79,13 @@ class SysManager
 		while ( rest >= FRAME_DELAY )
 		{
 			sysInput.refresh( FRAME_DELAY );
+			sysPhysic.refresh( FRAME_DELAY );
 			
 			for ( e in _entitiesVelocity )
 			{
-				e.transform.x += e.transform.vX;
-				e.transform.y += e.transform.vY;
+				e.transform.x += e.transform.getAbsVx();
+				e.transform.y += e.transform.getAbsVy();				
 			}
-			
-			sysPhysic.refresh( FRAME_DELAY );
 			rest -= FRAME_DELAY;
 		}
 		

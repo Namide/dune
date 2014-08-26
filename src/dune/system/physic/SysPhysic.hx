@@ -1,7 +1,7 @@
 package dune.system.physic;
 
 import dune.system.physic.components.CompBody;
-import dune.system.space.SysSpace;
+import dune.system.core.SysSpace;
 
 /**
  * ...

@@ -1,4 +1,4 @@
-package dune.system.space;
+package dune.system.core ;
 
 import dune.helpers.core.ArrayUtils;
 import dune.system.physic.components.CompBody;

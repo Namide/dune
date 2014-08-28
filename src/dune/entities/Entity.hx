@@ -17,7 +17,7 @@ class Entity
 	
 	public var inputs(default, null):Array<CompInput>;
 	public var bodies(default, null):Array<CompBody>;
-	public var attachedTo(default, null):Array<Entity>;
+	//public var attachedTo(default, null):Array<Entity>;
 	
 	public var display(default, default):ComponentDisplay;
 	
@@ -35,12 +35,12 @@ class Entity
 		
 		if ( inputs == null ) { inputs = []; }
 		if ( bodies == null ) { bodies = []; }
-		if ( attachedTo == null ) { attachedTo = []; }
+		//if ( attachedTo == null ) { attachedTo = []; }
 		
 		for ( input in inputs )	{ input.clear(); }
 		for ( body in bodies ) 	{ body.clear(); }
 		
-		ArrayUtils.clear( attachedTo );
+		//ArrayUtils.clear( attachedTo );
 	}
 	
 	public function addBody( body:CompBody ):Void

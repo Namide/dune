@@ -1,6 +1,7 @@
 package dune.system;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
+import dune.system.core.SysLink;
 import dune.system.graphic.SysGraphic;
 import dune.system.input.SysInput;
 import dune.system.physic.SysPhysic;
@@ -21,6 +22,7 @@ class SysManager
 	public var sysInput(default, default):SysInput;
 	public var sysPhysic(default, default):SysPhysic;
 	public var sysGraphic(default, default):SysGraphic;
+	public var sysLink(default, default):SysLink;
 	
 	var _time:UInt;
 	
@@ -33,6 +35,7 @@ class SysManager
 		sysInput = new SysInput();
 		sysGraphic = new SysGraphic();
 		sysPhysic = new SysPhysic();
+		sysLink = new SysLink();
 		
 		_time = Lib.getTimer();
 	}
@@ -79,13 +82,16 @@ class SysManager
 		while ( rest >= FRAME_DELAY )
 		{
 			sysInput.refresh( FRAME_DELAY );
-			sysPhysic.refresh( FRAME_DELAY );
+			sysPhysic.refresh( FRAME_DELAY, sysLink );
 			
 			for ( e in _entitiesVelocity )
 			{
-				e.transform.x += e.transform.getAbsVx();
-				e.transform.y += e.transform.getAbsVy();				
+				var vel:Array<Float> = sysLink.getAbsVel( e.transform );
+				e.transform.x += vel[0];//e.transform.getAbsVx();
+				e.transform.y += vel[1];//e.transform.getAbsVy();				
 			}
+			
+			//sysLink.refresh();
 			rest -= FRAME_DELAY;
 		}
 		

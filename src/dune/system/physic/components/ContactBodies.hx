@@ -1,5 +1,7 @@
 package dune.system.physic.components;
+import dune.compBasic.CompTransform;
 import dune.helpers.core.ArrayUtils;
+import dune.system.core.SysLink;
 import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.PhysShapeType;
@@ -87,7 +89,7 @@ class ContactBodies
 	 * Pushes the bodies in contact in the arrays :
 	 * top, left, right and bottom
 	 */
-	public function moveAndDispatch():Void
+	public function moveAndDispatch( link:SysLink ):Void
 	{
 		if ( length() < 0 )
 		{
@@ -98,14 +100,20 @@ class ContactBodies
 		
 		var dataActivated:Bool = all.length > 1;
 		
-		var absVX:Float = parent.entity.transform.getAbsVx();
-		var absVY:Float = parent.entity.transform.getAbsVy();
-		ArrayUtils.clear( parent.entity.attachedTo );
+		
+		var absVX:Float = parent.entity.transform.vX;
+		var absVY:Float = parent.entity.transform.vY;
+		
+		var vel:Array<Float> = link.getAbsVel( parent.entity.transform );
+		var absVX:Float = vel[0];
+		var absVY:Float = vel[1];
+		//ArrayUtils.clear( parent.entity.attachedTo );
+		link.removeParent( parent.entity.transform );
 		
 		for ( cp in all )
 		{
-			var dX:Float = cp.entity.transform.getAbsVx() - absVX;
-			var dY:Float = cp.entity.transform.getAbsVy() - absVY;
+			var dX:Float = cp.entity.transform.vX - absVX;//parent.entity.transform.vX;
+			var dY:Float = cp.entity.transform.vY - absVY;//parent.entity.transform.vY;
 			
 			if ( dataActivated )
 			{
@@ -122,7 +130,7 @@ class ContactBodies
 				else if ( reac == RIGHT ) 	{ right.push( cp ); }
 				else if ( reac == LEFT ) 	{ left.push( cp ); }
 				
-				return calculateReaction( cp, reac );
+				return calculateReaction( cp, reac, link );
 			}
 			
 		}
@@ -134,7 +142,7 @@ class ContactBodies
 				if ( a.dist > b.dist ) { return 1; }
 				return -1;
 			});
-			calculateChainReaction( allDatas );
+			calculateChainReaction( allDatas, link );
 		}
 	}	
 	
@@ -296,14 +304,14 @@ class ContactBodies
 	 * 
 	 * @param	dataList
 	 */
-	function calculateChainReaction( dataList:Array<ContactBodiesData> ):Void
+	function calculateChainReaction( dataList:Array<ContactBodiesData>, link:SysLink ):Void
 	{
 		ArrayUtils.clear( all );
 		for ( data in dataList )
 		{
 			if ( PhysShapeUtils.hitTest( parent.shape, data.body.shape ) )
 			{
-				calculateReaction( data.body, data.reac );
+				calculateReaction( data.body, data.reac, link );
 				
 				if 		( data.reac == BOTTOM ) { bottom.push( data.body ); }
 				else if ( data.reac == TOP ) 	{ top.push( data.body ); }
@@ -315,7 +323,7 @@ class ContactBodies
 		}
 	}
 	
-	function calculateReaction( body:CompBody, reac:Int ):Void
+	function calculateReaction( body:CompBody, reac:Int, link:SysLink ):Void
 	{
 		
 		if ( parent.typeOfSolid == CompBodyType.SOLID_TYPE_EATER &&
@@ -335,19 +343,19 @@ class ContactBodies
 					  body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL ) )
 			{
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
-				
-				if ( parent.entity.attachedTo.indexOf( body.entity ) < 0 )
+				if ( !link.has( body.entity.transform, parent.entity.transform ) )
+				{
+					link.add( body.entity.transform, parent.entity.transform, SysLink.TYPE_TOP );
+				}
+				/*if ( parent.entity.attachedTo.indexOf( body.entity ) < 0 )
 				{
 					parent.entity.attachedTo.push( body.entity );
-				}
+				}*/
 				
-				//parent.entity.transform.vX += body.entity.transform.vX;
 				if ( parent.entity.transform.vY > body.entity.transform.vY )
 				{
 					parent.entity.transform.vY = body.entity.transform.vY;
 				}
-				//parent.entity.transform.x += body.entity.transform.vX;
-				//parent.entity.transform.y += body.entity.transform.vY;
 			}
 			else if (	reac == TOP &&
 						body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
@@ -359,28 +367,15 @@ class ContactBodies
 						body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
 			{
 				parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
-				//parent.entity.transform.vX = body.entity.transform.vX;
-				
-				//parent.entity.transform.vX = 0;
-				//parent.entity.transform.vY = body.entity.transform.vY;
-				
 				if ( parent.entity.transform.vX > body.entity.transform.vX )
 				{
 					parent.entity.transform.vX = body.entity.transform.vX;
 				}
-				
-				//parent.entity.transform.x += body.entity.transform.vX;
-				//parent.entity.transform.y += body.entity.transform.vY;
 			}
 			else if ( 	reac == LEFT &&
 						body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
 			{
 				parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
-				//parent.entity.transform.vX = body.entity.transform.vX;
-				
-				//parent.entity.transform.vX = 0;
-				//parent.entity.transform.vY = body.entity.transform.vY;
-				
 				if ( parent.entity.transform.vX < body.entity.transform.vX )
 				{
 					parent.entity.transform.vX = body.entity.transform.vX;

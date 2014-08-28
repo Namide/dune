@@ -37,7 +37,7 @@ class CompTransform implements ComponentBasic
 	 */
 	public var vY(default, default):Float;
 	
-	public function getAbsVx():Float
+	/*public function getAbsVx():Float
 	{
 		var v:Float = vX;
 		for ( e in entity.attachedTo )
@@ -54,7 +54,7 @@ class CompTransform implements ComponentBasic
 			v += e.transform.vY;
 		}
 		return v;
-	}
+	}*/
 	
 	/**
 	 * X-axis position

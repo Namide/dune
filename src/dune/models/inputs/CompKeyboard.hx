@@ -18,6 +18,7 @@ class CompKeyboard extends CompInput
 	public var keyAction(default, default):UInt = Keyboard.SPACE;
 	
 	public var groundVX(default, default):Float = 5;
+	public var jumpVY(default, default):Float = 20;
 	
 	public function new() 
 	{
@@ -39,6 +40,9 @@ class CompKeyboard extends CompInput
 		if ( kh.getKeyPressed( keyLeft ) ) 			{ entity.transform.vX = -groundVX; }
 		else if ( kh.getKeyPressed( keyRight ) ) 	{ entity.transform.vX = groundVX; }
 		else 										{ entity.transform.vX = 0; }
+		
+		if ( kh.getKeyPressed( keyAction ) ) 		{ entity.transform.vY = -groundVX; }
+		
 		
 		/*if ( kh.getKeyPressed( keyTop ) ) 			{ onTop(entity); }
 		else if ( kh.getKeyPressed( keyBottom ) ) 	{ onBottom(entity); }

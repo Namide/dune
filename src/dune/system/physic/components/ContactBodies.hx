@@ -345,7 +345,7 @@ class ContactBodies
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
 				if ( !link.has( body.entity.transform, parent.entity.transform ) )
 				{
-					link.add( body.entity.transform, parent.entity.transform, SysLink.TYPE_TOP );
+					link.add( body.entity.transform, parent.entity.transform, SysLink.TYPE_TOP, false );
 				}
 				/*if ( parent.entity.attachedTo.indexOf( body.entity ) < 0 )
 				{

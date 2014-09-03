@@ -9,7 +9,7 @@
     <movie width="800" />
     <movie height="600" />
     <movie version="11" />
-    <movie minorVersion="6" />
+    <movie minorVersion="8" />
     <movie platform="Flash Player" />
     <movie background="#FFFFFF" />
   </output>
@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
-    <option additional="-D resourcesPath=assets&#xA;-lib h3d" />
+    <option additional="-D resourcesPath=assets&#xA;-lib heaps" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -50,7 +50,7 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Default" />
-    <option testMovieCommand="" />
+    <option testMovieCommand=" start  D:\damien\_sdk\flashplayer bin/dune.swf" />
   </options>
   <!-- Plugin storage -->
   <storage />

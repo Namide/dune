@@ -7,12 +7,14 @@ class Link
 	public var type(default, default):UInt;
 	public var parent(default, default):CompTransform;
 	public var child(default, default):CompTransform;
+	public var lasting(default, default):Bool;
 	
-	public function new( parent:CompTransform, child:CompTransform, type:UInt ) 
+	public function new( parent:CompTransform, child:CompTransform, type:UInt, lasting:Bool ) 
 	{
 		this.type = type;
 		this.parent = parent;
 		this.child = child;
+		this.lasting = lasting;
 	}
 	
 }
@@ -37,9 +39,9 @@ class SysLink
 		_links = [];
 	}
 	
-	public inline function add( parent:CompTransform, child:CompTransform, type:UInt ):Void
+	public inline function add( parent:CompTransform, child:CompTransform, type:UInt, lasting:Bool ):Void
 	{
-		_links.push( new Link( parent, child, type ) );
+		_links.push( new Link( parent, child, type, lasting ) );
 	}
 	
 	private inline function getChilds( parent:CompTransform ):List<Link>
@@ -55,6 +57,15 @@ class SysLink
 	public inline function has( parent:CompTransform, child:CompTransform ):Bool
 	{
 		return Lambda.exists(_links, function(l:Link):Bool { return (l.parent == parent && l.child == child ); } );
+	}
+	
+	public inline function clean():Void
+	{
+		var i:Int = _links.length;
+		while ( --i > -1 )
+		{
+			if ( !_links[i].lasting ) _links.splice( i, 1 );
+		}
 	}
 	
 	public inline function hasChild( parent:CompTransform ):Bool

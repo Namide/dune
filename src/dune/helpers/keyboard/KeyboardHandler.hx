@@ -3,7 +3,6 @@ package dune.helpers.keyboard;
 import flash.display.Stage;
 import flash.errors.Error;
 import flash.events.KeyboardEvent;
-import flash.utils.Function;
 
 /**
  * Gestionnaire d'interaction avec le clavier.
@@ -20,7 +19,7 @@ class KeyboardHandler
 	private var _listKeyPressed:Array<UInt>;
 	
 	private var _listKeyCodeHandler:Array<UInt>;
-	private var _listCallbackHandler:Array<Function>;
+	private var _listCallbackHandler:Array<Void->Void>;
 	private var _stage:Stage;
 	
 	public function new() 
@@ -39,7 +38,7 @@ class KeyboardHandler
 		_stage.addEventListener( KeyboardEvent.KEY_UP, keyUp );
 	}
 	
-	public function addCallback( keyCode:UInt, pCallback:Function ):Void
+	public function addCallback( keyCode:UInt, pCallback:Void->Void ):Void
 	{
 		_listCallbackHandler.push(pCallback);
 		_listKeyCodeHandler.push(keyCode);

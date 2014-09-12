@@ -13,7 +13,6 @@ import flash.Lib;
 
 class Main 
 {
-	
 	static var game:Game;
 	
 	static function main() 

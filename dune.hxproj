@@ -34,10 +34,6 @@
   <compileTargets>
     <compile path="src\Main.hx" />
   </compileTargets>
-  <!-- Assets to embed into the output SWF -->
-  <library>
-    <asset path="assets\ressources.swc" />
-  </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
     <hidden path="obj" />
@@ -49,8 +45,8 @@
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
-    <option testMovie="Default" />
-    <option testMovieCommand="" />
+    <option testMovie="Unknown" />
+    <option testMovieCommand=" start  D:\damien\_sdk\flashplayer bin/dune.swf" />
   </options>
   <!-- Plugin storage -->
   <storage />

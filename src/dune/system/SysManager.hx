@@ -86,10 +86,12 @@ class SysManager
 			
 			for ( e in _entitiesVelocity )
 			{
+				//trace( sysLink.hasParent(e.transform) );
 				var vel:Array<Float> = sysLink.getAbsVel( e.transform );
 				e.transform.x += vel[0];//e.transform.getAbsVx();
 				e.transform.y += vel[1];//e.transform.getAbsVy();				
 			}
+			sysLink.clean();
 			
 			//sysLink.refresh();
 			rest -= FRAME_DELAY;

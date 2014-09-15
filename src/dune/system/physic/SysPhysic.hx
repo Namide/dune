@@ -3,8 +3,11 @@ package dune.system.physic;
 import dune.system.core.SysLink;
 import dune.system.physic.components.CompBody;
 import dune.system.core.SysSpace;
-import flash.display.Sprite;
-import flash.Lib;
+
+#if (debugHitbox && flash)
+	import flash.display.Sprite;
+	import flash.Lib;
+#end
 
 /**
  * ...
@@ -17,7 +20,7 @@ class SysPhysic
 	 */
 	public var space(default, null):SysSpace;
 	
-	#if debugHitbox
+	#if (debugHitbox && flash)
 		var _sceneHitBox:Sprite;
 	#end
 	
@@ -25,7 +28,7 @@ class SysPhysic
 	{
 		space = new SysSpace();
 		
-		#if debugHitbox
+		#if (debugHitbox && flash)
 			_sceneHitBox = new Sprite();
 			Lib.current.stage.addChild( _sceneHitBox );
 		#end
@@ -40,7 +43,7 @@ class SysPhysic
 			b.contacts.moveAndDispatch( link );
 		}
 		
-		#if debugHitbox
+		#if (debugHitbox && flash)
 		
 			_sceneHitBox.graphics.clear();
 			

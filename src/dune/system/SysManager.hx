@@ -1,11 +1,22 @@
 package dune.system;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
+import dune.helpers.core.TimeUtil;
 import dune.system.core.SysLink;
 import dune.system.graphic.SysGraphic;
 import dune.system.input.SysInput;
 import dune.system.physic.SysPhysic;
-import flash.Lib;
+
+#if (debugHitbox && flash)
+
+	import flash.Lib;
+	
+#elseif js
+
+	import js.Lib;
+
+#end
+
 
 /**
  * ...
@@ -37,7 +48,11 @@ class SysManager
 		sysPhysic = new SysPhysic();
 		sysLink = new SysLink();
 		
-		_time = Lib.getTimer();
+		#if flash
+			_time = Lib.getTimer();
+		#elseif js
+			Date.now().getTime();
+		#end
 	}
 	
 	public function addEntity( entity:Entity ):Void
@@ -70,7 +85,7 @@ class SysManager
 	
 	public function refresh(dt:Float):Void 
 	{
-		var realTime:UInt = Lib.getTimer();
+		var realTime:UInt = TimeUtil.getTime();
 		var rest:UInt = realTime - _time;
 		
 		if ( rest < FRAME_DELAY )

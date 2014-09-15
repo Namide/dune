@@ -1,9 +1,20 @@
 package dune.helpers.keyboard;
 
-import flash.display.Stage;
-import flash.errors.Error;
-import flash.events.KeyboardEvent;
-import flash.Lib;
+
+
+
+#if flash
+
+	import flash.display.Stage;
+	import flash.events.KeyboardEvent;
+	import flash.Lib;
+	
+#elseif js
+
+	import js.html.KeyboardEvent;
+	
+#end
+
 
 /**
  * Gestionnaire d'interaction avec le clavier.
@@ -25,7 +36,7 @@ class KeyboardHandler
 	
 	public function new() 
 	{
-		if (_CAN_INSTANTIATE = false) throw new Error( "You can't instancies a singleton, you must use the static method getInstance()" );
+		if (_CAN_INSTANTIATE = false) throw "You can't instancies a singleton, you must use the static method getInstance()";
 		
 		_listKeyPressed = [];
 		_listKeyCodeHandler = [];

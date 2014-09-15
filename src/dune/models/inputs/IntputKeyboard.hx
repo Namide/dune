@@ -3,7 +3,16 @@ import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
 import dune.helpers.keyboard.KeyboardHandler;
 import dune.system.input.components.CompInput;
-import flash.ui.Keyboard;
+
+
+
+#if flash
+
+	import flash.ui.Keyboard;
+	
+#elseif js
+	
+#end
 
 /**
  * @author Namide

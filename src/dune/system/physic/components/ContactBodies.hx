@@ -347,10 +347,6 @@ class ContactBodies
 				{
 					link.add( body.entity.transform, parent.entity.transform, SysLink.TYPE_TOP, false );
 				}
-				/*if ( parent.entity.attachedTo.indexOf( body.entity ) < 0 )
-				{
-					parent.entity.attachedTo.push( body.entity );
-				}*/
 				
 				if ( parent.entity.transform.vY > body.entity.transform.vY )
 				{

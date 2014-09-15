@@ -3,7 +3,10 @@ package dune.system.physic.components;
 import dune.compBasic.ComponentBasic;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
+import dune.system.physic.shapes.PhysShapeCircle;
 import dune.system.physic.shapes.PhysShapePoint;
+import dune.system.physic.shapes.PhysShapeType;
+import flash.display.Sprite;
 
 /**
  * ...
@@ -56,4 +59,39 @@ class CompBody implements ComponentBasic
 		entity = null;
 		shape = null;
 	}
+	
+	#if debugHitbox
+	
+		public function draw(scene:Sprite):Void
+		{
+			scene.graphics.lineStyle( 1, (typeOfSolid == CompBodyType.COLLISION_TYPE_ACTIVE) ? 0xFF0000 : 0x0000FF );
+			
+			if ( shape.type == PhysShapeType.POINT )
+			{
+				scene.graphics.moveTo( shape.aabbXMin - 5, shape.aabbYMin - 5 );
+				scene.graphics.lineTo( shape.aabbXMax + 5, shape.aabbYMax + 5 );
+				scene.graphics.endFill();
+				
+				scene.graphics.moveTo( shape.aabbXMax + 5, shape.aabbYMin - 5 );
+				scene.graphics.lineTo( shape.aabbXMin + 5, shape.aabbYMax + 5 );
+				scene.graphics.endFill();
+			}
+			else if ( shape.type == PhysShapeType.RECT )
+			{
+				scene.graphics.drawRect( 	shape.aabbXMin,
+											shape.aabbYMin,
+											shape.aabbXMax - shape.aabbXMin,
+											shape.aabbYMax - shape.aabbYMin );
+			}
+			else if ( shape.type == PhysShapeType.CIRCLE )
+			{
+				scene.graphics.drawCircle( 	(shape.aabbXMax - shape.aabbXMin) * 0.5 + shape.aabbXMin,
+											(shape.aabbYMax - shape.aabbYMin) * 0.5 + shape.aabbYMin,
+											cast( shape, PhysShapeCircle ).r );
+			}
+			
+			
+		}
+		
+	#end
 }

@@ -3,6 +3,7 @@ package dune.helpers.keyboard;
 import flash.display.Stage;
 import flash.errors.Error;
 import flash.events.KeyboardEvent;
+import flash.Lib;
 
 /**
  * Gestionnaire d'interaction avec le clavier.
@@ -20,7 +21,7 @@ class KeyboardHandler
 	
 	private var _listKeyCodeHandler:Array<UInt>;
 	private var _listCallbackHandler:Array<Void->Void>;
-	private var _stage:Stage;
+	//private var _stage:Stage;
 	
 	public function new() 
 	{
@@ -29,13 +30,10 @@ class KeyboardHandler
 		_listKeyPressed = [];
 		_listKeyCodeHandler = [];
 		_listCallbackHandler = [];
-	}
-	
-	public function init(stage:Stage):Void
-	{
-		_stage = stage;
-		_stage.addEventListener( KeyboardEvent.KEY_DOWN, keyDown );
-		_stage.addEventListener( KeyboardEvent.KEY_UP, keyUp );
+		
+		
+		Lib.current.stage.addEventListener( KeyboardEvent.KEY_DOWN, keyDown );
+		Lib.current.stage.addEventListener( KeyboardEvent.KEY_UP, keyUp );
 	}
 	
 	public function addCallback( keyCode:UInt, pCallback:Void->Void ):Void
@@ -84,8 +82,8 @@ class KeyboardHandler
 	
 	public function dispose():Void
 	{
-		_stage.removeEventListener( KeyboardEvent.KEY_DOWN, keyDown );
-		_stage.removeEventListener( KeyboardEvent.KEY_UP, keyUp );
+		Lib.current.stage.removeEventListener( KeyboardEvent.KEY_DOWN, keyDown );
+		Lib.current.stage.removeEventListener( KeyboardEvent.KEY_UP, keyUp );
 		
 		_listKeyPressed = [];
 		_listKeyCodeHandler = [];

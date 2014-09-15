@@ -9,7 +9,7 @@
     <movie width="800" />
     <movie height="600" />
     <movie version="11" />
-    <movie minorVersion="6" />
+    <movie minorVersion="8" />
     <movie platform="Flash Player" />
     <movie background="#FFFFFF" />
   </output>
@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
-    <option additional="-D resourcesPath=assets&#xA;-lib heaps" />
+    <option additional="-D resourcesPath=assets&#xA;-lib heaps&#xA;-D debugHitbox=1" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -34,6 +34,10 @@
   <compileTargets>
     <compile path="src\Main.hx" />
   </compileTargets>
+  <!-- Assets to embed into the output SWF -->
+  <library>
+    <!-- example: <asset path="..." id="..." update="..." glyphs="..." mode="..." place="..." sharepoint="..." /> -->
+  </library>
   <!-- Paths to exclude from the Project Explorer tree -->
   <hiddenPaths>
     <hidden path="obj" />
@@ -45,7 +49,7 @@
   <!-- Other project options -->
   <options>
     <option showHiddenPaths="False" />
-    <option testMovie="Unknown" />
+    <option testMovie="Default" />
     <option testMovieCommand=" start  D:\damien\_sdk\flashplayer bin/dune.swf" />
   </options>
   <!-- Plugin storage -->

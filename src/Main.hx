@@ -21,13 +21,15 @@ class Main
 		stage.scaleMode = StageScaleMode.NO_SCALE;
 		stage.align = StageAlign.TOP_LEFT;
 		
-		/*#if hitbox
+		/*#if debugHitbox
 			trace("hitbox");
 		#else
 			trace("no hitbox");
 		#end*/
 		
-		KeyboardHandler.getInstance().init( stage );
+		trace( Lib.current.stage );
+		
+		//KeyboardHandler.getInstance().init( stage );
 		game = new Game();
 	}
 	

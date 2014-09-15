@@ -36,5 +36,4 @@ class PhysShapePoint
 		aabbYMin =
 		aabbYMax = pe.y - anchorY;
 	}
-	
 }

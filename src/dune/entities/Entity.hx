@@ -19,7 +19,14 @@ class Entity
 	public var bodies(default, null):Array<CompBody>;
 	//public var attachedTo(default, null):Array<Entity>;
 	
-	public var display(default, default):ComponentDisplay;
+	public var display(default, set):ComponentDisplay;
+	private function set_display( cd:ComponentDisplay ):ComponentDisplay
+	{
+		//transform.moved = true;
+		cd.setX( transform.x );
+		cd.setY( transform.y );
+		return display = cd;
+	}
 	
 	public function new() 
 	{

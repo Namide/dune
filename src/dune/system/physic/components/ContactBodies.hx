@@ -18,8 +18,6 @@ class ContactBodiesData
 	{
 		body = compBody;
 	}
-	
-	
 }
 
 /**
@@ -97,23 +95,17 @@ class ContactBodies
 		}
 		
 		var allDatas:Array<ContactBodiesData> = new Array<ContactBodiesData>();
-		
 		var dataActivated:Bool = all.length > 1;
-		
 		
 		var absVX:Float = parent.entity.transform.vX;
 		var absVY:Float = parent.entity.transform.vY;
 		
-		var vel:Array<Float> = link.getAbsVel( parent.entity.transform );
-		var absVX:Float = vel[0];
-		var absVY:Float = vel[1];
-		//ArrayUtils.clear( parent.entity.attachedTo );
-		link.removeParent( parent.entity.transform );
+		link.removeChild( parent.entity.transform );
 		
 		for ( cp in all )
 		{
-			var dX:Float = cp.entity.transform.vX - absVX;//parent.entity.transform.vX;
-			var dY:Float = cp.entity.transform.vY - absVY;//parent.entity.transform.vY;
+			var dX:Float = cp.entity.transform.vX - absVX;
+			var dY:Float = cp.entity.transform.vY - absVY;
 			
 			if ( dataActivated )
 			{

@@ -19,10 +19,6 @@ class SysGraphic
 		engine = new h3d.Engine();
 		engine.onReady = init;
 		engine.init();
-		
-		
-		
-		
 	}
 	
 	function init()

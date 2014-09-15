@@ -8,7 +8,7 @@ import flash.ui.Keyboard;
 /**
  * @author Namide
  */
-class CompKeyboard extends CompInput
+class IntputKeyboard extends CompInput
 {
 
 	public var keyLeft(default, default):UInt = Keyboard.LEFT;
@@ -23,7 +23,7 @@ class CompKeyboard extends CompInput
 	public function new() 
 	{
 		super();
-		
+		priority = false;
 	}
 	
 	override function set_entity(value:Entity):Entity 
@@ -37,9 +37,10 @@ class CompKeyboard extends CompInput
 		var kh:KeyboardHandler = KeyboardHandler.getInstance();
 		
 		
+		
 		if ( kh.getKeyPressed( keyLeft ) ) 			{ entity.transform.vX = -groundVX; }
 		else if ( kh.getKeyPressed( keyRight ) ) 	{ entity.transform.vX = groundVX; }
-		else 										{ entity.transform.vX = 0; }
+		else										{ entity.transform.vX = 0; }
 		
 		if ( kh.getKeyPressed( keyAction ) ) 		{ entity.transform.vY = -groundVX; }
 		

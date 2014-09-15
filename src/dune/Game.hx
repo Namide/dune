@@ -2,7 +2,8 @@ package dune;
 
 import dune.compBasic.CompTransform;
 import dune.entities.Entity;
-import dune.models.inputs.CompKeyboard;
+import dune.helpers.entity.EntityFact;
+import dune.models.inputs.IntputKeyboard;
 import dune.models.inputs.InputGravity;
 import dune.models.inputs.InputMobile;
 import dune.system.graphic.components.CompDisplay2dSprite;
@@ -37,20 +38,23 @@ class Game
 	
 	public function run()
 	{
-		
-		_entity1 = new Entity();
-		var spr = new h2d.Sprite( systemManager.sysGraphic.s2d );
 		var tile = hxd.Res.mainChar128x128.toTile();
+		
+		
+		
+		// MOBILE LINEAR
+		/*_entity1 = new Entity();
+		var spr = new h2d.Sprite( systemManager.sysGraphic.s2d );
 		var bmp = new h2d.Bitmap(tile, spr);
 		var i:InputMobile = new InputMobile();
 		i.initX( InputMobile.TYPE_LINEAR, 50, 100, 1000 );
 		_entity1.addInput( i );
 		_entity1.display = new CompDisplay2dSprite( spr );
-		systemManager.addEntity( _entity1 );
+		systemManager.addEntity( _entity1 );*/
 		
 		
 		
-		
+		// MOBILE COS
 		var e2 = new Entity();
 		
 			// graphic
@@ -74,14 +78,14 @@ class Game
 				psr2.h = 128;
 				b2.shape = psr2;
 				b2.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
-				b2.typeOfSolid = CompBodyType.SOLID_TYPE_PLATFORM;
+				b2.typeOfSolid = CompBodyType.SOLID_TYPE_WALL;
 				e2.addBody( b2 );
 				
 		systemManager.addEntity( e2 );
 		
 		
 		
-		
+		// PLAYER
 		var e3 = new Entity();
 		
 			// graphic
@@ -90,7 +94,6 @@ class Game
 				var bmp3 = new h2d.Bitmap(tile, spr3);
 				e3.display = new CompDisplay2dSprite( spr3 );
 				
-			
 			// gravity
 			
 				var g3:InputGravity = new InputGravity();
@@ -109,13 +112,47 @@ class Game
 			
 			// Keyboard
 			
-				var i3:CompKeyboard = new CompKeyboard();
+				var i3:IntputKeyboard = new IntputKeyboard();
 				i3.groundVX = 5;
 				e3.addInput( i3 );
 				
 		systemManager.addEntity( e3 );
 		
 		
+		
+		/*
+		// STATIC GROUND
+		var e4 = new Entity();
+		
+			// graphic
+			
+				var spr4 = new h2d.Sprite( systemManager.sysGraphic.s2d );
+				var bmp4 = new h2d.Bitmap(tile, spr4);
+				e4.transform.x = 64;
+				e4.transform.y = 512;
+				e4.display = new CompDisplay2dSprite( spr4 );
+			
+			// collision
+			
+				var b4:CompBody = new CompBody();
+				var psr4:PhysShapeRect = new PhysShapeRect();
+				psr4.w = 128;
+				psr4.h = 128;
+				b4.shape = psr4;
+				b4.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
+				b4.typeOfSolid = CompBodyType.SOLID_TYPE_PLATFORM;
+				e4.addBody( b4 );
+			
+		systemManager.addEntity( e4 );
+		*/
+		
+		
+		EntityFact.addSolid( systemManager, 0, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 256, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 512, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 512+256, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
+		
+		EntityFact.addSolid( systemManager, 512, 512-128, 128, 128, CompBodyType.SOLID_TYPE_WALL );
 		
 		
 		systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );

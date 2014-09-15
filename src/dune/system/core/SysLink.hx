@@ -17,6 +17,11 @@ class Link
 		this.lasting = lasting;
 	}
 	
+	public inline function execute():Void
+	{
+		child.entity.transform.vX += parent.entity.transform.vX;
+		child.entity.transform.vY += parent.entity.transform.vY;
+	}
 }
 
 /**
@@ -64,7 +69,11 @@ class SysLink
 		var i:Int = _links.length;
 		while ( --i > -1 )
 		{
-			if ( !_links[i].lasting ) _links.splice( i, 1 );
+			if ( !_links[i].lasting )
+			{
+				_links[i].execute();
+				_links.splice( i, 1 );
+			}
 		}
 	}
 	
@@ -96,7 +105,7 @@ class SysLink
 		if ( o != null ) _links.remove( o );
 	}
 	
-	public function getAbsVel( child:CompTransform ):Array<Float>
+	/*public function getAbsVel( child:CompTransform ):Array<Float>
 	{
 		var pos:Array<Float> = [ child.vX, child.vY ];
 		if ( hasParent(child) )
@@ -108,7 +117,7 @@ class SysLink
 			}
 		}
 		return pos;
-	}
+	}*/
 	
 	/*public function refresh():Void
 	{

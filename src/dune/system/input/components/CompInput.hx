@@ -18,6 +18,11 @@ class CompInput implements ComponentBasic
 		return entity = value;
 	}
 	
+	/**
+	 * Keyboard inputs are less priority than mobiles
+	 */
+	public var priority(default, default):Bool = true;
+	
 	public var type(default, null):UInt;
 	
 	

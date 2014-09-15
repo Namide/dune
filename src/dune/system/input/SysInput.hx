@@ -9,16 +9,17 @@ import dune.system.input.components.CompInput;
 class SysInput
 {
 
-	private var _inputs:Array<CompInput>;
+	private var _inputs:List<CompInput>;
 	
 	public function new() 
 	{
-		_inputs = [];
+		_inputs = new List();
 	}
 	
 	public inline function addInput( input:CompInput ):Void
 	{
-		_inputs.push(input);
+		if ( input.priority ) 	_inputs.push( input );
+		else					_inputs.add(input);
 	}
 	
 	public inline function removeInput( input:CompInput ):Void

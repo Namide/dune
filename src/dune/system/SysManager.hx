@@ -83,17 +83,18 @@ class SysManager
 		{
 			sysInput.refresh( FRAME_DELAY );
 			sysPhysic.refresh( FRAME_DELAY, sysLink );
+			sysLink.clean();
 			
 			for ( e in _entitiesVelocity )
 			{
-				//trace( sysLink.hasParent(e.transform) );
-				var vel:Array<Float> = sysLink.getAbsVel( e.transform );
-				e.transform.x += vel[0];//e.transform.getAbsVx();
-				e.transform.y += vel[1];//e.transform.getAbsVy();				
+				/*var vel:Array<Float> = sysLink.getAbsVel( e.transform );
+				e.transform.x += vel[0];
+				e.transform.y += vel[1];	*/
+				e.transform.x += e.transform.vX;
+				e.transform.y += e.transform.vY;
 			}
-			sysLink.clean();
 			
-			//sysLink.refresh();
+			
 			rest -= FRAME_DELAY;
 		}
 		

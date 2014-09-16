@@ -124,7 +124,7 @@ class Game
 		EntityFact.addSolid( systemManager, 512, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
 		EntityFact.addSolid( systemManager, 512+256, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
 		
-		EntityFact.addSolid( systemManager, 512, 512-128, 128, 128, CompBodyType.SOLID_TYPE_WALL );
+		EntityFact.addSolid( systemManager, 512, 512-128, 128, 128, CompBodyType.SOLID_TYPE_PLATFORM );
 		
 		
 		systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );

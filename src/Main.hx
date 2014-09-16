@@ -31,7 +31,6 @@ class Main
 			trace("no hitbox");
 		#end*/
 		
-		//KeyboardHandler.getInstance().init( stage );
 		game = new Game();
 	}
 	

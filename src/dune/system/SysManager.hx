@@ -1,21 +1,11 @@
 package dune.system;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
-import dune.helpers.core.TimeUtil;
 import dune.system.core.SysLink;
 import dune.system.graphic.SysGraphic;
 import dune.system.input.SysInput;
 import dune.system.physic.SysPhysic;
-
-#if (debugHitbox && flash)
-
-	import flash.Lib;
-	
-#elseif js
-
-	import js.Lib;
-
-#end
+import flash.Lib;
 
 
 /**
@@ -48,11 +38,7 @@ class SysManager
 		sysPhysic = new SysPhysic();
 		sysLink = new SysLink();
 		
-		#if flash
-			_time = Lib.getTimer();
-		#elseif js
-			Date.now().getTime();
-		#end
+		_time = Lib.getTimer();
 	}
 	
 	public function addEntity( entity:Entity ):Void
@@ -85,7 +71,7 @@ class SysManager
 	
 	public function refresh(dt:Float):Void 
 	{
-		var realTime:UInt = TimeUtil.getTime();
+		var realTime:UInt = Lib.getTimer();
 		var rest:UInt = realTime - _time;
 		
 		if ( rest < FRAME_DELAY )
@@ -96,25 +82,27 @@ class SysManager
 		
 		while ( rest >= FRAME_DELAY )
 		{
-			sysInput.refresh( FRAME_DELAY );
+			sysInput.refresh( FRAME_DELAY, true );
 			sysPhysic.refresh( FRAME_DELAY, sysLink );
-			sysLink.clean();
+			
+			if ( rest < FRAME_DELAY + FRAME_DELAY )
+			{
+				sysGraphic.refresh( _entitiesMoved );
+				_entitiesMoved = [];
+			}
+			
+			sysInput.refresh( FRAME_DELAY, false );
+			sysLink.executeAndClean();
 			
 			for ( e in _entitiesVelocity )
 			{
-				/*var vel:Array<Float> = sysLink.getAbsVel( e.transform );
-				e.transform.x += vel[0];
-				e.transform.y += vel[1];	*/
 				e.transform.x += e.transform.vX;
 				e.transform.y += e.transform.vY;
 			}
 			
-			
 			rest -= FRAME_DELAY;
 		}
 		
-		sysGraphic.refresh( _entitiesMoved );
-		_entitiesMoved = [];
 		_time = realTime - rest;
 	}
 }

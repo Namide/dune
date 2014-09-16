@@ -19,9 +19,9 @@ class CompInput implements ComponentBasic
 	}
 	
 	/**
-	 * Keyboard inputs are less priority than mobiles
+	 * Keyboard inputs are dependant, but mobiles (
 	 */
-	public var priority(default, default):Bool = true;
+	public var beforePhysic(default, default):Bool = false;
 	
 	public var type(default, null):UInt;
 	

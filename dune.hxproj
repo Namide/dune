@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
-    <option additional="-D resourcesPath=assets&#xA;-lib heaps&#xA;-D debugHitbox=1" />
+    <option additional="-D resourcesPath=assets&#xA;-lib heaps&#xA;-D debugHitbox0" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

@@ -32,7 +32,7 @@ class IntputKeyboard extends CompInput
 	public function new() 
 	{
 		super();
-		priority = false;
+		beforePhysic = false;
 	}
 	
 	override function set_entity(value:Entity):Entity 

@@ -64,7 +64,7 @@ class SysLink
 		return Lambda.exists(_links, function(l:Link):Bool { return (l.parent == parent && l.child == child ); } );
 	}
 	
-	public inline function clean():Void
+	public inline function executeAndClean():Void
 	{
 		var i:Int = _links.length;
 		while ( --i > -1 )

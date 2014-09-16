@@ -66,8 +66,8 @@ class Game
 			// move
 			
 				var i2:InputMobile = new InputMobile();
-				i2.initX( InputMobile.TYPE_COS, 0, 100, 1000 );
-				i2.anchorY = 300;
+				i2.initX( InputMobile.TYPE_COS, 128, 100, 1000 );
+				i2.anchorY = 250;
 				e2.addInput( i2 );
 				
 			// collision
@@ -117,34 +117,6 @@ class Game
 				e3.addInput( i3 );
 				
 		systemManager.addEntity( e3 );
-		
-		
-		
-		/*
-		// STATIC GROUND
-		var e4 = new Entity();
-		
-			// graphic
-			
-				var spr4 = new h2d.Sprite( systemManager.sysGraphic.s2d );
-				var bmp4 = new h2d.Bitmap(tile, spr4);
-				e4.transform.x = 64;
-				e4.transform.y = 512;
-				e4.display = new CompDisplay2dSprite( spr4 );
-			
-			// collision
-			
-				var b4:CompBody = new CompBody();
-				var psr4:PhysShapeRect = new PhysShapeRect();
-				psr4.w = 128;
-				psr4.h = 128;
-				b4.shape = psr4;
-				b4.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
-				b4.typeOfSolid = CompBodyType.SOLID_TYPE_PLATFORM;
-				e4.addBody( b4 );
-			
-		systemManager.addEntity( e4 );
-		*/
 		
 		
 		EntityFact.addSolid( systemManager, 0, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );

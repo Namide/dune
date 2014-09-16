@@ -9,29 +9,42 @@ import dune.system.input.components.CompInput;
 class SysInput
 {
 
-	private var _inputs:List<CompInput>;
+	private var _befPhys:List<CompInput>;
+	private var _aftPhys:List<CompInput>;
 	
 	public function new() 
 	{
-		_inputs = new List();
+		_befPhys = new List();
+		_aftPhys = new List();
 	}
 	
 	public inline function addInput( input:CompInput ):Void
 	{
-		if ( input.priority ) 	_inputs.push( input );
-		else					_inputs.add(input);
+		if ( input.beforePhysic ) 	_befPhys.push( input );
+		else						_aftPhys.push(input);
 	}
 	
 	public inline function removeInput( input:CompInput ):Void
 	{
-		_inputs.remove(input);
+		if ( input.beforePhysic ) 	_befPhys.remove( input );
+		else						_aftPhys.remove(input);
 	}
 	
-	public inline function refresh( dt:UInt ):Void 
+	public inline function refresh( dt:UInt, beforePhysic:Bool ):Void 
 	{
-		for ( input in _inputs )
+		if ( beforePhysic )
 		{
-			input.execute( dt );
+			for ( input in _befPhys )
+			{
+				input.execute( dt );
+			}
+		}
+		else
+		{
+			for ( input in _aftPhys )
+			{
+				input.execute( dt );
+			}
 		}
 	}
 	

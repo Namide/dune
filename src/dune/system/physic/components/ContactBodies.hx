@@ -148,7 +148,7 @@ class ContactBodies
 		if ( a.aabbXMin + dX >= b.aabbXMax ) { pos |= LEFT; }
 		
 		// hack if the entity appear in an other
-		if ( pos == 0 ) { pos = getPosA( a, b, dX + dX, dY + dY ); }
+		if ( pos == 0 ) { pos = getPosA( a, b, dX, dY - 1 ); }
 		
 		return pos;
 	}

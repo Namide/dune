@@ -34,6 +34,7 @@ class InputMobile extends CompInput
 	public function new() 
 	{
 		super();
+		beforePhysic = true;
 	}
 	
 	public function initX( type:UInt, x:Float, dist:UInt, time:UInt, pause:UInt = 0, loop:Bool = true ):Void

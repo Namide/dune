@@ -49,6 +49,7 @@ class InputGravity extends CompInput
 	public function new() 
 	{
 		super();
+		beforePhysic = true;
 	}
 	
 	override function set_entity(value:Entity):Entity 

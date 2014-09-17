@@ -82,7 +82,6 @@ class SysManager
 		
 		while ( rest >= FRAME_DELAY )
 		{
-			sysInput.refresh( FRAME_DELAY, true );
 			sysPhysic.refresh( FRAME_DELAY, sysLink );
 			
 			if ( rest < FRAME_DELAY + FRAME_DELAY )
@@ -91,6 +90,7 @@ class SysManager
 				_entitiesMoved = [];
 			}
 			
+			sysInput.refresh( FRAME_DELAY, true );
 			sysInput.refresh( FRAME_DELAY, false );
 			sysLink.executeAndClean();
 			

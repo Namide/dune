@@ -6,6 +6,7 @@ import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.PhysShapeType;
 import dune.system.physic.shapes.PhysShapeUtils;
+import flash.Lib;
 
 class ContactBodiesData
 {
@@ -163,7 +164,7 @@ class ContactBodies
 		{
 			if ( data != null )
 			{
-				data.dist = a.aabbYMax + dY - b.aabbYMin;
+				data.dist = Math.abs( a.aabbYMax + dY - b.aabbYMin );
 			}
 			return BOTTOM;
 		}
@@ -171,7 +172,7 @@ class ContactBodies
 		{
 			if ( data != null )
 			{
-				data.dist = a.aabbYMin + dY - b.aabbYMax;
+				data.dist = Math.abs( a.aabbYMin + dY - b.aabbYMax );
 			}
 			return TOP;
 		}
@@ -179,7 +180,7 @@ class ContactBodies
 		{
 			if ( data != null )
 			{
-				data.dist = a.aabbXMax + dY - b.aabbXMin;
+				data.dist = Math.abs( a.aabbXMax + dY - b.aabbXMin );
 			}
 			return RIGHT;
 		}
@@ -187,7 +188,7 @@ class ContactBodies
 		{
 			if ( data != null )
 			{
-				data.dist = a.aabbXMin + dY - b.aabbXMax;
+				data.dist = Math.abs( a.aabbXMin + dY - b.aabbXMax );
 			}
 			return LEFT;
 		}
@@ -211,7 +212,7 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = a.aabbXMax + dY - b.aabbXMin;
+							data.dist = Math.abs( a.aabbXMax + dY - b.aabbXMin );
 						}
 						return RIGHT;
 					}
@@ -219,7 +220,7 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = a.aabbYMax + dY - b.aabbYMin;
+							data.dist = Math.abs( a.aabbYMax + dY - b.aabbYMin );
 						}
 						return BOTTOM;
 					}
@@ -230,7 +231,7 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = a.aabbXMin + dY - b.aabbXMax;
+							data.dist = Math.abs( a.aabbXMin + dY - b.aabbXMax );
 						}
 						return LEFT;
 					}
@@ -238,7 +239,7 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = a.aabbYMax + dY - b.aabbYMin;
+							data.dist = Math.abs( a.aabbYMax + dY - b.aabbYMin );
 						}
 						return BOTTOM;
 					}
@@ -252,7 +253,7 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = a.aabbYMin + dY - b.aabbYMax;
+							data.dist = Math.abs( a.aabbYMin + dY - b.aabbYMax );
 						}
 						return TOP;
 					}
@@ -260,7 +261,7 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = a.aabbXMax + dY - b.aabbXMin;
+							data.dist = Math.abs( a.aabbXMax + dY - b.aabbXMin );
 						}
 						return RIGHT;
 					}
@@ -271,7 +272,7 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = a.aabbYMin + dY - b.aabbYMax;
+							data.dist = Math.abs( a.aabbYMin + dY - b.aabbYMax );
 						}
 						return TOP;
 					}
@@ -279,7 +280,7 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = a.aabbXMin + dY - b.aabbXMax;
+							data.dist = Math.abs( a.aabbXMin + dY - b.aabbXMax );
 						}
 						return LEFT;
 					}
@@ -303,7 +304,16 @@ class ContactBodies
 		{
 			if ( PhysShapeUtils.hitTest( parent.shape, data.body.shape ) )
 			{
-				calculateReaction( data.body, data.reac, link );
+				// Recalcule le positionnement
+				
+					parent.shape.updateAABB( parent.entity.transform );
+					var dX:Float = data.body.entity.transform.vX - parent.entity.transform.vX;
+					var dY:Float = data.body.entity.transform.vY - parent.entity.transform.vY;
+					data.reac = getReactPosA( parent.shape, data.body.shape, dX, dY, data );
+					
+					calculateReaction( data.body, data.reac, link );
+				
+				// ---
 				
 				if 		( data.reac == BOTTOM ) { bottom.push( data.body ); }
 				else if ( data.reac == TOP ) 	{ top.push( data.body ); }

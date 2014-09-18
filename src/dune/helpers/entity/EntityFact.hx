@@ -18,7 +18,7 @@ class EntityFact
 		throw "this class is static!";
 	}
 	
-	public static function addSolid( sm:SysManager, x:Float, y:Float, w:Float, h:Float, compBodyType:UInt = CompBodyType.SOLID_TYPE_WALL ):Entity
+	public static function addSolid( sm:SysManager, x:Float, y:Float, w:Float, h:Float, solidType:UInt = CompBodyType.SOLID_TYPE_WALL ):Entity
 	{
 		var e = new Entity();
 		
@@ -43,8 +43,8 @@ class EntityFact
 			psr4.w = w;
 			psr4.h = h;
 			b4.shape = psr4;
-			b4.typeOfCollision = compBodyType;
-			b4.typeOfSolid = CompBodyType.SOLID_TYPE_WALL;
+			b4.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
+			b4.typeOfSolid = solidType;
 			e.addBody( b4 );
 		
 		sm.addEntity( e );

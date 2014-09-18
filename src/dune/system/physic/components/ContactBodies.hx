@@ -81,7 +81,6 @@ class ContactBodies
 		ArrayUtils.clear( right );
 		ArrayUtils.clear( left );
 		ArrayUtils.clear( top );
-		//clearArray( over );
 	}
 	
 	/**
@@ -149,7 +148,18 @@ class ContactBodies
 		if ( a.aabbXMin + dX >= b.aabbXMax ) { pos |= LEFT; }
 		
 		// hack if the entity appear in an other
-		if ( pos == 0 ) { pos = getPosA( a, b, dX, dY - 1 ); }
+		/*if ( pos == 0 )
+		{
+			if ( dX == 0 && dY == 0 )
+			{
+				pos = getPosA( a, b, dX, dY - 1 );
+			}
+			else
+			{
+				pos = getPosA( a, b, dX + dX, dY + dY );
+				trace( pos, dX, dY );
+			}
+		}*/
 		
 		return pos;
 	}

@@ -51,7 +51,11 @@ class IntputKeyboard extends CompInput
 		else if ( kh.getKeyPressed( keyRight ) ) 	{ entity.transform.vX = groundVX; }
 		else										{ entity.transform.vX = 0; }
 		
-		if ( kh.getKeyPressed( keyAction ) ) 		{ entity.transform.vY = -groundVX; }
+		if ( 	kh.getKeyPressed( keyAction ) &&
+				entity.bodies[0].contacts.bottom.length > 0	)
+		{
+			entity.transform.vY = -groundVX;
+		}
 		
 		
 		/*if ( kh.getKeyPressed( keyTop ) ) 			{ onTop(entity); }

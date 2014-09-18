@@ -37,7 +37,7 @@ class SysPhysic
 	public function refresh( dt:UInt, link:SysLink ):Void 
 	{
 		//space.refreshGrid();
-		var list:Array<CompBody> = space.hitTest();
+		var list:Iterable<CompBody> = space.hitTest();
 		for ( b in list )
 		{
 			b.contacts.moveAndDispatch( link );

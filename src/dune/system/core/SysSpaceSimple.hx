@@ -12,19 +12,19 @@ import dune.system.physic.shapes.PhysShapeUtils;
 class SysSpaceSimple
 {
 
-	public var _active(default, null):Array<CompBody>;
-	public var _passive(default, null):Array<CompBody>;
+	public var _active(default, null):List<CompBody>;
+	public var _passive(default, null):List<CompBody>;
 	
 	public function new() 
 	{
-		_active = [];
-		_passive = [];
+		_active = new List<CompBody>();
+		_passive = new List<CompBody>();
 	}
 	
-	public function hitTest():Array<CompBody>
+	public function hitTest():List<CompBody>
 	{
 		
-		var affected:Array<CompBody> = [];
+		var affected:List<CompBody> = new List<CompBody>();
 		
 		var first:Bool = true;
 		for ( physBody in _active )

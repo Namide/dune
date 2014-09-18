@@ -9,7 +9,7 @@ class ArrayUtils
 
 	public function new() 
 	{
-		
+		throw "static class!";
 	}
 	
 	public static inline function clear( arr:Array<Dynamic> ):Void

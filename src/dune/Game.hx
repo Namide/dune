@@ -78,7 +78,7 @@ class Game
 				psr2.h = 128;
 				b2.shape = psr2;
 				b2.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
-				b2.typeOfSolid = CompBodyType.SOLID_TYPE_WALL;
+				b2.typeOfSolid = CompBodyType.SOLID_TYPE_PLATFORM;
 				e2.addBody( b2 );
 				
 		systemManager.addEntity( e2 );

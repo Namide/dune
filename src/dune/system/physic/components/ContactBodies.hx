@@ -150,8 +150,6 @@ class ContactBodies
 		if ( a.aabbYMax + dY <= b.aabbYMin ) { pos |= BOTTOM; }
 		if ( a.aabbXMin + dX >= b.aabbXMax ) { pos |= LEFT; }
 		
-		trace( pos );
-		
 		// hack if the entity appear in an other
 		/*if ( pos == 0 )
 		{

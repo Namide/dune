@@ -23,15 +23,20 @@ class SysSpaceSimple
 	
 	public function hitTest():Array<CompBody>
 	{
+		
 		var affected:Array<CompBody> = [];
 		
+		var first:Bool = true;
 		for ( physBody in _active )
 		{
 			var isAffected:Bool = false;
+			physBody.contacts.clear();
 			physBody.shape.updateAABB( physBody.entity.transform );
 			
 			for ( physBodyPassive in _passive )
 			{
+				if ( first ) physBodyPassive.shape.updateAABB( physBodyPassive.entity.transform );
+				
 				if ( 	physBody.contacts.all.indexOf( physBodyPassive ) < 0 &&
 						PhysShapeUtils.hitTest( physBody.shape, physBodyPassive.shape ) )
 				{
@@ -42,7 +47,9 @@ class SysSpaceSimple
 						affected.push( physBody );
 					}
 				}
-			}	
+			}
+			
+			if ( first ) first = false;
 		}
 		
 		return affected;

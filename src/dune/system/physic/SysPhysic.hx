@@ -2,7 +2,7 @@ package dune.system.physic;
 
 import dune.system.core.SysLink;
 import dune.system.physic.components.CompBody;
-import dune.system.core.SysSpace;
+import dune.system.core.SysSpaceSimple;
 
 #if debugHitbox
 	import flash.display.Sprite;
@@ -18,7 +18,7 @@ class SysPhysic
 	/**
 	 * Scene of the bodies
 	 */
-	public var space(default, null):SysSpace;
+	public var space(default, null):SysSpaceSimple;
 	
 	#if debugHitbox
 		var _sceneHitBox:Sprite;
@@ -26,7 +26,7 @@ class SysPhysic
 	
 	public function new() 
 	{
-		space = new SysSpace();
+		space = new SysSpaceSimple();
 		
 		#if debugHitbox
 			_sceneHitBox = new Sprite();
@@ -36,7 +36,7 @@ class SysPhysic
 	
 	public function refresh( dt:UInt, link:SysLink ):Void 
 	{
-		space.refreshGrid();
+		//space.refreshGrid();
 		var list:Array<CompBody> = space.hitTest();
 		for ( b in list )
 		{

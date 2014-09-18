@@ -78,7 +78,7 @@ class Game
 				psr2.h = 128;
 				b2.shape = psr2;
 				b2.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
-				b2.typeOfSolid = CompBodyType.SOLID_TYPE_PLATFORM;
+				b2.typeOfSolid = CompBodyType.SOLID_TYPE_WALL;
 				e2.addBody( b2 );
 				
 		systemManager.addEntity( e2 );
@@ -127,7 +127,7 @@ class Game
 		EntityFact.addSolid( systemManager, 512, 512-128, 128, 128, CompBodyType.SOLID_TYPE_WALL );
 		
 		
-		systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );
+		//systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );
 		systemManager.refresh(0);
 		hxd.System.setLoop( refresh );
 	}

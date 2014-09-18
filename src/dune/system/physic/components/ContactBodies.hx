@@ -39,7 +39,7 @@ class ContactBodies
 	public var right(default, default):Array<CompBody>;
 	public var left(default, default):Array<CompBody>;
 	public var top(default, default):Array<CompBody>;
-	//public var over(default, default):Array<CompBody>;
+	public var on(default, default):Array<CompBody>;
 	
 	public function new( p:CompBody ) 
 	{
@@ -50,6 +50,7 @@ class ContactBodies
 		right = new Array<CompBody>();
 		left = new Array<CompBody>();
 		top = new Array<CompBody>();
+		on = new Array<CompBody>();
 	}
 	
 	// has (_data & value) == value;
@@ -81,6 +82,7 @@ class ContactBodies
 		ArrayUtils.clear( right );
 		ArrayUtils.clear( left );
 		ArrayUtils.clear( top );
+		ArrayUtils.clear( on );
 	}
 	
 	/**
@@ -121,6 +123,7 @@ class ContactBodies
 				else if ( reac == TOP ) 	{ top.push( cp ); }
 				else if ( reac == RIGHT ) 	{ right.push( cp ); }
 				else if ( reac == LEFT ) 	{ left.push( cp ); }
+				else 					 	{ on.push( cp ); }
 				
 				return calculateReaction( cp, reac, link );
 			}
@@ -146,6 +149,8 @@ class ContactBodies
 		if ( a.aabbXMax + dX <= b.aabbXMin ) { pos |= RIGHT; }
 		if ( a.aabbYMax + dY <= b.aabbYMin ) { pos |= BOTTOM; }
 		if ( a.aabbXMin + dX >= b.aabbXMax ) { pos |= LEFT; }
+		
+		trace( pos );
 		
 		// hack if the entity appear in an other
 		/*if ( pos == 0 )

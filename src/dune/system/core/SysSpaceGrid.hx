@@ -9,7 +9,7 @@ import dune.system.physic.shapes.PhysShapeUtils;
  * ...
  * @author Namide
  */
-class SysSpace
+class SysSpaceGrid
 {
 
 	public var _active(default, null):Array<CompBody>;

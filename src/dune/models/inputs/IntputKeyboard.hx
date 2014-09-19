@@ -30,12 +30,13 @@ class IntputKeyboard extends CompInput
 	public var keyBottom(default, default):UInt = Keyboard.DOWN;
 	public var keyAction(default, default):UInt = Keyboard.SPACE;
 	
-	public var groundTimeAccX(default, default):UInt = 100;
-	public var groundVX(default, default):Float = Settings.getVX( 10 );
+	public var groundTimeAccX(default, default):UInt = 3 * Settings.FRAME_DELAY; 	// milliseconds
+	public var groundVX(default, default):Float = Settings.getVX( 10 );				// tiles / sec
 	public var groundAccX(default, default):Float;
 	public var runTime:UInt = 0;
 	
-	public var jumpVY(default, default):Float = Settings.getJumpVY( 2 );
+	public var jumpStartVY(default, default):Float = Settings.getJumpStartVY( 2 );
+	public var jumpVY(default, default):Float = Settings.getJumpStartVY( 2 );
 	
 	private var _contacts:ContactBodies;
 	
@@ -44,6 +45,7 @@ class IntputKeyboard extends CompInput
 		super();
 		beforePhysic = false;
 		groundAccX = Settings.getAccX( groundVX, groundTimeAccX );
+		jumpVY = Settings.getJumpVY( 2, jumpStartVY );
 	}
 	
 	override function set_entity(value:Entity):Entity 
@@ -99,13 +101,18 @@ class IntputKeyboard extends CompInput
 			entity.transform.vX = 0;
 		}
 		
-		if ( 	kh.getKeyPressed( keyAction ) &&
-				( 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) ||
-					_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM )
-				)
-			)
+		if ( kh.getKeyPressed( keyAction ) )
 		{
-			entity.transform.vY = -jumpVY;
+			if (	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) ||
+					_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM ) )
+			{
+				entity.transform.vY = -jumpStartVY;
+			}
+			/*else if ( !_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP ) )
+			{
+				entity.transform.vY -= jumpVY;
+			}*/
+			trace(entity.transform.vY);
 		}
 		
 		

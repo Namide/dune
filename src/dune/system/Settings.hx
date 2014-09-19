@@ -37,7 +37,7 @@ class Settings
 	 * @param	gravity			In pixels added by frames
 	 * @return
 	 */
-	public inline static function getJumpVY( jumpTiles:Float, gravity:Float = Settings.GRAVITY ):Float
+	public inline static function getJumpStartVY( jumpTiles:Float, gravity:Float = Settings.GRAVITY ):Float
 	{
 		var y:Float = jumpTiles * TILE_SIZE;
 		var vY:Float = 0;
@@ -49,6 +49,10 @@ class Settings
 		return vY;
 	}
 	
-	
+	public inline static function getJumpVY( jumpMoreTiles:Float, jumpStartVY:Float, gravity:Float = Settings.GRAVITY ):Float
+	{
+		var n:Float = jumpStartVY / gravity;
+		return jumpMoreTiles * TILE_SIZE / n;
+	}
 	
 }

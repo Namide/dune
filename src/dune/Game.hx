@@ -11,6 +11,7 @@ import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
 import dune.system.physic.shapes.PhysShapeRect;
 import dune.system.physic.shapes.PhysShapeType;
+import dune.system.Settings;
 import dune.system.SysManager;
 import h2d.comp.Input;
 import hxd.Stage;
@@ -52,6 +53,7 @@ class Game
 		_entity1.display = new CompDisplay2dSprite( spr );
 		systemManager.addEntity( _entity1 );*/
 		
+		var TS:Float = Settings.TILE_SIZE;
 		
 		
 		// MOBILE COS
@@ -59,26 +61,27 @@ class Game
 		
 			// graphic
 			
-				var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
-				var bmp2 = new h2d.Bitmap(tile, spr2);
-				e2.display = new CompDisplay2dSprite( spr2 );
+				//var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
+				//var bmp2 = new h2d.Bitmap(tile, spr2);
+				//e2.display = new CompDisplay2dSprite( spr2 );
+				e2.display = EntityFact.getSolidDisplay( systemManager, 3*TS, TS );
 			
 			// move
 			
 				var i2:InputMobile = new InputMobile();
-				i2.initX( InputMobile.TYPE_COS, 128, 100, 1000 );
-				i2.anchorY = 250;
+				i2.initX( InputMobile.TYPE_COS, TS, 4*TS, 2000 );
+				i2.anchorY = 3*TS;
 				e2.addInput( i2 );
 				
 			// collision
 			
 				var b2:CompBody = new CompBody();
 				var psr2:PhysShapeRect = new PhysShapeRect();
-				psr2.w = 128;
-				psr2.h = 128;
+				psr2.w = 3*TS;
+				psr2.h = TS;
 				b2.shape = psr2;
 				b2.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
-				b2.typeOfSolid = CompBodyType.SOLID_TYPE_PLATFORM;
+				b2.typeOfSolid = CompBodyType.SOLID_TYPE_WALL;
 				e2.addBody( b2 );
 				
 		systemManager.addEntity( e2 );
@@ -90,9 +93,10 @@ class Game
 		
 			// graphic
 			
-				var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
-				var bmp3 = new h2d.Bitmap(tile, spr3);
-				e3.display = new CompDisplay2dSprite( spr3 );
+				//var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
+				//var bmp3 = new h2d.Bitmap(tile, spr3);
+				//e3.display = new CompDisplay2dSprite( spr3 );
+				e3.display = EntityFact.getSolidDisplay( systemManager, TS, TS );
 				
 			// gravity
 			
@@ -105,27 +109,32 @@ class Game
 				b3.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
 				b3.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER;
 				var psr3:PhysShapeRect = new PhysShapeRect();
-				psr3.w = 128;
-				psr3.h = 128;
+				psr3.w = TS;
+				psr3.h = TS;
 				b3.shape = psr3;
 				e3.addBody( b3 );
 			
 			// Keyboard
 			
 				var i3:IntputKeyboard = new IntputKeyboard();
-				i3.groundVX = 5;
+				//i3.groundVX = 5;
 				e3.addInput( i3 );
 				
 		systemManager.addEntity( e3 );
 		
 		
-		EntityFact.addSolid( systemManager, 0, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 256, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 512, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 512+256, 512, 256, 256, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 0, 6*TS, 4*TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 4*TS, 6*TS, 4*TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 8*TS, 6*TS, 4*TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 12*TS, 6*TS, 4*TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		
-		EntityFact.addSolid( systemManager, 512, 512-128, 128, 128, CompBodyType.SOLID_TYPE_WALL );
+		EntityFact.addSolid( systemManager, 8*TS, 5*TS, TS, TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		
+		EntityFact.addSolid( systemManager, 11*TS, 4*TS, TS, 2*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		
+		EntityFact.addSolid( systemManager, 13*TS, 3*TS, TS, 3*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		
+		EntityFact.addSolid( systemManager, 15*TS, 2*TS, TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		
 		//systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );
 		systemManager.refresh(0);

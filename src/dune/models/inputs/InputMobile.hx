@@ -37,7 +37,7 @@ class InputMobile extends CompInput
 		beforePhysic = true;
 	}
 	
-	public function initX( type:UInt, x:Float, dist:UInt, time:UInt, pause:UInt = 0, loop:Bool = true ):Void
+	public function initX( type:UInt, x:Float, dist:Float, time:UInt, pause:UInt = 0, loop:Bool = true ):Void
 	{
 		anchorX = x;
 		moveTypeX = type;

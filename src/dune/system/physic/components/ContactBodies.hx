@@ -27,10 +27,11 @@ class ContactBodiesData
  */
 class ContactBodies
 {
-	inline static var TOP:Int = 1;
-	inline static var RIGHT:Int = 2;
-	inline static var BOTTOM:Int = 4;
-	inline static var LEFT:Int = 8;
+	public inline static var ON:Int = 0;
+	public inline static var TOP:Int = 1;
+	public inline static var RIGHT:Int = 2;
+	public inline static var BOTTOM:Int = 4;
+	public inline static var LEFT:Int = 8;
 	
 	public var parent:CompBody;
 	public var all(default, default):Array<CompBody>;
@@ -44,23 +45,45 @@ class ContactBodies
 	public function new( p:CompBody ) 
 	{
 		parent = p;
-		all = new Array<CompBody>();
+		all = [];
 		
-		bottom = new Array<CompBody>();
-		right = new Array<CompBody>();
-		left = new Array<CompBody>();
-		top = new Array<CompBody>();
-		on = new Array<CompBody>();
+		bottom = [];
+		right = [];
+		left = [];
+		top = [];
+		on = [];
 	}
 	
 	// has (_data & value) == value;
 	
-	public inline function hasType( solidType:Int ):Bool
+	/**
+	 * 
+	 * @param	solidType		CompBodyType.SOLID_TYPE_WALL, SOLID_TYPE_PLATFORM...
+	 * @param	direction		ContactBodies.ON, ContactBodies.LEFT...
+	 * @return
+	 */
+	public function hasTypeOfSolid( solidType:UInt, direction:Int = -1 ):Bool
 	{
-		return Lambda.exists( all, function(cp:CompBody):Bool
+		if 		( direction == -1 )		return hasTypeInArray( solidType, all );
+		else if ( direction == ON )		return hasTypeInArray( solidType, on );
+		else if ( direction == TOP )	return hasTypeInArray( solidType, top );
+		else if ( direction == RIGHT )	return hasTypeInArray( solidType, right );
+		else if ( direction == BOTTOM )	return hasTypeInArray( solidType, bottom );
+		else if ( direction == LEFT )	return hasTypeInArray( solidType, left );
+		return false;
+	}
+	
+	public inline function hasTypeInArray( solidType:Int, a:Array<CompBody> ):Bool
+	{
+		return Lambda.exists( a, function(cp:CompBody):Bool
 		{
 			return cp.typeOfSolid & solidType == solidType;
 		});
+	}
+	
+	public inline function hasType( solidType:Int ):Bool
+	{
+		return hasTypeInArray( solidType, all );
 	}
 	
 	public inline function getByType( solidType:Int ):Array<CompBody>
@@ -119,12 +142,6 @@ class ContactBodies
 			{
 				var reac:Int = getReactPosA( parent.shape, cp.shape, dX, dY );
 				
-				if 		( reac == BOTTOM ) 	{ bottom.push( cp ); }
-				else if ( reac == TOP ) 	{ top.push( cp ); }
-				else if ( reac == RIGHT ) 	{ right.push( cp ); }
-				else if ( reac == LEFT ) 	{ left.push( cp ); }
-				else 					 	{ on.push( cp ); }
-				
 				return calculateReaction( cp, reac, link );
 			}
 			
@@ -141,7 +158,7 @@ class ContactBodies
 		}
 	}	
 	
-	function getPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float ):Int
+	function getPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
 	{
 		var pos:Int = 0;
 		
@@ -151,18 +168,17 @@ class ContactBodies
 		if ( a.aabbXMin + dX >= b.aabbXMax ) { pos |= LEFT; }
 		
 		// hack if the entity appear in an other
-		/*if ( pos == 0 )
+		if ( !overAuthorized && pos == 0  )
 		{
 			if ( dX == 0 && dY == 0 )
 			{
-				pos = getPosA( a, b, dX, dY - 1 );
+				pos = getPosA( a, b, dX, dY - 1, overAuthorized );
 			}
 			else
 			{
-				pos = getPosA( a, b, dX + dX, dY + dY );
-				trace( pos, dX, dY );
+				pos = getPosA( a, b, dX + dX, dY + dY, overAuthorized );
 			}
-		}*/
+		}
 		
 		return pos;
 	}
@@ -328,10 +344,7 @@ class ContactBodies
 				
 				// ---
 				
-				if 		( data.reac == BOTTOM ) { bottom.push( data.body ); }
-				else if ( data.reac == TOP ) 	{ top.push( data.body ); }
-				else if ( data.reac == RIGHT ) 	{ right.push( data.body ); }
-				else if ( data.reac == LEFT ) 	{ left.push( data.body ); }
+				
 				
 				all.push( data.body );
 			}
@@ -354,8 +367,7 @@ class ContactBodies
 		{
 			var shape:PhysShapePoint = body.shape;
 			if ( 	reac == BOTTOM &&
-					( body.typeOfSolid == CompBodyType.SOLID_TYPE_PLATFORM ||
-					  body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL ) )
+					body.typeOfSolid == CompBodyType.SOLID_TYPE_PLATFORM )
 			{
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
 				if ( !link.has( body.entity.transform, parent.entity.transform ) )
@@ -368,33 +380,58 @@ class ContactBodies
 					parent.entity.transform.vY = body.entity.transform.vY;
 				}
 			}
-			else if (	reac == TOP &&
-						body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
+			else if ( body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
 			{
-				parent.entity.transform.y = shape.aabbYMax - PhysShapeUtils.getPosToTop( parent.shape );
-				parent.entity.transform.vY = body.entity.transform.vY;
-			}
-			else if ( 	reac == RIGHT &&
-						body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
-			{
-				parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
-				if ( parent.entity.transform.vX > body.entity.transform.vX )
+				if ( reac == 0 )
 				{
-					parent.entity.transform.vX = body.entity.transform.vX;
+					var dX:Float = body.entity.transform.vX - parent.entity.transform.vX;
+					var dY:Float = body.entity.transform.vY - parent.entity.transform.vY;
+					reac = getPosA( parent.shape, body.shape, dX, dY, false );
+				}
+				
+				if ( reac == BOTTOM )
+				{
+					parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
+					if ( !link.has( body.entity.transform, parent.entity.transform ) )
+					{
+						link.add( body.entity.transform, parent.entity.transform, SysLink.TYPE_TOP, false );
+					}
+					
+					if ( parent.entity.transform.vY > body.entity.transform.vY )
+					{
+						parent.entity.transform.vY = body.entity.transform.vY;
+					}
+				}
+				else if ( reac == TOP )
+				{
+					parent.entity.transform.y = shape.aabbYMax - PhysShapeUtils.getPosToTop( parent.shape );
+					parent.entity.transform.vY = body.entity.transform.vY;
+				}
+				else if ( reac == RIGHT )
+				{
+					parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
+					if ( parent.entity.transform.vX > body.entity.transform.vX )
+					{
+						parent.entity.transform.vX = body.entity.transform.vX;
+					}
+				}
+				else if ( reac == LEFT )
+				{
+					parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
+					if ( parent.entity.transform.vX < body.entity.transform.vX )
+					{
+						parent.entity.transform.vX = body.entity.transform.vX;
+					}
 				}
 			}
-			else if ( 	reac == LEFT &&
-						body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
-			{
-				parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
-				if ( parent.entity.transform.vX < body.entity.transform.vX )
-				{
-					parent.entity.transform.vX = body.entity.transform.vX;
-				}
-			}
+			
 		}
 		
-		
+		if 		( reac == BOTTOM ) 	{ bottom.push( body ); }
+		else if ( reac == TOP ) 	{ top.push( body ); }
+		else if ( reac == RIGHT ) 	{ right.push( body ); }
+		else if ( reac == LEFT ) 	{ left.push( body ); }
+		else						{ on.push( body ); }
 	}
 	
 }

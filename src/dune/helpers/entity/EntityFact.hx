@@ -18,23 +18,26 @@ class EntityFact
 		throw "this class is static!";
 	}
 	
-	public static function addSolid( sm:SysManager, x:Float, y:Float, w:Float, h:Float, solidType:UInt = CompBodyType.SOLID_TYPE_WALL ):Entity
+	public static function getSolidDisplay( sm:SysManager, w:Float, h:Float ):CompDisplay2dSprite
 	{
-		var e = new Entity();
-		
-		var g = new h2d.Graphics(sm.sysGraphic.s2d);
+		var g = new h2d.Graphics( sm.sysGraphic.s2d );
 		g.beginFill( Math.round( 0xFFFFFF * Math.random() ) );
 		g.lineStyle( 1, Math.round( 0xFFFFFF * Math.random() ) );
 		g.drawRect( 0, 0, w, h );
 		g.endFill();
 		
+		return new CompDisplay2dSprite( g );
+	}
+	
+	public static function addSolid( sm:SysManager, x:Float, y:Float, w:Float, h:Float, solidType:UInt = CompBodyType.SOLID_TYPE_WALL ):Entity
+	{
+		var e = new Entity();
+		
 		// graphic
 		
-			//var spr4 = new h2d.Sprite( sm.sysGraphic.s2d );
-			//var bmp4 = new h2d.Bitmap( tile, spr4 );
 			e.transform.x = x;
 			e.transform.y = y;
-			e.display = new CompDisplay2dSprite( g );
+			e.display = getSolidDisplay( sm, w, h );
 		
 		// collision
 		

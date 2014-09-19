@@ -5,7 +5,7 @@
     <movie outputType="Application" />
     <movie input="" />
     <movie path="bin\dune.swf" />
-    <movie fps="60" />
+    <movie fps="120" />
     <movie width="800" />
     <movie height="600" />
     <movie version="11" />
@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
-    <option additional="-D resourcesPath=assets&#xA;-lib heaps&#xA;-D debugHitbox=1" />
+    <option additional="-D resourcesPath=assets&#xA;-lib heaps&#xA;-D debugHitbox1" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

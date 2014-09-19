@@ -1,6 +1,7 @@
 package dune.models.inputs;
 import dune.entities.Entity;
 import dune.system.input.components.CompInput;
+import dune.system.Settings;
 import dune.system.SysManager;
 
 /**
@@ -21,7 +22,7 @@ class InputGravity extends CompInput
 	 * For a similar to "time dependant", you must do like the following:
 	 * X = 10 / SysManager.FRAME_DELAY;
 	 */
-	public static var Y(default, default):Float = 6 / SysManager.FRAME_DELAY;
+	public static var Y(default, default):Float = Settings.GRAVITY;
 	
 	/**
 	 * Position on the X-axis

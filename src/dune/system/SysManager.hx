@@ -14,7 +14,6 @@ import flash.Lib;
  */
 class SysManager
 {
-	public static inline var FRAME_DELAY:UInt = 20;
 	
 	public var _entities:Array<Entity>;
 	public var _entitiesVelocity:Array<Entity>;
@@ -74,24 +73,24 @@ class SysManager
 		var realTime:UInt = Lib.getTimer();
 		var rest:UInt = realTime - _time;
 		
-		if ( rest < FRAME_DELAY )
+		if ( rest < Settings.FRAME_DELAY )
 		{
 			_time = realTime - rest;
 			return;
 		}
 		
-		while ( rest >= FRAME_DELAY )
+		while ( rest >= Settings.FRAME_DELAY )
 		{
-			sysPhysic.refresh( FRAME_DELAY, sysLink );
+			sysPhysic.refresh( Settings.FRAME_DELAY, sysLink );
 			
-			if ( rest < FRAME_DELAY + FRAME_DELAY )
+			if ( rest < Settings.FRAME_DELAY + Settings.FRAME_DELAY )
 			{
 				sysGraphic.refresh( _entitiesMoved );
 				_entitiesMoved = [];
 			}
 			
-			sysInput.refresh( FRAME_DELAY, true );
-			sysInput.refresh( FRAME_DELAY, false );
+			sysInput.refresh( Settings.FRAME_DELAY, true );
+			sysInput.refresh( Settings.FRAME_DELAY, false );
 			sysLink.executeAndClean();
 			
 			for ( e in _entitiesVelocity )
@@ -100,7 +99,7 @@ class SysManager
 				e.transform.y += e.transform.vY;
 			}
 			
-			rest -= FRAME_DELAY;
+			rest -= Settings.FRAME_DELAY;
 		}
 		
 		_time = realTime - rest;

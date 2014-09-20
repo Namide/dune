@@ -39,20 +39,17 @@ class Settings
 	 */
 	public inline static function getJumpStartVY( jumpTiles:Float, gravity:Float = Settings.GRAVITY ):Float
 	{
-		var y:Float = jumpTiles * TILE_SIZE;
-		var vY:Float = 0;
-		while ( y > 0 )
-		{
-			vY += gravity;
-			y -= vY;
-		}
-		return vY;
+		return Math.sqrt( 2 * gravity * jumpTiles * TILE_SIZE );
 	}
 	
-	public inline static function getJumpVY( jumpMoreTiles:Float, jumpStartVY:Float, gravity:Float = Settings.GRAVITY ):Float
+	public inline static function getJumpVY( maxTilesJump:Float, jumpStartVY:Float, gravity:Float = Settings.GRAVITY ):Float
 	{
-		var n:Float = jumpStartVY / gravity;
-		return jumpMoreTiles * TILE_SIZE / n;
+		return - (jumpStartVY * jumpStartVY / (2 * maxTilesJump * TILE_SIZE) - gravity );
 	}
 	
+	public inline static function getJumpVX( maxTilesJump:Float, jumpStartVY:Float, jumpVY:Float = 0, gravity:Float = Settings.GRAVITY ):Float
+	{
+		//var frames:Float = jumpStartVY / ( gravity - jumpVY );
+		return maxTilesJump * TILE_SIZE * ( gravity - jumpVY ) / jumpStartVY;
+	}
 }

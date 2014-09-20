@@ -95,6 +95,7 @@ class SysManager
 			
 			for ( e in _entitiesVelocity )
 			{
+				//trace( e.transform.x, e.transform.y );
 				e.transform.x += e.transform.vX;
 				e.transform.y += e.transform.vY;
 			}

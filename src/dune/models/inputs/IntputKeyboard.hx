@@ -30,22 +30,48 @@ class IntputKeyboard extends CompInput
 	public var keyBottom(default, default):UInt = Keyboard.DOWN;
 	public var keyAction(default, default):UInt = Keyboard.SPACE;
 	
-	public var groundTimeAccX(default, default):UInt = 3 * Settings.FRAME_DELAY; 	// milliseconds
-	public var groundVX(default, default):Float = Settings.getVX( 10 );				// tiles / sec
-	public var groundAccX(default, default):Float;
-	public var runTime:UInt = 0;
+	private var _groundTimeAccX:UInt;  	// milliseconds
+	private var _groundVX:Float;			// tiles / sec
+	private var _groundAccX:Float;
+	private var _jumpStartVY:Float;
+	private var _jumpVY:Float;
+	private var _jumpVX:Float;
 	
-	public var jumpStartVY(default, default):Float = Settings.getJumpStartVY( 2 );
-	public var jumpVY(default, default):Float = Settings.getJumpStartVY( 2 );
-	
-	private var _contacts:ContactBodies;
+	var _runTime:UInt = 0;
+	var _contacts:ContactBodies;
 	
 	public function new() 
 	{
 		super();
 		beforePhysic = false;
-		groundAccX = Settings.getAccX( groundVX, groundTimeAccX );
-		jumpVY = Settings.getJumpVY( 2, jumpStartVY );
+		
+		setRun( 10, 0.06 );
+		setJump( 2, 3, 4 );
+	}
+	
+	/**
+	 * 
+	 * @param	vel			Velocity in tile by seconds
+	 * @param	accTime		Time to accelerate in seconds
+	 */
+	public function setRun( vel:Float, accTime:Float ):Void
+	{
+		_groundTimeAccX = Math.round(accTime * 1000);
+		_groundAccX = Settings.getAccX( vel, _groundTimeAccX );
+		_groundVX = Settings.getVX( vel );
+	}
+	
+	/**
+	 * 
+	 * @param	hMin		Minimal height of the jump in tiles
+	 * @param	hMax		Maximal height of the jump in tiles
+	 * @param	lMax		Length of the jump in tiles
+	 */
+	public function setJump( hMin:Float, hMax:Float, lMax:Float ):Void
+	{
+		_jumpStartVY = Settings.getJumpStartVY( hMin );
+		_jumpVY = Settings.getJumpVY( hMax, _jumpStartVY );
+		_jumpVX = Settings.getJumpVX( lMax, _jumpStartVY, _jumpVY );
 	}
 	
 	override function set_entity(value:Entity):Entity 
@@ -56,7 +82,6 @@ class IntputKeyboard extends CompInput
 		if ( body == null ) throw "An entity with input keyboard must have a solid type mover in physic body";
 		_contacts = body.contacts;
 		
-		
 		return entity = value;
 	}
 	
@@ -66,17 +91,28 @@ class IntputKeyboard extends CompInput
 		
 		if ( kh.getKeyPressed( keyLeft ) )
 		{
+			
 			if ( !_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.LEFT ) )
 			{
-				runTime += dt;
-				if ( runTime < groundTimeAccX )
+				_runTime += dt;
+				
+				if ( 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) ||
+						_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM )  )
 				{
-					entity.transform.vX = -groundAccX * runTime;
+					if ( _runTime < _groundTimeAccX )
+					{
+						entity.transform.vX = -_groundAccX * _runTime;
+					}
+					else
+					{
+						entity.transform.vX = -_groundVX;
+					}
 				}
 				else
 				{
-					entity.transform.vX = -groundVX;
+					entity.transform.vX = -_jumpVX;
 				}
+				
 			}
 			
 		}
@@ -84,20 +120,29 @@ class IntputKeyboard extends CompInput
 		{
 			if ( !_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.RIGHT ) )
 			{
-				runTime += dt;
-				if ( runTime < groundTimeAccX )
+				_runTime += dt;
+				
+				if ( 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) ||
+						_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM )  )
 				{
-					entity.transform.vX = groundAccX * runTime;
+					if ( _runTime < _groundTimeAccX )
+					{
+						entity.transform.vX = _groundAccX * _runTime;
+					}
+					else
+					{
+						entity.transform.vX = _groundVX;
+					}
 				}
 				else
 				{
-					entity.transform.vX = groundVX;
+					entity.transform.vX = _jumpVX;
 				}
 			}
 		}
 		else
 		{
-			runTime = 0;
+			_runTime = 0;
 			entity.transform.vX = 0;
 		}
 		
@@ -106,13 +151,12 @@ class IntputKeyboard extends CompInput
 			if (	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) ||
 					_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM ) )
 			{
-				entity.transform.vY = -jumpStartVY;
+				entity.transform.vY = - _jumpStartVY;
 			}
-			/*else if ( !_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP ) )
+			else if ( !_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP ) )
 			{
-				entity.transform.vY -= jumpVY;
-			}*/
-			trace(entity.transform.vY);
+				entity.transform.vY -= _jumpVY;
+			}
 		}
 		
 		

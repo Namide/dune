@@ -69,7 +69,7 @@ class Game
 			// move
 			
 				var i2:InputMobile = new InputMobile();
-				i2.initX( InputMobile.TYPE_COS, TS, 4*TS, 2000 );
+				i2.initX( InputMobile.TYPE_COS, 12*TS, 4*TS, 2000 );
 				i2.anchorY = 3*TS;
 				e2.addInput( i2 );
 				
@@ -90,7 +90,8 @@ class Game
 		
 		// PLAYER
 		var e3 = new Entity();
-		
+		/*e3.transform.x = TS;
+		e3.transform.y = TS;*/
 			// graphic
 			
 				//var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
@@ -129,11 +130,8 @@ class Game
 		EntityFact.addSolid( systemManager, 12*TS, 6*TS, 4*TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		
 		EntityFact.addSolid( systemManager, 8*TS, 5*TS, TS, TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		
 		EntityFact.addSolid( systemManager, 11*TS, 4*TS, TS, 2*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		
 		EntityFact.addSolid( systemManager, 13*TS, 3*TS, TS, 3*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		
 		EntityFact.addSolid( systemManager, 15*TS, 2*TS, TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		
 		//systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );

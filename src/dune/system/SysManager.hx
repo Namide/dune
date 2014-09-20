@@ -5,7 +5,7 @@ import dune.system.core.SysLink;
 import dune.system.graphic.SysGraphic;
 import dune.system.input.SysInput;
 import dune.system.physic.SysPhysic;
-import flash.Lib;
+//import flash.Lib;
 
 
 /**

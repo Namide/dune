@@ -3,7 +3,7 @@ package dune.helpers.keyboard;
 
 
 
-#if flash
+#if (flash || openfl)
 
 	import flash.display.Stage;
 	import flash.events.KeyboardEvent;
@@ -12,6 +12,10 @@ package dune.helpers.keyboard;
 #elseif js
 
 	import js.html.KeyboardEvent;
+
+#elseif cpp
+
+	
 	
 #end
 

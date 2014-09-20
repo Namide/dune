@@ -6,7 +6,7 @@ import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.PhysShapeType;
 import dune.system.physic.shapes.PhysShapeUtils;
-import flash.Lib;
+//import flash.Lib;
 
 class ContactBodiesData
 {

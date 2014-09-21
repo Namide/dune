@@ -16,6 +16,10 @@ todo list
 	* system for animation
 * input
 	* mouse
+	* platform
+		* jump X velocity
+		* wall jump
+		* double jump
 * helpers
 	* platform-player
 	

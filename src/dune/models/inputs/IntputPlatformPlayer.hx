@@ -13,24 +13,29 @@ import dune.system.Settings;
 #if (flash || openfl)
 
 	import flash.ui.Keyboard;
-	
-#elseif js
-	
-
 
 #end
 
 /**
  * @author Namide
  */
-class IntputKeyboard extends CompInput
+class IntputPlatformPlayer extends CompInput
 {
 
-	public var keyLeft(default, default):UInt = Keyboard.LEFT;
-	public var keyRight(default, default):UInt = Keyboard.RIGHT;
-	public var keyTop(default, default):UInt = Keyboard.UP;
-	public var keyBottom(default, default):UInt = Keyboard.DOWN;
-	public var keyAction(default, default):UInt = Keyboard.SPACE;
+	#if (flash || openfl)
+		public var keyLeft(default, default):UInt = Keyboard.LEFT;
+		public var keyRight(default, default):UInt = Keyboard.RIGHT;
+		public var keyTop(default, default):UInt = Keyboard.UP;
+		public var keyBottom(default, default):UInt = Keyboard.DOWN;
+		public var keyAction(default, default):UInt = Keyboard.SPACE;
+	#else
+		public var keyLeft(default, default):UInt = 37;
+		public var keyRight(default, default):UInt = 39;
+		public var keyTop(default, default):UInt = 38;
+		public var keyBottom(default, default):UInt = 40;
+		public var keyAction(default, default):UInt = 8;
+	#end
+	
 	
 	private var _groundTimeAccX:UInt;  	// milliseconds
 	private var _groundVX:Float;		// tiles / sec
@@ -48,7 +53,7 @@ class IntputKeyboard extends CompInput
 		beforePhysic = false;
 		
 		setRun( 10, 0.06 );
-		setJump( 2, 3, 4 );
+		setJump( 1, 3, 4 );
 	}
 	
 	/**
@@ -91,15 +96,22 @@ class IntputKeyboard extends CompInput
 	{
 		var kh:KeyboardHandler = KeyboardHandler.getInstance();
 		
+		var bottomWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) || 
+								_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM );
+		
+		var leftWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.LEFT );
+		var rightWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.RIGHT );
+		var topWall:Bool = 		_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP );
+		
+		
 		if ( kh.getKeyPressed( keyLeft ) )
 		{
 			
-			if ( !_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.LEFT ) )
+			if ( !leftWall )
 			{
 				_runTime += dt;
 				
-				if ( 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) ||
-						_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM )  )
+				if ( bottomWall )
 				{
 					if ( _runTime < _groundTimeAccX )
 					{
@@ -120,12 +132,11 @@ class IntputKeyboard extends CompInput
 		}
 		else if ( kh.getKeyPressed( keyRight ) ) 
 		{
-			if ( !_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.RIGHT ) )
+			if ( !rightWall )
 			{
 				_runTime += dt;
 				
-				if ( 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) ||
-						_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM )  )
+				if ( bottomWall  )
 				{
 					if ( _runTime < _groundTimeAccX )
 					{
@@ -145,17 +156,26 @@ class IntputKeyboard extends CompInput
 		else
 		{
 			_runTime = 0;
-			entity.transform.vX = 0;
+			if ( bottomWall  ) entity.transform.vX = 0;
 		}
 		
 		if ( kh.getKeyPressed( keyAction ) )
 		{
-			if (	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) ||
-					_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM ) )
+			if ( bottomWall )
 			{
 				entity.transform.vY = - _jumpStartVY;
 			}
-			else if ( !_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP ) )
+			else if ( leftWall )
+			{
+				entity.transform.vY = - _jumpStartVY;
+				entity.transform.vX = _groundVX;
+			}
+			else if ( rightWall )
+			{
+				entity.transform.vY = - _jumpStartVY;
+				entity.transform.vX = - _groundVX;
+			}
+			else if ( !topWall )
 			{
 				entity.transform.vY -= _jumpVY;
 			}

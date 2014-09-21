@@ -1,4 +1,7 @@
 package dune.helpers.keyboard;
+import hxd.Event;
+
+
 
 #if (flash || openfl)
 
@@ -9,10 +12,10 @@ package dune.helpers.keyboard;
 #elseif js
 
 	import js.html.KeyboardEvent;
-
+	
 #elseif cpp
 
-	
+	// todo!
 	
 #end
 
@@ -26,14 +29,14 @@ package dune.helpers.keyboard;
  */
 class KeyboardHandler
 {
-	private static var _CAN_INSTANTIATE:Bool = false;
-	private static var _INSTANCE:KeyboardHandler;
+	static var _CAN_INSTANTIATE:Bool = false;
+	static var _INSTANCE:KeyboardHandler;
 	
-	private var _listKeyPressed:Array<UInt>;
+	var _listKeyPressed:Array<UInt>;
 	
-	private var _listKeyCodeHandler:Array<UInt>;
-	private var _listCallbackHandler:Array<Void->Void>;
-	//private var _stage:Stage;
+	var _listKeyCodeHandler:Array<UInt>;
+	var _listCallbackHandler:Array<Void->Void>;
+	//var _stage:Stage;
 	
 	public function new() 
 	{
@@ -43,9 +46,13 @@ class KeyboardHandler
 		_listKeyCodeHandler = [];
 		_listCallbackHandler = [];
 		
-		
-		Lib.current.stage.addEventListener( KeyboardEvent.KEY_DOWN, keyDown );
-		Lib.current.stage.addEventListener( KeyboardEvent.KEY_UP, keyUp );
+		#if (flash || openfl )
+			Lib.current.stage.addEventListener( KeyboardEvent.KEY_DOWN, keyDown );
+			Lib.current.stage.addEventListener( KeyboardEvent.KEY_UP, keyUp );
+		#elseif js
+			js.Browser.document.onkeydown = keyDown;
+			js.Browser.document.onkeyup = keyUp;
+		#end
 	}
 	
 	public function addCallback( keyCode:UInt, pCallback:Void->Void ):Void
@@ -94,8 +101,15 @@ class KeyboardHandler
 	
 	public function dispose():Void
 	{
-		Lib.current.stage.removeEventListener( KeyboardEvent.KEY_DOWN, keyDown );
-		Lib.current.stage.removeEventListener( KeyboardEvent.KEY_UP, keyUp );
+		
+		
+		#if (flash || openfl )
+			Lib.current.stage.removeEventListener( KeyboardEvent.KEY_DOWN, keyDown );
+			Lib.current.stage.removeEventListener( KeyboardEvent.KEY_UP, keyUp );
+		#elseif js
+			js.Browser.document.onkeydown = null;
+			js.Browser.document.onkeyup = null;
+		#end
 		
 		_listKeyPressed = [];
 		_listKeyCodeHandler = [];

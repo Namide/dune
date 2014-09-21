@@ -4,7 +4,7 @@ import dune.system.core.SysLink;
 import dune.system.physic.components.CompBody;
 import dune.system.core.SysSpaceSimple;
 
-#if debugHitbox
+#if (debugHitbox && (flash || openfl))
 	import flash.display.Sprite;
 	import flash.Lib;
 #end
@@ -20,7 +20,7 @@ class SysPhysic
 	 */
 	public var space(default, null):SysSpaceSimple;
 	
-	#if debugHitbox
+	#if (debugHitbox && (flash || openfl ))
 		var _sceneHitBox:Sprite;
 	#end
 	
@@ -28,7 +28,7 @@ class SysPhysic
 	{
 		space = new SysSpaceSimple();
 		
-		#if debugHitbox
+		#if (debugHitbox && (flash || openfl ))
 			_sceneHitBox = new Sprite();
 			Lib.current.stage.addChild( _sceneHitBox );
 		#end
@@ -43,7 +43,7 @@ class SysPhysic
 			b.contacts.moveAndDispatch( link );
 		}
 		
-		#if debugHitbox
+		#if (debugHitbox && (flash || openfl ))
 		
 			_sceneHitBox.graphics.clear();
 			

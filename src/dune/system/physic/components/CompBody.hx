@@ -7,7 +7,7 @@ import dune.system.physic.shapes.PhysShapeCircle;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.PhysShapeType;
 
-#if (debugHitbox && flash)
+#if (debugHitbox && (flash || openfl))
 	import flash.display.Sprite;
 #end
 
@@ -63,7 +63,7 @@ class CompBody implements ComponentBasic
 		shape = null;
 	}
 	
-	#if debugHitbox
+	#if (debugHitbox && (flash || openfl ))
 	
 		public function draw(scene:Sprite):Void
 		{

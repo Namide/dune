@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
-    <option additional="-D resourcesPath=assets&#xA;-lib heaps&#xA;-D debugHitbox=1" />
+    <option additional="-D resourcesPath=assets&#xA;-lib heaps&#xA;-D debugHitbox1" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>
@@ -50,7 +50,7 @@
   <options>
     <option showHiddenPaths="False" />
     <option testMovie="Default" />
-    <option testMovieCommand=" start D:\damien\_sdk\flashplayer bin/dune.swf" />
+    <option testMovieCommand="start D:\damien\_sdk\flashplayer bin/dune.swf" />
   </options>
   <!-- Plugin storage -->
   <storage />

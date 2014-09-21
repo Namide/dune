@@ -4,7 +4,7 @@ import dune.compBasic.ComponentType;
 import dune.compBasic.CompTransform;
 import dune.entities.Entity;
 import dune.helpers.entity.EntityFact;
-import dune.models.inputs.IntputKeyboard;
+import dune.models.inputs.IntputPlatformPlayer;
 import dune.models.inputs.InputGravity;
 import dune.models.inputs.InputMobile;
 import dune.system.graphic.components.CompDisplay2dSprite;
@@ -119,22 +119,26 @@ class Game
 			
 			// Keyboard
 			
-				var i3:IntputKeyboard = new IntputKeyboard();
+				var i3:IntputPlatformPlayer = new IntputPlatformPlayer();
 				//i3.groundVX = 5;
 				e3.addInput( i3 );
 			
 		systemManager.addEntity( e3 );
 		
+		// GROUND
+		EntityFact.addSolid( systemManager, 0, 6*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 4*TS, 6*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 8*TS, 6*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFact.addSolid( systemManager, 12*TS, 6*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		
-		EntityFact.addSolid( systemManager, 0, 6*TS, 4*TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 4*TS, 6*TS, 4*TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 8*TS, 6*TS, 4*TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 12*TS, 6*TS, 4*TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		
+		// PLATFORMS
 		EntityFact.addSolid( systemManager, 8*TS, 5*TS, TS, TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		EntityFact.addSolid( systemManager, 11*TS, 4*TS, TS, 2*TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		EntityFact.addSolid( systemManager, 13*TS, 3*TS, TS, 3*TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		EntityFact.addSolid( systemManager, 15*TS, 2*TS, TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		
+		// WALL LEFT
+		EntityFact.addSolid( systemManager, 0, 1*TS, TS, 5*TS, CompBodyType.SOLID_TYPE_WALL );
 		
 		//systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );
 		systemManager.refresh(0);

@@ -1,6 +1,7 @@
 package dune.system;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
+import dune.helpers.core.TimeUtils;
 import dune.system.core.SysLink;
 import dune.system.graphic.SysGraphic;
 import dune.system.input.SysInput;
@@ -37,7 +38,7 @@ class SysManager
 		sysPhysic = new SysPhysic();
 		sysLink = new SysLink();
 		
-		_time = Lib.getTimer();
+		_time = TimeUtils.getMS(); //Lib.getTimer();
 	}
 	
 	public function addEntity( entity:Entity ):Void
@@ -70,7 +71,7 @@ class SysManager
 	
 	public function refresh(dt:Float):Void 
 	{
-		var realTime:UInt = Lib.getTimer();
+		var realTime:UInt = TimeUtils.getMS();
 		var rest:UInt = realTime - _time;
 		
 		if ( rest < Settings.FRAME_DELAY )

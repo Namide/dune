@@ -7,7 +7,7 @@ package dune.system;
 class Settings
 {
 	public static inline var FRAME_DELAY:UInt = 20;
-	public static inline var GRAVITY:Float =  10 / Settings.FRAME_DELAY;
+	public static inline var GRAVITY:Float =  10 / 20;//10 / Settings.FRAME_DELAY;
 	
 	public static inline var TILE_SIZE:UInt = 32;
 	//public inline static var TILE_SIZE:UInt = 32;

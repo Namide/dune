@@ -10,12 +10,14 @@ import dune.system.Settings;
 
 
 
-#if flash
+#if (flash || openfl)
 
 	import flash.ui.Keyboard;
 	
 #elseif js
 	
+
+
 #end
 
 /**
@@ -31,7 +33,7 @@ class IntputKeyboard extends CompInput
 	public var keyAction(default, default):UInt = Keyboard.SPACE;
 	
 	private var _groundTimeAccX:UInt;  	// milliseconds
-	private var _groundVX:Float;			// tiles / sec
+	private var _groundVX:Float;		// tiles / sec
 	private var _groundAccX:Float;
 	private var _jumpStartVY:Float;
 	private var _jumpVY:Float;

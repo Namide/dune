@@ -1,8 +1,5 @@
 package dune.helpers.keyboard;
 
-
-
-
 #if (flash || openfl)
 
 	import flash.display.Stage;

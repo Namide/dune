@@ -1,5 +1,6 @@
 package dune;
 
+import dune.compBasic.ComponentType;
 import dune.compBasic.CompTransform;
 import dune.entities.Entity;
 import dune.helpers.entity.EntityFact;
@@ -30,7 +31,7 @@ class Game
 	
 	public function new() 
 	{
-		hxd.Res.initEmbed();
+		//hxd.Res.initEmbed();
 		//hxd.Res.loader = new hxd.res.Loader(hxd.res.EmbedFileSystem.create());
 		
 		systemManager = new SysManager();
@@ -39,7 +40,7 @@ class Game
 	
 	public function run()
 	{
-		var tile = hxd.Res.mainChar128x128.toTile();
+		//var tile = hxd.Res.mainChar128x128.toTile();
 		
 		
 		
@@ -90,8 +91,9 @@ class Game
 		
 		// PLAYER
 		var e3 = new Entity();
-		/*e3.transform.x = TS;
-		e3.transform.y = TS;*/
+		e3.transform.x = TS;
+		e3.transform.y = TS;
+			
 			// graphic
 			
 				//var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
@@ -120,7 +122,7 @@ class Game
 				var i3:IntputKeyboard = new IntputKeyboard();
 				//i3.groundVX = 5;
 				e3.addInput( i3 );
-				
+			
 		systemManager.addEntity( e3 );
 		
 		

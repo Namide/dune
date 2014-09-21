@@ -22,9 +22,7 @@ class Entity
 	public var display(default, set):ComponentDisplay;
 	private function set_display( cd:ComponentDisplay ):ComponentDisplay
 	{
-		//transform.moved = true;
-		cd.setX( transform.x );
-		cd.setY( transform.y );
+		cd.setPos( transform.x, transform.y );
 		return display = cd;
 	}
 	

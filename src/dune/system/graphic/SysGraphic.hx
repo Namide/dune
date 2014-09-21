@@ -77,7 +77,7 @@ class SysGraphic
 		for ( entity in entities )
 		{
 			entity.display.setPos( entity.transform.x, entity.transform.y );
-			entity.transform.moved = false;
+			//entity.transform.moved = false;
 		}
 		
 		engine.render(s3d);

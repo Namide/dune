@@ -52,6 +52,7 @@ class SysManager
 		
 		entity.transform.onMoved = function()
 		{
+			trace(entity.transform.y);
 			_entitiesMoved.push( entity );
 		};
 	}

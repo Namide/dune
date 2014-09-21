@@ -62,9 +62,9 @@ class CompTransform implements ComponentBasic
 	public var x(default, set):Float;
 	inline function set_x( value:Float ):Float
 	{
-		if ( value != x && !moved )
+		if ( value != x /*&& !moved*/ )
 		{
-			moved = true;
+			//moved = true;
 			onMoved();
 		}
 		return x = value;
@@ -76,15 +76,15 @@ class CompTransform implements ComponentBasic
 	public var y(default, set):Float;
 	inline function set_y( value:Float ):Float
 	{
-		if ( value != y && !moved )
+		if ( value != y /*&& !moved*/ )
 		{
-			moved = true;
+			//moved = true;
 			onMoved();
 		}
 		return y = value;
 	}
 	
-	public var moved(default, default):Bool;
+	//public var moved(default, default):Bool;
 	
 	/**
 	 * Used in the system manager, don't change it
@@ -104,7 +104,7 @@ class CompTransform implements ComponentBasic
 		y = 0.0;
 		vX = 0.0;
 		vY = 0.0;
-		moved = false;
+		//moved = false;
 	}
 	
 }

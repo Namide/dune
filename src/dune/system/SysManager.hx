@@ -2,11 +2,9 @@ package dune.system;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
 import dune.helpers.core.TimeUtils;
-import dune.system.core.SysLink;
 import dune.system.graphic.SysGraphic;
 import dune.system.input.SysInput;
 import dune.system.physic.SysPhysic;
-//import flash.Lib;
 
 
 /**
@@ -23,7 +21,7 @@ class SysManager
 	public var sysInput(default, default):SysInput;
 	public var sysPhysic(default, default):SysPhysic;
 	public var sysGraphic(default, default):SysGraphic;
-	public var sysLink(default, default):SysLink;
+	//public var sysLink(default, default):SysLink;
 	
 	var _time:UInt;
 	
@@ -36,7 +34,7 @@ class SysManager
 		sysInput = new SysInput();
 		sysGraphic = new SysGraphic();
 		sysPhysic = new SysPhysic();
-		sysLink = new SysLink();
+		//sysLink = new SysLink();
 		
 		_time = TimeUtils.getMS(); //Lib.getTimer();
 	}
@@ -82,7 +80,7 @@ class SysManager
 		
 		while ( rest >= Settings.FRAME_DELAY )
 		{
-			sysPhysic.refresh( Settings.FRAME_DELAY, sysLink );
+			sysPhysic.refresh( Settings.FRAME_DELAY/*, sysLink*/ );
 			
 			if ( rest < Settings.FRAME_DELAY + Settings.FRAME_DELAY )
 			{
@@ -92,7 +90,7 @@ class SysManager
 			
 			sysInput.refresh( Settings.FRAME_DELAY, true );
 			sysInput.refresh( Settings.FRAME_DELAY, false );
-			sysLink.executeAndClean();
+			//sysLink.executeAndClean();
 			
 			for ( e in _entitiesVelocity )
 			{

@@ -1,7 +1,6 @@
 package dune.system.physic.components;
 import dune.compBasic.CompTransform;
 import dune.helpers.core.ArrayUtils;
-import dune.system.core.SysLink;
 import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.PhysShapeType;
@@ -112,7 +111,7 @@ class ContactBodies
 	 * Pushes the bodies in contact in the arrays :
 	 * top, left, right and bottom
 	 */
-	public function moveAndDispatch( link:SysLink ):Void
+	public function moveAndDispatch( /*link:SysLink*/ ):Void
 	{
 		if ( length() < 0 )
 		{
@@ -125,7 +124,7 @@ class ContactBodies
 		var absVX:Float = parent.entity.transform.vX;
 		var absVY:Float = parent.entity.transform.vY;
 		
-		link.removeChild( parent.entity.transform );
+		//link.removeChild( parent.entity.transform );
 		
 		for ( cp in all )
 		{
@@ -142,7 +141,7 @@ class ContactBodies
 			{
 				var reac:Int = getReactPosA( parent.shape, cp.shape, dX, dY );
 				
-				return calculateReaction( cp, reac, link );
+				return calculateReaction( cp, reac/*, link*/ );
 			}
 			
 		}
@@ -154,7 +153,7 @@ class ContactBodies
 				if ( a.dist > b.dist ) { return 1; }
 				return -1;
 			});
-			calculateChainReaction( allDatas, link );
+			calculateChainReaction( allDatas/*, link*/ );
 		}
 	}	
 	
@@ -326,7 +325,7 @@ class ContactBodies
 	 * 
 	 * @param	dataList
 	 */
-	function calculateChainReaction( dataList:Array<ContactBodiesData>, link:SysLink ):Void
+	function calculateChainReaction( dataList:Array<ContactBodiesData>/*, link:SysLink*/ ):Void
 	{
 		ArrayUtils.clear( all );
 		for ( data in dataList )
@@ -340,7 +339,7 @@ class ContactBodies
 					var dY:Float = data.body.entity.transform.vY - parent.entity.transform.vY;
 					data.reac = getReactPosA( parent.shape, data.body.shape, dX, dY, data );
 					
-					calculateReaction( data.body, data.reac, link );
+					calculateReaction( data.body, data.reac/*, link*/ );
 				
 				// ---
 				
@@ -351,7 +350,7 @@ class ContactBodies
 		}
 	}
 	
-	function calculateReaction( body:CompBody, reac:Int, link:SysLink ):Void
+	function calculateReaction( body:CompBody, reac:Int/*, link:SysLink*/ ):Void
 	{
 		
 		if ( parent.typeOfSolid == CompBodyType.SOLID_TYPE_EATER &&
@@ -370,10 +369,10 @@ class ContactBodies
 					body.typeOfSolid == CompBodyType.SOLID_TYPE_PLATFORM )
 			{
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
-				if ( !link.has( body.entity.transform, parent.entity.transform ) )
+				/*if ( !link.has( body.entity.transform, parent.entity.transform ) )
 				{
 					link.add( body.entity.transform, parent.entity.transform, SysLink.TYPE_TOP, false );
-				}
+				}*/
 				
 				if ( parent.entity.transform.vY > body.entity.transform.vY )
 				{
@@ -392,10 +391,10 @@ class ContactBodies
 				if ( reac == BOTTOM )
 				{
 					parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
-					if ( !link.has( body.entity.transform, parent.entity.transform ) )
+					/*if ( !link.has( body.entity.transform, parent.entity.transform ) )
 					{
 						link.add( body.entity.transform, parent.entity.transform, SysLink.TYPE_TOP, false );
-					}
+					}*/
 					
 					if ( parent.entity.transform.vY > body.entity.transform.vY )
 					{

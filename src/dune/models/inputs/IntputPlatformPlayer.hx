@@ -110,6 +110,14 @@ class IntputPlatformPlayer extends CompInput
 		var rightWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.RIGHT );
 		var topWall:Bool = 		_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP );
 		
+		var platformVX:Float = 0;
+		if ( bottomWall )
+		{
+			for ( body in _contacts.bottom )
+			{
+				platformVX += body.entity.transform.vX;
+			}
+		}
 		
 		if ( kh.getKeyPressed( keyLeft ) )
 		{
@@ -118,10 +126,10 @@ class IntputPlatformPlayer extends CompInput
 			{
 				if ( bottomWall )
 				{
-					if ( entity.transform.vX > -_groundVX )
+					if ( entity.transform.vX > platformVX-_groundVX )
 					{
 						entity.transform.vX -= _groundAccX;
-						if ( entity.transform.vX < -_groundVX ) entity.transform.vX = -_groundVX;
+						if ( entity.transform.vX < platformVX-_groundVX ) entity.transform.vX = platformVX-_groundVX;
 					}
 				}
 				else if ( TimeUtils.getMS() > _landmark )
@@ -142,10 +150,10 @@ class IntputPlatformPlayer extends CompInput
 			{
 				if ( bottomWall  )
 				{
-					if ( entity.transform.vX < _groundVX )
+					if ( entity.transform.vX < platformVX+_groundVX )
 					{
 						entity.transform.vX += _groundAccX;
-						if ( entity.transform.vX > _groundVX ) entity.transform.vX = _groundVX;
+						if ( entity.transform.vX > platformVX+_groundVX ) entity.transform.vX = platformVX+_groundVX;
 					}
 				}
 				else if ( TimeUtils.getMS() > _landmark )
@@ -160,7 +168,7 @@ class IntputPlatformPlayer extends CompInput
 		}
 		else
 		{
-			if ( bottomWall  ) entity.transform.vX = 0;
+			if ( bottomWall  ) entity.transform.vX = platformVX;
 		}
 		
 		if ( kh.getKeyPressed( keyAction ) )

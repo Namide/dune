@@ -1,6 +1,5 @@
 package dune.system.physic;
 
-import dune.system.core.SysLink;
 import dune.system.physic.components.CompBody;
 import dune.system.core.SysSpaceSimple;
 
@@ -34,13 +33,13 @@ class SysPhysic
 		#end
 	}
 	
-	public function refresh( dt:UInt, link:SysLink ):Void 
+	public function refresh( dt:UInt/*, link:SysLink*/ ):Void 
 	{
 		//space.refreshGrid();
 		var list:Iterable<CompBody> = space.hitTest();
 		for ( b in list )
 		{
-			b.contacts.moveAndDispatch( link );
+			b.contacts.moveAndDispatch( /*link*/ );
 		}
 		
 		#if (debugHitbox && (flash || openfl ))

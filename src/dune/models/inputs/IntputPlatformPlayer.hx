@@ -1,6 +1,7 @@
 package dune.models.inputs;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
+import dune.helpers.core.TimeUtils;
 import dune.helpers.keyboard.KeyboardHandler;
 import dune.system.input.components.CompInput;
 import dune.system.physic.components.CompBody;
@@ -41,12 +42,14 @@ class IntputPlatformPlayer extends CompInput
 	var _groundVX:Float;		// tiles / sec
 	var _groundAccX:Float;
 	var _jumpStartVY:Float;
+	var _jumpAccX:Float;
 	var _jumpVY:Float;
 	var _jumpVX:Float;
+	var _jumpTimeLock:UInt;
 	
 	var _actionPressed:Bool = false;
 	
-	var _runTime:UInt = 0;
+	var _landmark:UInt = 0;
 	var _contacts:ContactBodies;
 	
 	public function new() 
@@ -55,7 +58,7 @@ class IntputPlatformPlayer extends CompInput
 		beforePhysic = false;
 		
 		setRun( 10, 0.06 );
-		setJump( 1, 3, 4 );
+		setJump( 1, 3, 4, 0.06, 0.2 );
 	}
 	
 	/**
@@ -65,8 +68,8 @@ class IntputPlatformPlayer extends CompInput
 	 */
 	public function setRun( vel:Float, accTime:Float ):Void
 	{
-		_groundTimeAccX = Math.round(accTime * 1000);
-		_groundAccX = Settings.getAccX( vel, _groundTimeAccX );
+		//_groundTimeAccX = Math.round(accTime * 1000);
+		_groundAccX = Settings.getAccX( vel, Math.round(accTime * 1000) );
 		_groundVX = Settings.getVX( vel );
 	}
 	
@@ -76,11 +79,13 @@ class IntputPlatformPlayer extends CompInput
 	 * @param	hMax		Maximal height of the jump in tiles
 	 * @param	lMax		Length of the jump in tiles
 	 */
-	public function setJump( hMin:Float, hMax:Float, lMax:Float ):Void
+	public function setJump( hMin:Float, hMax:Float, lMax:Float, accTime:Float, timeLock:Float ):Void
 	{
 		_jumpStartVY = Settings.getJumpStartVY( hMin );
 		_jumpVY = Settings.getJumpVY( hMax, _jumpStartVY );
 		_jumpVX = Settings.getJumpVX( lMax, _jumpStartVY, _jumpVY );
+		_jumpAccX = Settings.getAccX( _jumpVX, Math.round(accTime * 1000) );
+		_jumpTimeLock = Math.round(timeLock * 1000);
 	}
 	
 	override function set_entity(value:Entity):Entity 
@@ -111,22 +116,21 @@ class IntputPlatformPlayer extends CompInput
 			
 			if ( !leftWall )
 			{
-				_runTime += dt;
-				
 				if ( bottomWall )
 				{
-					if ( _runTime < _groundTimeAccX )
+					if ( entity.transform.vX > -_groundVX )
 					{
-						entity.transform.vX = -_groundAccX * _runTime;
-					}
-					else
-					{
-						entity.transform.vX = -_groundVX;
+						entity.transform.vX -= _groundAccX;
+						if ( entity.transform.vX < -_groundVX ) entity.transform.vX = -_groundVX;
 					}
 				}
-				else
+				else if ( TimeUtils.getMS() > _landmark )
 				{
-					entity.transform.vX = -_jumpVX;
+					if ( entity.transform.vX > -_jumpVX )
+					{
+						entity.transform.vX -= _jumpAccX;
+						if ( entity.transform.vX < -_jumpVX ) entity.transform.vX = -_jumpVX;
+					}
 				}
 				
 			}
@@ -136,28 +140,26 @@ class IntputPlatformPlayer extends CompInput
 		{
 			if ( !rightWall )
 			{
-				_runTime += dt;
-				
 				if ( bottomWall  )
 				{
-					if ( _runTime < _groundTimeAccX )
+					if ( entity.transform.vX < _groundVX )
 					{
-						entity.transform.vX = _groundAccX * _runTime;
-					}
-					else
-					{
-						entity.transform.vX = _groundVX;
+						entity.transform.vX += _groundAccX;
+						if ( entity.transform.vX > _groundVX ) entity.transform.vX = _groundVX;
 					}
 				}
-				else
+				else if ( TimeUtils.getMS() > _landmark )
 				{
-					entity.transform.vX = _jumpVX;
+					if ( entity.transform.vX < _jumpVX )
+					{
+						entity.transform.vX += _jumpAccX;
+						if ( entity.transform.vX > _jumpVX ) entity.transform.vX = _jumpVX;
+					}
 				}
 			}
 		}
 		else
 		{
-			_runTime = 0;
 			if ( bottomWall  ) entity.transform.vX = 0;
 		}
 		
@@ -166,16 +168,22 @@ class IntputPlatformPlayer extends CompInput
 			if ( bottomWall )
 			{
 				entity.transform.vY = - _jumpStartVY;
+				if ( kh.getKeyPressed( keyLeft ) ) 			entity.transform.vX = -_jumpVX;
+				else if ( kh.getKeyPressed( keyRight ) ) 	entity.transform.vX = _jumpVX;
+				
+				//_landmark = TimeUtils.getMS() + _jumpTimeLock;
 			}
 			else if ( leftWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
-				entity.transform.vX = _groundVX;
+				entity.transform.vX = _jumpVX;
+				_landmark = TimeUtils.getMS() + _jumpTimeLock;
 			}
 			else if ( rightWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
-				entity.transform.vX = - _groundVX;
+				entity.transform.vX = - _jumpVX;
+				_landmark = TimeUtils.getMS() + _jumpTimeLock;
 			}
 			else if ( !topWall )
 			{

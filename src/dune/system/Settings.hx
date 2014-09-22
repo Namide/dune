@@ -28,7 +28,7 @@ class Settings
 	public inline static function getAccX( distTile:Float, timeMS:UInt ):Float
 	{
 		var a:Float = distTile * TILE_SIZE / ( 1000 * timeMS / FRAME_DELAY );
-		return a;
+		return a * FRAME_DELAY;
 	}
 	
 	/**

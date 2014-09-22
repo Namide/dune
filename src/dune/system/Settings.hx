@@ -12,6 +12,10 @@ class Settings
 	public static inline var TILE_SIZE:UInt = 32;
 	//public inline static var TILE_SIZE:UInt = 32;
 	
+	public static inline var X_MIN:UInt = - TILE_SIZE;
+	public static inline var Y_MIN:UInt = - TILE_SIZE;
+	public static inline var X_MAX:UInt = 50 * TILE_SIZE;
+	public static inline var Y_MAX:UInt = 50 * TILE_SIZE;
 	
 	public function new() 
 	{

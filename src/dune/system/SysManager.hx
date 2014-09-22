@@ -80,6 +80,13 @@ class SysManager
 		
 		while ( rest >= Settings.FRAME_DELAY )
 		{
+			/*for ( e in _entitiesMoved )
+			{
+				for ( body in e.bodies )
+				{
+					body.shape.updateAABB( e.transform );
+				}
+			}*/
 			sysPhysic.refresh( Settings.FRAME_DELAY/*, sysLink*/ );
 			
 			if ( rest < Settings.FRAME_DELAY + Settings.FRAME_DELAY )

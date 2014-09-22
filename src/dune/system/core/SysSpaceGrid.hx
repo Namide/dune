@@ -1,9 +1,144 @@
-package dune.system.core ;
+package dune.system.core;
 
-import dune.helpers.core.ArrayUtils;
+import dune.system.core.SysSpaceGrid.Grid;
+import dune.system.core.SysSpaceGrid.Node;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
 import dune.system.physic.shapes.PhysShapeUtils;
+
+#if (debugHitbox && (flash || openfl))
+	import flash.display.Sprite;
+#end
+
+class Grid
+{
+	public var minTileX(default, null):Int;
+	public var minTileY(default, null):Int;
+	public var maxTileX(default, null):Int;
+	public var maxTileY(default, null):Int;
+	
+	var _grid:Array<Array<Array<Node>>>;
+	
+	public function new( minTileX:Int, minTileY:Int, maxTileX:Int, maxTileY:Int )
+	{
+		this.minTileX = minTileX;
+		this.minTileY = minTileY;
+		this.maxTileX = maxTileX;
+		this.maxTileY = maxTileY;
+		
+		_grid = [];
+		var x:Int = -1;
+		for ( i in minTileX...maxTileX )
+		{
+			_grid[++x] = [];
+			var y:Int = -1;
+			for ( j in minTileY...maxTileY )
+			{
+				_grid[x][++y] = [];
+			}
+		}
+	}
+	
+	public inline function remove( i:Int, j:Int, node:Node ):Void
+	{
+		if ( 	i >= minTileX && i < maxTileX &&
+				j >= minTileY && j < maxTileY )
+		{
+			_grid[i-minTileX][j-minTileY].remove( node );
+		}
+	}
+	
+	public inline function push( i:Int, j:Int, node:Node ):Void
+	{
+		if ( 	i >= minTileX && i < maxTileX &&
+				j >= minTileY && j < maxTileY )
+		{
+			_grid[i-minTileX][j-minTileY].push( node );
+		}
+	}
+
+	public inline function getNodes( i:Int, j:Int ):Array<Node>
+	{
+		return ( i >= minTileX && i < maxTileX && j >= minTileY && j < maxTileY ) ? _grid[i - minTileX][j - minTileY] : [];
+	}
+	
+	public function getContacts( n:Node ):Array<Node>
+	{
+		var c:Array<Node> = [n];
+		for ( i in n.minTileX...n.maxTileX )
+		{
+			for ( j in n.minTileY...n.maxTileY )
+			{
+				for ( n2 in getNodes( i, j ) )
+				{
+					if ( !Lambda.has( c, n2 ) ) c.push( n2 );
+				}
+			}
+		}
+		c.remove( n );
+		return c;
+	}
+}
+
+class Node
+{
+	public var body(default, null):CompBody;
+	
+	public var minTileX(default, default):Int;
+	public var minTileY(default, default):Int;
+	public var maxTileX(default, default):Int;
+	public var maxTileY(default, default):Int;
+	
+	public function new( body:CompBody )
+	{
+		this.body = body;
+	}
+	
+	public function init( pitchX:Int, pitchY:Int, grid:Grid )
+	{
+		minTileX = -1;
+		minTileY = -1;
+		maxTileX = -1;
+		maxTileY = -1;
+		refresh( pitchX, pitchY, grid );
+	}
+	
+	public function refresh( pitchX:Int, pitchY:Int, grid:Grid ):Void
+	{
+		var nXMin:Int = Math.floor( (body.shape.aabbXMin) / pitchX );
+		var nYMin:Int = Math.floor( (body.shape.aabbYMin) / pitchY );
+		var nXMax:Int = Math.ceil( (body.shape.aabbXMax+1) / pitchX );
+		var nYMax:Int = Math.ceil( (body.shape.aabbYMax+1) / pitchY );
+		
+		if ( 	nXMin != minTileX ||
+				nYMin != minTileY ||
+				nXMax != maxTileX ||
+				nYMax != maxTileY )
+		{
+			for ( i in minTileX...maxTileX )
+			{
+				for ( j in minTileY...maxTileY )
+				{
+					grid.remove( i, j, this );
+				}
+			}
+			
+			for ( i in nXMin...nXMax )
+			{
+				for ( j in nYMin...nYMax )
+				{
+					grid.push( i, j, this );
+				}
+			}
+			
+			minTileX = nXMin;
+			minTileY = nYMin;
+			maxTileX = nXMax;
+			maxTileY = nYMax;
+		}
+	}
+	
+}
 
 /**
  * ...
@@ -11,169 +146,79 @@ import dune.system.physic.shapes.PhysShapeUtils;
  */
 class SysSpaceGrid
 {
-
-	public var _active(default, null):Array<CompBody>;
-	public var _passive(default, null):Array<CompBody>;
+	public var _active(default, null):Array<Node>;
+	public var _passive(default, null):Array<Node>;
 	
-	private var _grid:Array<Array<Array<CompBody>>>;
-	
-	public var _limitLeft(default, null):Int = 0;
-	public var _limitTop(default, null):Int = 0;
-	public var _limitRight(default, null):Int = 1024;
-	public var _limitBottom(default, null):Int = 1024;
-	
-	public var _cellW(default, null):Int = 64;
-	public var _cellH(default, null):Int = 64;
-	
-	private var _gridTilesW:UInt;
-	private var _gridTilesH:UInt;
+	public var _pitchX:Int;
+	public var _pitchY:Int;
+	public var _grid:Grid;
 	
 	public function new() 
 	{
 		_active = [];
 		_passive = [];
-		_grid = [];
+		init();
 	}
 	
-	/**
-	 * Change the size of the grid.
-	 * The better tile size is the same that all the objects sizes.
-	 * 
-	 * @param	minX		Left position of the scene
-	 * @param	minY		Top position of the scene
-	 * @param	maxX		Right position of the scene
-	 * @param	maxY		Bottom position of the scene
-	 * @param	cellW		With of the tile
-	 * @param	cellH		Height of the tile
-	 */
-	public function setSize( minX:Int, minY:Int, maxX:Int, maxY:Int, cellW:Int, cellH:Int ):Void
+	public function init( 	minX:Int = Settings.X_MIN,
+							minY:Int = Settings.Y_MIN,
+							maxX:Int = Settings.X_MAX,
+							maxY:Int = Settings.Y_MAX,
+							pitchX:Int = Settings.TILE_SIZE,
+							pitchY:Int = Settings.TILE_SIZE ):Void
 	{
-		_limitLeft = minX;
-		_limitTop = minY;
-		_limitRight = maxX;
-		_limitBottom = maxY;
-		_cellW = cellW;
-		_cellH = cellH;
+		_pitchX = pitchX;
+		_pitchY = pitchY;
 		
-		_gridTilesW = Math.floor( (_limitRight - _limitLeft) / _cellW );
-		_gridTilesH = Math.floor( (_limitBottom - _limitTop) / _cellH );
-	}
-	
-	/**
-	 * Refresh the grid and add all the passives bodies in it.
-	 */
-	public function refreshGrid():Void 
-	{
-		ArrayUtils.clear( _grid );
+		_grid = new Grid( 	Math.floor( minX / _pitchX ),
+							Math.floor( minY / _pitchX ),
+							Math.ceil( maxX / _pitchX ),
+							Math.ceil( maxY / _pitchY ) );
 		
-		for ( physBody in _passive )
+		for ( node in _passive )
 		{
-			addBodyInGrid( physBody );
+			node.init( pitchX, pitchY, _grid );
+		}
+		
+		for ( node in _active )
+		{
+			node.init( pitchX, pitchY, _grid );
 		}
 	}
 	
-	private function addBodyInGrid( physBody:CompBody ):Void
+	public function hitTest():List<CompBody>
 	{
-		physBody.shape.updateAABB( physBody.entity.transform );
+		var affected:List<CompBody> = new List<CompBody>();
 		
-		var pX:Float = physBody.shape.aabbXMin;
-		var pY:Float = physBody.shape.aabbYMin;
 		
-		if ( 	pX < _limitLeft ||
-				pX > _limitRight ||
-				pY < _limitTop ||
-				pY > _limitBottom	)
+		for ( node in _passive )
 		{
-			return;
-		}
-
-		var entityGridXMin:Int = Math.floor( (pX - _limitLeft) / _cellW );
-		var entityGridXMax:Int = Math.floor( (physBody.shape.aabbXMax - _limitLeft) / _cellW );
-		var entityGridYMin:Int = Math.floor( (pY - _limitTop) / _cellH );
-		var entityGridYMax:Int = Math.floor( (physBody.shape.aabbYMax - _limitTop) / _cellH );
-
-		for ( cX in entityGridXMin...entityGridXMax )
-		{
-			for ( cY in entityGridYMin...entityGridYMax )
-			{
-				if ( _grid[cX] == null ) { _grid[cX] = []; }
-				if ( _grid[cX][cY] == null ) { _grid[cX][cY] = []; }
-				_grid[cX][cY].push( physBody );
-			}
-		}
-	}
-	
-	/**
-	 * Hit test for all entities and fill contacts in physic body
-	 * 
-	 * @return					Entities collides
-	 */
-	public function hitTest( /*dispatch:Bool = false*/ ):Array<CompBody>
-	{
-		var affected:Array<CompBody> = [];
-		
-		for ( physBody in _active )
-		{
-			physBody.shape.updateAABB( physBody.entity.transform );
+			node.body.shape.updateAABB( node.body.entity.transform );
+			node.refresh( _pitchX, _pitchY, _grid );
 		}
 		
-		for ( physBody in _active )
+		for ( node in _active )
 		{
+			var b:CompBody = node.body;
 			var isAffected:Bool = false;
-			var pX:Float = physBody.shape.aabbXMin;
-			var pY:Float = physBody.shape.aabbYMin;
+			b.contacts.clear();
+			b.shape.updateAABB( b.entity.transform );
 			
-			if ( 	pX < _limitLeft ||
-					pX > _limitRight ||
-					pY < _limitTop ||
-					pY > _limitBottom	)
+			node.refresh( _pitchX, _pitchX, _grid );
+			var contacts:Array<Node> = _grid.getContacts( node );
+			for ( node2 in contacts )
 			{
-				continue;
-			}
-
-			var entityGridXMin:Int = Math.floor( (pX - _limitLeft) / _cellW );
-			var entityGridXMax:Int = Math.ceil( (physBody.shape.aabbXMax - _limitLeft) / _cellW );
-			var entityGridYMin:Int = Math.floor( (pY - _limitTop) / _cellH );
-			var entityGridYMax:Int = Math.ceil( (physBody.shape.aabbYMax - _limitTop) / _cellH );
-			
-			physBody.contacts.clear();
-			for ( cX in entityGridXMin...entityGridXMax )
-			{
-				for ( cY in entityGridYMin...entityGridYMax )
+				if ( PhysShapeUtils.hitTest( b.shape, node2.body.shape ) )
 				{
-					if ( 	cX < _grid.length &&
-							_grid[cX] != null &&
-							cY < _grid[cX].length &&
-							_grid[cX][cY] != null )
+					b.contacts.push( node2.body );
+					if ( !isAffected )
 					{
-						for ( physBodyPassive in _grid[cX][cY] )
-						{
-							if ( 	physBody.contacts.all.indexOf( physBodyPassive ) < 0 &&
-									PhysShapeUtils.hitTest( physBody.shape, physBodyPassive.shape ) )
-							{
-								physBody.contacts.push( physBodyPassive );
-								if ( !isAffected )
-								{
-									isAffected = true;
-									affected.push( physBody );
-								}
-							}
-						}
+						isAffected = true;
+						affected.push( b );
 					}
 				}
 			}
 		}
-		
-		/*if ( dispatch )
-		{
-			for ( physBody in affected )
-			{
-				for ( fct in physBody.onCollide )
-				{
-					fct( physBody.contacts );
-				}
-			}
-		}*/
 		
 		return affected;
 	}
@@ -182,19 +227,21 @@ class SysSpaceGrid
 	 * Add a body in this system
 	 * 
 	 * @param	body			Body to add in the system
-	 * @param	addNowInGrid	Add the body in the grid (you must add only for the first adding)
 	 */
-	public function addBody( body:CompBody, addNowInGrid:Bool = true ):Void
+	public function addBody( body:CompBody ):Void
 	{
+		var node:Node = new Node( body );
+		node.init( _pitchX, _pitchY, _grid );
+		
 		if ( body.typeOfCollision == CompBodyType.COLLISION_TYPE_PASSIVE )
 		{
-			_passive.push( body );
-			if ( addNowInGrid ) { addBodyInGrid( body ); };
+			_passive.push( node );
 		}
 		else
 		{
-			_active.push( body );
+			_active.push( node );
 		}
+		
 	}
 	
 	/**
@@ -203,25 +250,42 @@ class SysSpaceGrid
 	 * @param	body			Body to add
 	 * @param	rebuildGrid		Clear the grid and buid it
 	 */
-	public function removeBody( body:CompBody, rebuildGrid:Bool = false ):Void
+	public function removeBody( body:CompBody ):Void
 	{
+		
 		if ( body.typeOfCollision == CompBodyType.COLLISION_TYPE_PASSIVE )
 		{
-			_passive.remove( body );
-			if ( rebuildGrid ) { refreshGrid(); }
+			var node:Node = Lambda.find( _passive, function( n:Node ):Bool { return n.body == body; } );
+			_passive.remove( node );
 		}
 		else
 		{
-			_active.remove( body );
+			var node:Node = Lambda.find( _active, function( n:Node ):Bool { return n.body == body; } );
+			_active.remove( node );
 		}
 	}
 	
-	/*private inline function clear( arr:Array<Dynamic> ):Void
-	{
-        #if (cpp||php)
-           arr.splice(0,arr.length);          
-        #else
-           untyped arr.length = 0;
-        #end
-    }*/
+	#if (debugHitbox && (flash || openfl ))
+	
+		public function draw(scene:Sprite):Void
+		{
+			scene.graphics.lineStyle( 1, 0xCCCCCC, 0.5 );
+			
+			for ( i in _grid.minTileX..._grid.maxTileX )
+			{
+				for ( j in _grid.minTileY..._grid.maxTileY )
+				{
+					scene.graphics.beginFill( 0xFFFFFF, _grid.getNodes( i, j ).length / 4 );
+					scene.graphics.drawRect( 	i * _pitchX,
+												j * _pitchY,
+												_pitchX,
+												_pitchX );
+				}
+			}
+			
+			
+		}
+		
+	#end
+	
 }

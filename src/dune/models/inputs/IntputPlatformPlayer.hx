@@ -58,7 +58,7 @@ class IntputPlatformPlayer extends CompInput
 		beforePhysic = false;
 		
 		setRun( 10, 0.06 );
-		setJump( 1, 3, 4, 0.06, 0.2 );
+		setJump( 1, 2, 3, 0.06, 0.2 );
 	}
 	
 	/**

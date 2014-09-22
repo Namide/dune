@@ -37,12 +37,14 @@ class IntputPlatformPlayer extends CompInput
 	#end
 	
 	
-	private var _groundTimeAccX:UInt;  	// milliseconds
-	private var _groundVX:Float;		// tiles / sec
-	private var _groundAccX:Float;
-	private var _jumpStartVY:Float;
-	private var _jumpVY:Float;
-	private var _jumpVX:Float;
+	var _groundTimeAccX:UInt;  	// milliseconds
+	var _groundVX:Float;		// tiles / sec
+	var _groundAccX:Float;
+	var _jumpStartVY:Float;
+	var _jumpVY:Float;
+	var _jumpVX:Float;
+	
+	var _actionPressed:Bool = false;
 	
 	var _runTime:UInt = 0;
 	var _contacts:ContactBodies;
@@ -165,12 +167,12 @@ class IntputPlatformPlayer extends CompInput
 			{
 				entity.transform.vY = - _jumpStartVY;
 			}
-			else if ( leftWall )
+			else if ( leftWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
 				entity.transform.vX = _groundVX;
 			}
-			else if ( rightWall )
+			else if ( rightWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
 				entity.transform.vX = - _groundVX;
@@ -179,8 +181,13 @@ class IntputPlatformPlayer extends CompInput
 			{
 				entity.transform.vY -= _jumpVY;
 			}
+			
+			if ( !_actionPressed ) { _actionPressed = true; }
 		}
-		
+		else if ( _actionPressed )
+		{
+			_actionPressed = false;
+		}
 		
 		/*if ( kh.getKeyPressed( keyTop ) ) 			{ onTop(entity); }
 		else if ( kh.getKeyPressed( keyBottom ) ) 	{ onBottom(entity); }

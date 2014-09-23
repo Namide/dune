@@ -1,5 +1,5 @@
 package dune.system.physic.shapes;
-import dune.compBasic.CompTransform;
+import dune.compBasic.Transform;
 import dune.system.physic.shapes.PhysShapePoint;
 
 /**
@@ -19,7 +19,7 @@ class PhysShapeCircle extends PhysShapePoint
 		r = 0.0;
 	}
 	
-	override public function updateAABB( pe:CompTransform ) 
+	override public function updateAABB( pe:Transform ) 
 	{
 		var cx:Float = pe.x - anchorX;
 		var cy:Float = pe.y - anchorY;

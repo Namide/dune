@@ -1,15 +1,15 @@
 package dune.system.core;
-import dune.compBasic.CompTransform;
+import dune.compBasic.Transform;
 import dune.system.core.SysLink.Link;
 
 class Link
 {
 	public var type(default, default):UInt;
-	public var parent(default, default):CompTransform;
-	public var child(default, default):CompTransform;
+	public var parent(default, default):Transform;
+	public var child(default, default):Transform;
 	public var lasting(default, default):Bool;
 	
-	public function new( parent:CompTransform, child:CompTransform, type:UInt, lasting:Bool ) 
+	public function new( parent:Transform, child:Transform, type:UInt, lasting:Bool ) 
 	{
 		this.type = type;
 		this.parent = parent;
@@ -44,22 +44,22 @@ class SysLink
 		_links = [];
 	}
 	
-	public inline function add( parent:CompTransform, child:CompTransform, type:UInt, lasting:Bool ):Void
+	public inline function add( parent:Transform, child:Transform, type:UInt, lasting:Bool ):Void
 	{
 		_links.push( new Link( parent, child, type, lasting ) );
 	}
 	
-	private inline function getChilds( parent:CompTransform ):List<Link>
+	private inline function getChilds( parent:Transform ):List<Link>
 	{
 		return Lambda.filter( _links, function(l:Link):Bool { return (l.parent == parent); } );
 	}
 	
-	private inline function getParents( child:CompTransform ):List<Link>
+	private inline function getParents( child:Transform ):List<Link>
 	{
 		return Lambda.filter( _links, function(l:Link):Bool { return (l.child == child); } );
 	}
 	
-	public inline function has( parent:CompTransform, child:CompTransform ):Bool
+	public inline function has( parent:Transform, child:Transform ):Bool
 	{
 		return Lambda.exists(_links, function(l:Link):Bool { return (l.parent == parent && l.child == child ); } );
 	}
@@ -77,29 +77,29 @@ class SysLink
 		}
 	}
 	
-	public inline function hasChild( parent:CompTransform ):Bool
+	public inline function hasChild( parent:Transform ):Bool
 	{
 		return Lambda.exists(_links, function(l:Link):Bool { return (l.parent == parent); } );
 	}
 	
-	public inline function hasParent( child:CompTransform ):Bool
+	public inline function hasParent( child:Transform ):Bool
 	{
 		return Lambda.exists(_links, function(l:Link):Bool { return (l.child == child); } );
 	}
 	
-	public function remove( parent:CompTransform, child:CompTransform ):Void
+	public function remove( parent:Transform, child:Transform ):Void
 	{
 		var o:Link = Lambda.find( _links, function(l:Link):Bool { return (l.parent == parent && l.child == child ); } );
 		if ( o != null ) _links.remove( o );
 	}
 	
-	public function removeParent( parent:CompTransform ):Void
+	public function removeParent( parent:Transform ):Void
 	{
 		var o:Link = Lambda.find( _links, function(l:Link):Bool { return (l.parent == parent); } );
 		if ( o != null ) _links.remove( o );
 	}
 	
-	public function removeChild( child:CompTransform ):Void
+	public function removeChild( child:Transform ):Void
 	{
 		var o:Link = Lambda.find( _links, function(l:Link):Bool { return (l.child == child); } );
 		if ( o != null ) _links.remove( o );

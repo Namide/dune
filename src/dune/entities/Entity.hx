@@ -1,8 +1,9 @@
 package dune.entities;
-import dune.compBasic.CompTransform;
+
+import dune.compBasic.Transform;
 import dune.helpers.core.ArrayUtils;
 import dune.system.graphic.components.ComponentDisplay;
-import dune.system.input.components.CompInput;
+import dune.compBasic.Controller;
 import dune.system.physic.components.CompBody;
 
 /**
@@ -13,9 +14,9 @@ class Entity
 {
 	public var type(default, default):UInt;
 	
-	public var transform(default, null):CompTransform;
+	public var transform(default, null):Transform;
 	
-	public var inputs(default, null):Array<CompInput>;
+	public var controllers(default, null):Array<Controller>;
 	public var bodies(default, null):Array<CompBody>;
 	//public var attachedTo(default, null):Array<Entity>;
 	
@@ -35,14 +36,14 @@ class Entity
 	{
 		type = 0;
 		
-		if ( transform == null )	{ transform = new CompTransform( this ); }
+		if ( transform == null )	{ transform = new Transform( this ); }
 		else 						{ transform.clear(); }
 		
-		if ( inputs == null ) { inputs = []; }
+		if ( controllers == null ) { controllers = []; }
 		if ( bodies == null ) { bodies = []; }
 		//if ( attachedTo == null ) { attachedTo = []; }
 		
-		for ( input in inputs )	{ input.clear(); }
+		for ( input in controllers )	{ input.clear(); }
 		for ( body in bodies ) 	{ body.clear(); }
 		
 		//ArrayUtils.clear( attachedTo );
@@ -54,9 +55,9 @@ class Entity
 		bodies.push( body );
 	}
 	
-	public function addInput( input:CompInput ):Void
+	public function addController( input:Controller ):Void
 	{
 		input.entity = this;
-		inputs.push( input );
+		controllers.push( input );
 	}
 }

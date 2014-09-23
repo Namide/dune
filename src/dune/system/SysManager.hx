@@ -3,7 +3,7 @@ import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
 import dune.helpers.core.TimeUtils;
 import dune.system.graphic.SysGraphic;
-import dune.system.input.SysInput;
+import dune.system.controller.SysController;
 import dune.system.physic.SysPhysic;
 
 
@@ -18,7 +18,7 @@ class SysManager
 	public var _entitiesVelocity:Array<Entity>;
 	public var _entitiesMoved:Array<Entity>;
 	
-	public var sysInput(default, default):SysInput;
+	public var sysController(default, default):SysController;
 	public var sysPhysic(default, default):SysPhysic;
 	public var sysGraphic(default, default):SysGraphic;
 	//public var sysLink(default, default):SysLink;
@@ -31,7 +31,7 @@ class SysManager
 		_entitiesVelocity = [];
 		_entitiesMoved = [];
 		
-		sysInput = new SysInput();
+		sysController = new SysController();
 		sysGraphic = new SysGraphic();
 		sysPhysic = new SysPhysic();
 		//sysLink = new SysLink();
@@ -44,13 +44,13 @@ class SysManager
 		_entities.push( entity );
 		if ( entity.transform.vActive ) { _entitiesVelocity.push( entity ); }
 		
-		for ( i in entity.inputs ) { sysInput.addInput( i ); }
+		for ( i in entity.controllers ) { sysController.addController( i ); }
 		for ( b in entity.bodies ) { sysPhysic.space.addBody( b ); }
 		sysGraphic.add( entity );
 		
 		entity.transform.onMoved = function()
 		{
-			_entitiesMoved.push( entity );
+			if ( !Lambda.has( _entitiesMoved, entity ) ) _entitiesMoved.push( entity );
 		};
 	}
 	
@@ -59,7 +59,7 @@ class SysManager
 		_entities.remove( entity );
 		if ( _entitiesVelocity.indexOf( entity ) > -1 ) { _entitiesVelocity.remove( entity ); }
 		
-		for ( i in entity.inputs ) { sysInput.removeInput( i ); }
+		for ( i in entity.controllers ) { sysController.removeController( i ); }
 		for ( b in entity.bodies ) { sysPhysic.space.removeBody( b ); }
 		sysGraphic.remove( entity );
 		
@@ -95,13 +95,15 @@ class SysManager
 				_entitiesMoved = [];
 			}
 			
-			sysInput.refresh( Settings.FRAME_DELAY, true );
-			sysInput.refresh( Settings.FRAME_DELAY, false );
+			sysController.refresh( Settings.FRAME_DELAY, true );
+			sysController.refresh( Settings.FRAME_DELAY, false );
 			//sysLink.executeAndClean();
 			
 			for ( e in _entitiesVelocity )
 			{
 				//trace( e.transform.x, e.transform.y );
+				/*e.transform.setXY( 	e.transform.x + e.transform.vX,
+									e.transform.y + e.transform.vY );*/
 				e.transform.x += e.transform.vX;
 				e.transform.y += e.transform.vY;
 			}

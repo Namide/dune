@@ -1,16 +1,16 @@
-package dune.system.input;
+package dune.system.controller ;
 
-import dune.system.input.components.CompInput;
+import dune.compBasic.Controller;
 
 /**
  * ...
  * @author Namide
  */
-class SysInput
+class SysController
 {
 
-	private var _befPhys:List<CompInput>;
-	private var _aftPhys:List<CompInput>;
+	private var _befPhys:List<Controller>;
+	private var _aftPhys:List<Controller>;
 	
 	public function new() 
 	{
@@ -18,13 +18,13 @@ class SysInput
 		_aftPhys = new List();
 	}
 	
-	public inline function addInput( input:CompInput ):Void
+	public inline function addController( input:Controller ):Void
 	{
 		if ( input.beforePhysic ) 	_befPhys.push( input );
 		else						_aftPhys.push(input);
 	}
 	
-	public inline function removeInput( input:CompInput ):Void
+	public inline function removeController( input:Controller ):Void
 	{
 		if ( input.beforePhysic ) 	_befPhys.remove( input );
 		else						_aftPhys.remove(input);

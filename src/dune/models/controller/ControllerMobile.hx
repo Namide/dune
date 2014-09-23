@@ -1,11 +1,12 @@
-package dune.models.inputs;
+package dune.models.controller ;
 
-import dune.system.input.components.CompInput;
+import dune.compBasic.Controller;
+
 
 /**
  * @author Namide
  */
-class InputMobile extends CompInput
+class ControllerMobile extends Controller
 {
 	
 	public static var TYPE_LINEAR:UInt = 1;
@@ -17,13 +18,13 @@ class InputMobile extends CompInput
 	public var anchorX(default, default):Float = 0;
 	public var anchorY(default, default):Float = 0;
 	
-	public var moveTypeX(default, default):UInt = InputMobile.TYPE_LINEAR;
+	public var moveTypeX(default, default):UInt = ControllerMobile.TYPE_LINEAR;
 	public var moveDistX(default, default):Float = 0;
 	public var moveTimeX(default, default):UInt = 0;
 	public var movePauseX(default, default):UInt = 0;
 	public var moveLoopX(default, default):Bool = true;
 	
-	public var moveTypeY(default, default):UInt = InputMobile.TYPE_LINEAR;
+	public var moveTypeY(default, default):UInt = ControllerMobile.TYPE_LINEAR;
 	public var moveDistY(default, default):Float = 0;
 	public var moveTimeY(default, default):UInt = 0;
 	public var movePauseY(default, default):UInt = 0;
@@ -69,19 +70,19 @@ class InputMobile extends CompInput
 		{
 			switch ( moveTypeX )
 			{
-				case InputMobile.TYPE_LINEAR :
+				case ControllerMobile.TYPE_LINEAR :
 					x = ( time % allTimeMove ) / moveTimeX;
 					x = ( x > 1 ) ? x = 1 : x;
 					x = calculateLoop( x, moveLoopX );
 					
-				case InputMobile.TYPE_SIN :
+				case ControllerMobile.TYPE_SIN :
 					if ( time % allTimeMove >= moveTimeX ) { x = 1; }
-					else { x = Math.sin( ( time % allTimeMove ) * InputMobile.PI2 / moveTimeX ) * 0.5 + 0.5; }
+					else { x = Math.sin( ( time % allTimeMove ) * ControllerMobile.PI2 / moveTimeX ) * 0.5 + 0.5; }
 					x = calculateLoop( x, !moveLoopX );
 					
-				case InputMobile.TYPE_COS :
+				case ControllerMobile.TYPE_COS :
 					if ( time % allTimeMove > moveTimeX ) { x = 1; }
-					else { x = Math.cos( time * InputMobile.PI2 / allTimeMove ) * 0.5 + 0.5; }
+					else { x = Math.cos( time * ControllerMobile.PI2 / allTimeMove ) * 0.5 + 0.5; }
 					x = calculateLoop( x, !moveLoopX );
 			}
 		}
@@ -90,19 +91,19 @@ class InputMobile extends CompInput
 		{
 			switch ( moveTypeY )
 			{
-				case InputMobile.TYPE_LINEAR :
+				case ControllerMobile.TYPE_LINEAR :
 					y = ( time % allTimeMove ) / moveTimeY;
 					y = ( y > 1 ) ? y = 1 : y;
 					y = calculateLoop( y, moveLoopY );
 					
-				case InputMobile.TYPE_SIN :
+				case ControllerMobile.TYPE_SIN :
 					if ( time % allTimeMove >= moveTimeY ) { y = 1; }
-					else { y = Math.sin( ( time % allTimeMove ) * InputMobile.PI2 / moveTimeY ) * 0.5 + 0.5; }
+					else { y = Math.sin( ( time % allTimeMove ) * ControllerMobile.PI2 / moveTimeY ) * 0.5 + 0.5; }
 					y = calculateLoop( y, !moveLoopY );
 					
-				case InputMobile.TYPE_COS :
+				case ControllerMobile.TYPE_COS :
 					if ( time % allTimeMove > moveTimeY ) { y = 1; }
-					else { y = Math.cos( time * InputMobile.PI2 / allTimeMove ) * 0.5 + 0.5; }
+					else { y = Math.cos( time * ControllerMobile.PI2 / allTimeMove ) * 0.5 + 0.5; }
 					y = calculateLoop( y, !moveLoopY );
 			}
 		}

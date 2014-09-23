@@ -1,9 +1,9 @@
-package dune.models.inputs;
+package dune.models.controller ;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
 import dune.helpers.core.TimeUtils;
 import dune.helpers.keyboard.KeyboardHandler;
-import dune.system.input.components.CompInput;
+import dune.compBasic.Controller;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
 import dune.system.physic.components.ContactBodies;
@@ -20,7 +20,7 @@ import dune.system.Settings;
 /**
  * @author Namide
  */
-class IntputPlatformPlayer extends CompInput
+class ControllerPlatformPlayer extends Controller
 {
 
 	#if (flash || openfl)

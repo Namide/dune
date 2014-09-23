@@ -1,5 +1,5 @@
 package dune.system.physic.components;
-import dune.compBasic.CompTransform;
+import dune.compBasic.Transform;
 import dune.helpers.core.ArrayUtils;
 import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;

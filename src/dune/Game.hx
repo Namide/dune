@@ -1,12 +1,12 @@
 package dune;
 
 import dune.compBasic.ComponentType;
-import dune.compBasic.CompTransform;
+import dune.compBasic.Transform;
 import dune.entities.Entity;
 import dune.helpers.entity.EntityFact;
-import dune.models.inputs.IntputPlatformPlayer;
-import dune.models.inputs.InputGravity;
-import dune.models.inputs.InputMobile;
+import dune.models.controller.ControllerPlatformPlayer;
+import dune.models.controller.ControllerGravity;
+import dune.models.controller.ControllerMobile;
 import dune.system.graphic.components.CompDisplay2dSprite;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
@@ -50,7 +50,7 @@ class Game
 		var bmp = new h2d.Bitmap(tile, spr);
 		var i:InputMobile = new InputMobile();
 		i.initX( InputMobile.TYPE_LINEAR, 50, 100, 1000 );
-		_entity1.addInput( i );
+		_entity1.addController( i );
 		_entity1.display = new CompDisplay2dSprite( spr );
 		systemManager.addEntity( _entity1 );*/
 		
@@ -69,10 +69,10 @@ class Game
 			
 			// move
 			
-				var i2:InputMobile = new InputMobile();
-				i2.initX( InputMobile.TYPE_COS, 12*TS, 4*TS, 2000 );
+				var i2:ControllerMobile = new ControllerMobile();
+				i2.initX( ControllerMobile.TYPE_COS, 12*TS, 4*TS, 2000 );
 				i2.anchorY = 3*TS;
-				e2.addInput( i2 );
+				e2.addController( i2 );
 				
 			// collision
 			
@@ -103,8 +103,8 @@ class Game
 				
 			// gravity
 			
-				var g3:InputGravity = new InputGravity();
-				e3.addInput( new InputGravity() );
+				var g3:ControllerGravity = new ControllerGravity();
+				e3.addController( new ControllerGravity() );
 				
 			// collision
 			
@@ -119,9 +119,9 @@ class Game
 			
 			// Keyboard
 			
-				var i3:IntputPlatformPlayer = new IntputPlatformPlayer();
+				var i3:ControllerPlatformPlayer = new ControllerPlatformPlayer();
 				//i3.groundVX = 5;
-				e3.addInput( i3 );
+				e3.addController( i3 );
 			
 		systemManager.addEntity( e3 );
 		

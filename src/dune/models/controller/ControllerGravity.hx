@@ -1,13 +1,13 @@
-package dune.models.inputs;
+package dune.models.controller ;
 import dune.entities.Entity;
-import dune.system.input.components.CompInput;
+import dune.compBasic.Controller;
 import dune.system.Settings;
 import dune.system.SysManager;
 
 /**
  * @author Namide
  */
-class InputGravity extends CompInput
+class ControllerGravity extends Controller
 {
 
 	/**
@@ -30,7 +30,7 @@ class InputGravity extends CompInput
 	public var x(default, set):Float = 1;
 	inline function set_x(val:Float):Float 
 	{
-		xFinal = InputGravity.X * val;
+		xFinal = ControllerGravity.X * val;
 		return x = val;
 	}
 	
@@ -40,7 +40,7 @@ class InputGravity extends CompInput
 	public var y(default, set):Float = 1;
 	inline function set_y(val:Float):Float 
 	{
-		yFinal = InputGravity.Y * val;
+		yFinal = ControllerGravity.Y * val;
 		return y = val;
 	}
 	
@@ -70,8 +70,8 @@ class InputGravity extends CompInput
 		super.clear();
 		x = 1;
 		y = 1;
-		xFinal = InputGravity.X * x;
-		yFinal = InputGravity.Y * y;
+		xFinal = ControllerGravity.X * x;
+		yFinal = ControllerGravity.Y * y;
 	}
 	
 	

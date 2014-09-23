@@ -1,5 +1,5 @@
 package dune.system.physic.shapes;
-import dune.compBasic.CompTransform;
+import dune.compBasic.Transform;
 
 /**
  * ...
@@ -29,7 +29,7 @@ class PhysShapePoint
 	 * 
 	 * @param	pe	transform of entity parent of this shape
 	 */
-	public function updateAABB( pe:CompTransform )
+	public function updateAABB( pe:Transform )
 	{
 		aabbXMin =
 		aabbXMax = pe.x - anchorX;

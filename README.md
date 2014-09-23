@@ -4,7 +4,7 @@ dune
 Microframework for Haxe 2D games
 
 Dependencies:
-* [H3D and H2D](https://github.com/ncannasse/h3d)
+* [Heaps](https://github.com/ncannasse/heaps)
 
 
 todo list

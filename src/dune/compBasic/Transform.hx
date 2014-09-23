@@ -5,7 +5,7 @@ import dune.entities.Entity;
  * ...
  * @author Namide
  */
-class CompTransform implements ComponentBasic
+class Transform implements ComponentBasic
 {
 
 	/*public inline static var TYPE_STATIC:UInt = 1;
@@ -37,24 +37,15 @@ class CompTransform implements ComponentBasic
 	 */
 	public var vY(default, default):Float;
 	
-	/*public function getAbsVx():Float
+	public function setXY( x:Float, y:Float ):Void
 	{
-		var v:Float = vX;
-		for ( e in entity.attachedTo )
+		if ( x != this.x && y != this.y )
 		{
-			v += e.transform.vX;
+			this.x = x;
+			this.y = y;
+			onMoved();
 		}
-		return v;
 	}
-	public function getAbsVy():Float
-	{
-		var v:Float = vY;
-		for ( e in entity.attachedTo )
-		{
-			v += e.transform.vY;
-		}
-		return v;
-	}*/
 	
 	/**
 	 * X-axis position
@@ -62,12 +53,12 @@ class CompTransform implements ComponentBasic
 	public var x(default, set):Float;
 	inline function set_x( value:Float ):Float
 	{
-		if ( value != x /*&& !moved*/ )
+		if ( value != x )
 		{
-			//moved = true;
+			x = value;
 			onMoved();
 		}
-		return x = value;
+		return x;
 	}
 	
 	/**
@@ -76,12 +67,12 @@ class CompTransform implements ComponentBasic
 	public var y(default, set):Float;
 	inline function set_y( value:Float ):Float
 	{
-		if ( value != y /*&& !moved*/ )
+		if ( value != y )
 		{
-			//moved = true;
+			y = value;
 			onMoved();
 		}
-		return y = value;
+		return y;
 	}
 	
 	//public var moved(default, default):Bool;

@@ -1,4 +1,4 @@
-package dune.system.input.components;
+package dune.compBasic ;
 
 import dune.compBasic.ComponentBasic;
 import dune.entities.Entity;
@@ -7,7 +7,7 @@ import dune.entities.Entity;
  * ...
  * @author Namide
  */
-class CompInput implements ComponentBasic
+class Controller implements ComponentBasic
 {
 	/**
 	 * Entity attached to the body

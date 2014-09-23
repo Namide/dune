@@ -1,5 +1,5 @@
 package dune.helpers.component;
-import dune.compBasic.ComponentAnim;
+import dune.compBasic.Anim;
 import dune.system.graphic.components.CompDisplay2dAnim;
 import dune.system.SysManager;
 import flash.display.BitmapData;
@@ -23,7 +23,7 @@ class FactCompDisplay
 		
 	}
 	
-	public inline static function mcToDisplay2dAnim( mc:MovieClip, scale:Float = 1.0, innerTex:Texture ):ComponentAnim
+	public inline static function mcToDisplay2dAnim( mc:MovieClip, scale:Float = 1.0, innerTex:Texture ):Anim
 	{
 		
 		var tile : Tile;

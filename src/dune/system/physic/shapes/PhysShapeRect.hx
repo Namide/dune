@@ -1,5 +1,5 @@
 package dune.system.physic.shapes;
-import dune.compBasic.CompTransform;
+import dune.compBasic.Transform;
 
 /**
  * ...
@@ -20,7 +20,7 @@ class PhysShapeRect extends PhysShapePoint
 		h = 0.0;
 	}
 	
-	override public function updateAABB(pe:CompTransform) 
+	override public function updateAABB(pe:Transform) 
 	{
 		aabbXMin = pe.x - anchorX;
 		aabbXMax = aabbXMin + w;

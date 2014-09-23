@@ -114,12 +114,12 @@ class ControllerPlatformPlayer extends Controller
 		if ( bottomWall )
 		{
 			var platformVY:Float = 0;
-			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.BOTTOM ) /*_contacts.bottom*/ )
+			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.BOTTOM ) )
 			{
 				platformVX += body.entity.transform.vX;
 				platformVY += body.entity.transform.vY;
 			}
-			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_PLATFORM , ContactBodies.BOTTOM ) /*_contacts.bottom*/ )
+			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_PLATFORM , ContactBodies.BOTTOM ) )
 			{
 				platformVX += body.entity.transform.vX;
 				platformVY += body.entity.transform.vY;
@@ -145,7 +145,6 @@ class ControllerPlatformPlayer extends Controller
 		{
 			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.TOP ) )
 			{
-				//trace(entity.transform.vY, body.entity.transform.vX);
 				if ( entity.transform.vY < body.entity.transform.vY ) entity.transform.vY = body.entity.transform.vY;
 			}
 		}
@@ -210,8 +209,6 @@ class ControllerPlatformPlayer extends Controller
 				entity.transform.vY = - _jumpStartVY;
 				if ( kh.getKeyPressed( keyLeft ) ) 			entity.transform.vX = -_jumpVX;
 				else if ( kh.getKeyPressed( keyRight ) ) 	entity.transform.vX = _jumpVX;
-				
-				//_landmark = TimeUtils.getMS() + _jumpTimeLock;
 			}
 			else if ( leftWall && !_actionPressed )
 			{
@@ -236,11 +233,6 @@ class ControllerPlatformPlayer extends Controller
 		{
 			_actionPressed = false;
 		}
-		
-		/*if ( kh.getKeyPressed( keyTop ) ) 			{ onTop(entity); }
-		else if ( kh.getKeyPressed( keyBottom ) ) 	{ onBottom(entity); }
-		else 										{ offTop(entity); }*/
-		
 		
 	}
 	

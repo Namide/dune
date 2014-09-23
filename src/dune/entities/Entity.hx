@@ -39,12 +39,12 @@ class Entity
 		if ( transform == null )	{ transform = new Transform( this ); }
 		else 						{ transform.clear(); }
 		
-		if ( controllers == null ) { controllers = []; }
-		if ( bodies == null ) { bodies = []; }
+		if ( controllers == null ) 	{ controllers = []; }
+		if ( bodies == null ) 		{ bodies = []; }
 		//if ( attachedTo == null ) { attachedTo = []; }
 		
 		for ( input in controllers )	{ input.clear(); }
-		for ( body in bodies ) 	{ body.clear(); }
+		for ( body in bodies ) 			{ body.clear(); }
 		
 		//ArrayUtils.clear( attachedTo );
 	}

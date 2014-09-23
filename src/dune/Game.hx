@@ -104,7 +104,7 @@ class Game
 			// gravity
 			
 				var g3:ControllerGravity = new ControllerGravity();
-				e3.addController( new ControllerGravity() );
+				//e3.addController( new ControllerGravity() );
 				
 			// collision
 			

@@ -113,11 +113,43 @@ class ControllerPlatformPlayer extends Controller
 		var platformVX:Float = 0;
 		if ( bottomWall )
 		{
-			for ( body in _contacts.bottom )
+			var platformVY:Float = 0;
+			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.BOTTOM ) /*_contacts.bottom*/ )
 			{
 				platformVX += body.entity.transform.vX;
+				platformVY += body.entity.transform.vY;
+			}
+			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_PLATFORM , ContactBodies.BOTTOM ) /*_contacts.bottom*/ )
+			{
+				platformVX += body.entity.transform.vX;
+				platformVY += body.entity.transform.vY;
+			}
+			entity.transform.vY = platformVY;
+		}
+		
+		if ( leftWall )
+		{
+			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.LEFT ) )
+			{
+				if ( platformVX < body.entity.transform.vX ) platformVX = body.entity.transform.vX;
 			}
 		}
+		if ( rightWall )
+		{
+			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.RIGHT ) )
+			{
+				if ( platformVX > body.entity.transform.vX ) platformVX = body.entity.transform.vX;
+			}
+		}
+		if ( topWall )
+		{
+			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.TOP ) )
+			{
+				//trace(entity.transform.vY, body.entity.transform.vX);
+				if ( entity.transform.vY < body.entity.transform.vY ) entity.transform.vY = body.entity.transform.vY;
+			}
+		}
+		
 		
 		if ( kh.getKeyPressed( keyLeft ) )
 		{

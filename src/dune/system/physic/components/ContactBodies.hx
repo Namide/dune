@@ -85,12 +85,23 @@ class ContactBodies
 		return hasTypeInArray( solidType, all );
 	}
 	
-	public inline function getByType( solidType:Int ):Array<CompBody>
+	/*public inline function getByType( solidType:Int ):Array<CompBody>
 	{
 		return all.filter( function( cb:CompBody ):Bool
 		{
 			return cb.typeOfSolid & solidType == solidType;
 		});
+	}*/
+	
+	public function getByType( solidType:Int, direction:Int = -1 ):Array<CompBody>
+	{
+		if 		( direction == -1 )		return all.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == ON )		return on.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == TOP )	return top.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == RIGHT )	return right.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == BOTTOM )	return bottom.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == LEFT )	return left.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		return new Array<CompBody>();
 	}
 	
 	public inline function push( cb:CompBody ):Void { all.push( cb ); }
@@ -369,10 +380,6 @@ class ContactBodies
 					body.typeOfSolid == CompBodyType.SOLID_TYPE_PLATFORM )
 			{
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
-				/*if ( !link.has( body.entity.transform, parent.entity.transform ) )
-				{
-					link.add( body.entity.transform, parent.entity.transform, SysLink.TYPE_TOP, false );
-				}*/
 				
 				if ( parent.entity.transform.vY > body.entity.transform.vY )
 				{
@@ -391,36 +398,32 @@ class ContactBodies
 				if ( reac == BOTTOM )
 				{
 					parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
-					/*if ( !link.has( body.entity.transform, parent.entity.transform ) )
-					{
-						link.add( body.entity.transform, parent.entity.transform, SysLink.TYPE_TOP, false );
-					}*/
 					
-					if ( parent.entity.transform.vY > body.entity.transform.vY )
+					/*if ( parent.entity.transform.vY > body.entity.transform.vY )
 					{
 						parent.entity.transform.vY = body.entity.transform.vY;
-					}
+					}*/
 				}
 				else if ( reac == TOP )
 				{
 					parent.entity.transform.y = shape.aabbYMax - PhysShapeUtils.getPosToTop( parent.shape );
-					parent.entity.transform.vY = body.entity.transform.vY;
+					//parent.entity.transform.vY = body.entity.transform.vY;
 				}
 				else if ( reac == RIGHT )
 				{
 					parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
-					if ( parent.entity.transform.vX > body.entity.transform.vX )
+					/*if ( parent.entity.transform.vX > body.entity.transform.vX )
 					{
 						parent.entity.transform.vX = body.entity.transform.vX;
-					}
+					}*/
 				}
 				else if ( reac == LEFT )
 				{
 					parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
-					if ( parent.entity.transform.vX < body.entity.transform.vX )
+					/*if ( parent.entity.transform.vX < body.entity.transform.vX )
 					{
 						parent.entity.transform.vX = body.entity.transform.vX;
-					}
+					}*/
 				}
 			}
 			

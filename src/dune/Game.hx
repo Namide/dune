@@ -91,8 +91,8 @@ class Game
 		
 		// PLAYER
 		var e3 = new Entity();
-		e3.transform.x = TS;
-		e3.transform.y = TS;
+		e3.transform.x = 2*TS;
+		e3.transform.y = 2*TS;
 			
 			// graphic
 			

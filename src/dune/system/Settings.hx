@@ -9,7 +9,7 @@ class Settings
 	public static inline var FRAME_DELAY:UInt = 20;
 	public static inline var GRAVITY:Float =  16 / Settings.FRAME_DELAY;
 	
-	public static inline var TILE_SIZE:UInt = 32;
+	public static inline var TILE_SIZE:UInt = 24;
 	//public inline static var TILE_SIZE:UInt = 32;
 	
 	public static inline var X_MIN:UInt = - TILE_SIZE;

@@ -1,5 +1,6 @@
 package dune.system.core;
 
+import dune.helpers.core.FloatUtils;
 import dune.system.core.SysSpaceGrid.Grid;
 import dune.system.core.SysSpaceGrid.Node;
 import dune.system.physic.components.CompBody;
@@ -94,21 +95,22 @@ class Node
 		this.body = body;
 	}
 	
-	public function init( pitchX:Int, pitchY:Int, grid:Grid )
+	public function init( pitchExpX:Int, pitchExpY:Int, grid:Grid )
 	{
 		minTileX = -1;
 		minTileY = -1;
 		maxTileX = -1;
 		maxTileY = -1;
-		refresh( pitchX, pitchY, grid );
+		
+		refresh( pitchExpX, pitchExpY, grid );
 	}
 	
-	public function refresh( pitchX:Int, pitchY:Int, grid:Grid ):Void
+	public function refresh( pitchExpX:Int, pitchExpY:Int, grid:Grid ):Void
 	{
-		var nXMin:Int = Math.floor( (body.shape.aabbXMin) / pitchX );
-		var nYMin:Int = Math.floor( (body.shape.aabbYMin) / pitchY );
-		var nXMax:Int = Math.ceil( (body.shape.aabbXMax+1) / pitchX );
-		var nYMax:Int = Math.ceil( (body.shape.aabbYMax+1) / pitchY );
+		var nXMin:Int = (Math.floor(body.shape.aabbXMin) >> pitchExpX);
+		var nYMin:Int = (Math.floor(body.shape.aabbYMin) >> pitchExpY);
+		var nXMax:Int = (Math.ceil(body.shape.aabbXMax) >> pitchExpX) + 1;
+		var nYMax:Int = (Math.ceil(body.shape.aabbYMax) >> pitchExpY) + 1;
 		
 		if ( 	nXMin != minTileX ||
 				nYMin != minTileY ||
@@ -153,6 +155,9 @@ class SysSpaceGrid
 	public var _pitchY:Int;
 	public var _grid:Grid;
 	
+	var _pitchXExp:Int;
+	var _pitchYExp:Int;
+	
 	public function new() 
 	{
 		_active = [];
@@ -167,22 +172,25 @@ class SysSpaceGrid
 							pitchX:Int = Settings.TILE_SIZE,
 							pitchY:Int = Settings.TILE_SIZE ):Void
 	{
-		_pitchX = pitchX;
-		_pitchY = pitchY;
+		_pitchX = FloatUtils.getNextPow( pitchX );
+		_pitchY = FloatUtils.getNextPow( pitchY );
 		
-		_grid = new Grid( 	Math.floor( minX / _pitchX ),
-							Math.floor( minY / _pitchX ),
-							Math.ceil( maxX / _pitchX ),
-							Math.ceil( maxY / _pitchY ) );
+		_pitchXExp = FloatUtils.getExposantInt( _pitchX );
+		_pitchYExp = FloatUtils.getExposantInt( _pitchY );
+		
+		_grid = new Grid( 	minX >> _pitchXExp,
+							minY >> _pitchYExp,
+							maxX >> _pitchXExp,
+							maxY >> _pitchYExp );
 		
 		for ( node in _passive )
 		{
-			node.init( pitchX, pitchY, _grid );
+			node.init( _pitchXExp, _pitchYExp, _grid );
 		}
 		
 		for ( node in _active )
 		{
-			node.init( pitchX, pitchY, _grid );
+			node.init( _pitchXExp, _pitchYExp, _grid );
 		}
 	}
 	
@@ -194,7 +202,7 @@ class SysSpaceGrid
 		for ( node in _passive )
 		{
 			node.body.shape.updateAABB( node.body.entity.transform );
-			node.refresh( _pitchX, _pitchY, _grid );
+			node.refresh( _pitchXExp, _pitchYExp, _grid );
 		}
 		
 		for ( node in _active )
@@ -204,7 +212,7 @@ class SysSpaceGrid
 			b.contacts.clear();
 			b.shape.updateAABB( b.entity.transform );
 			
-			node.refresh( _pitchX, _pitchX, _grid );
+			node.refresh( _pitchXExp, _pitchYExp, _grid );
 			var contacts:Array<Node> = _grid.getContacts( node );
 			for ( node2 in contacts )
 			{

@@ -1,6 +1,7 @@
 package dune.models.controller ;
 
 import dune.compBasic.Controller;
+import dune.entities.Entity;
 
 
 /**
@@ -38,9 +39,8 @@ class ControllerMobile extends Controller
 		beforePhysic = true;
 	}
 	
-	public function initX( type:UInt, x:Float, dist:Float, time:UInt, pause:UInt = 0, loop:Bool = true ):Void
+	public function initX( type:UInt, /*x:Float,*/ dist:Float, time:UInt, pause:UInt = 0, loop:Bool = true ):Void
 	{
-		anchorX = x;
 		moveTypeX = type;
 		moveDistX = dist;
 		moveTimeX = time;
@@ -49,15 +49,21 @@ class ControllerMobile extends Controller
 		time = 0;
 	}
 	
-	public function initY( type:UInt, y:Float, dist:UInt, time:UInt, pause:UInt = 0, loop:Bool = true ):Void
+	public function initY( type:UInt, /*y:Float,*/ dist:UInt, time:UInt, pause:UInt = 0, loop:Bool = true ):Void
 	{
-		anchorY = y;
 		moveTypeY = type;
 		moveDistY = dist;
 		moveTimeY = time;
 		movePauseY = pause;
 		moveLoopY = loop;
 		time = 0;
+	}
+	
+	override function set_entity(value:Entity):Entity 
+	{
+		anchorX = value.transform.x;
+		anchorY = value.transform.y;
+		return super.set_entity(value);
 	}
 	
 	override public function execute( dt:UInt ):Void 

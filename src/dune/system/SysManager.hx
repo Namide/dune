@@ -80,13 +80,6 @@ class SysManager
 		
 		while ( rest >= Settings.FRAME_DELAY )
 		{
-			/*for ( e in _entitiesMoved )
-			{
-				for ( body in e.bodies )
-				{
-					body.shape.updateAABB( e.transform );
-				}
-			}*/
 			sysPhysic.refresh( Settings.FRAME_DELAY/*, sysLink*/ );
 			
 			if ( rest < Settings.FRAME_DELAY + Settings.FRAME_DELAY )
@@ -97,16 +90,14 @@ class SysManager
 			
 			sysController.refresh( Settings.FRAME_DELAY, true );
 			sysController.refresh( Settings.FRAME_DELAY, false );
-			//sysLink.executeAndClean();
 			
 			for ( e in _entitiesVelocity )
 			{
-				//trace( e.transform.x, e.transform.y );
-				/*e.transform.setXY( 	e.transform.x + e.transform.vX,
-									e.transform.y + e.transform.vY );*/
 				e.transform.x += e.transform.vX;
 				e.transform.y += e.transform.vY;
 			}
+			
+			sysPhysic.space.testSleeping();
 			
 			rest -= Settings.FRAME_DELAY;
 		}

@@ -38,6 +38,18 @@ class CompBody implements ComponentBasic
 	
 	public var typeOfSolid(default, default):UInt;
 	
+	public var insomniac(default, default):Bool = false;
+	
+	/*public var sleep(default, set):Bool = false;
+	//Used in the system physic, don't change it
+	public dynamic function onSleep( body:CompBody ):Void {  }
+	function set_sleep( val:Bool ):Bool
+	{
+		sleep = val;
+		onSleep( this );
+		return val;
+	}*/
+	
 	/**
 	 * Like a signal, add to this array the functions called at a collision
 	 */

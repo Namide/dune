@@ -1,5 +1,6 @@
 package dune.system.core;
 
+import dune.compBasic.Transform;
 import dune.helpers.core.FloatUtils;
 import dune.system.core.SysSpaceGrid.Grid;
 import dune.system.core.SysSpaceGrid.Node;
@@ -85,6 +86,9 @@ class Node
 {
 	public var body(default, null):CompBody;
 	
+	public var lastX(default, default):Float;
+	public var lastY(default, default):Float;
+	
 	public var minTileX(default, default):Int;
 	public var minTileY(default, default):Int;
 	public var maxTileX(default, default):Int;
@@ -149,6 +153,7 @@ class Node
 class SysSpaceGrid
 {
 	public var _active(default, null):Array<Node>;
+	public var _activeSleeping(default, null):Array<Node>;
 	public var _passive(default, null):Array<Node>;
 	
 	public var _pitchX:Int;
@@ -161,6 +166,7 @@ class SysSpaceGrid
 	public function new() 
 	{
 		_active = [];
+		_activeSleeping = [];
 		_passive = [];
 		init();
 	}
@@ -194,6 +200,41 @@ class SysSpaceGrid
 		}
 	}
 	
+	public function testSleeping():Void
+	{
+		for ( node in _active )
+		{
+			if ( node.body.insomniac ) continue;
+			var t:Transform = node.body.entity.transform;
+			if ( node.lastX == t.x && node.lastY == t.y )
+			{
+				_active.remove( node );
+				_activeSleeping.push( node );
+				trace("sleep! active:" + _active.length + "/" + (_active.length+_activeSleeping.length) );
+			}
+			else
+			{
+				node.lastX = t.x;
+				node.lastY = t.y;
+			}
+			
+		}
+		
+		for ( node in _activeSleeping )
+		{
+			var t:Transform = node.body.entity.transform;
+			if ( node.lastX != t.x || node.lastY != t.y )
+			{
+				_activeSleeping.remove( node );
+				_active.push( node );
+				
+				node.lastX = t.x;
+				node.lastY = t.y;
+				trace("walk!");
+			}
+		}
+	}
+	
 	public function hitTest():List<CompBody>
 	{
 		var affected:List<CompBody> = new List<CompBody>();
@@ -205,9 +246,23 @@ class SysSpaceGrid
 			node.refresh( _pitchXExp, _pitchYExp, _grid );
 		}
 		
+		for ( node in _activeSleeping )
+		{
+			var t:Transform = node.body.entity.transform;
+			if ( node.lastX != t.x || node.lastY != t.y )
+			{
+				_activeSleeping.remove( node );
+				_active.push( node );
+				trace("walk!");
+			}
+		}
+		
 		for ( node in _active )
 		{
 			var b:CompBody = node.body;
+			node.lastX = b.entity.transform.x;
+			node.lastY = b.entity.transform.y;
+			
 			var isAffected:Bool = false;
 			b.contacts.clear();
 			b.shape.updateAABB( b.entity.transform );

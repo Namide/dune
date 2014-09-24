@@ -1,6 +1,7 @@
 package ;
 
 import dune.Game;
+import net.hires.debug.Stats;
 
 #if (flash || openfl)
 
@@ -41,6 +42,8 @@ class Main
 		#else
 			trace("no hitbox");
 		#end*/
+		
+		Lib.current.addChild( new Stats() );
 		
 		game = new Game();
 	}

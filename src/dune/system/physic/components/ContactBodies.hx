@@ -381,10 +381,10 @@ class ContactBodies
 			{
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
 				
-				if ( parent.entity.transform.vY > body.entity.transform.vY )
+				/*if ( parent.entity.transform.vY > body.entity.transform.vY )
 				{
 					parent.entity.transform.vY = body.entity.transform.vY;
-				}
+				}*/
 			}
 			else if ( body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
 			{

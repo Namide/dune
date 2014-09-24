@@ -112,24 +112,15 @@ class ControllerPlatform extends Controller
 			if ( entity.transform.vY > stopBounceVY )
 			{
 				vY += -entity.transform.vY * bounce;
+				trace(1);
 			}
 			else
 			{
 				vY = 0;
 				grip = true;
+				trace(2);
 			}
 			
-			/*if ( Math.abs(vY) < Settings.GRAVITY )
-			{
-				trace("sleep?");
-				for ( body in entity.bodies )
-				{
-					entity.transform.vX = 0;
-					entity.transform.vY = 0;
-					body.sleep = true;
-					return;
-				}
-			}*/
 		}
 		else if ( topWall && entity.transform.vY < 0 )
 		{
@@ -138,6 +129,7 @@ class ControllerPlatform extends Controller
 		else
 		{
 			vY += entity.transform.vY;
+			//trace(1);
 		}
 		
 		if ( leftWall && entity.transform.vX < 0 )
@@ -156,10 +148,12 @@ class ControllerPlatform extends Controller
 			{
 				vX = Math.max( vX, entity.transform.vX ) * friction;
 				//vX += entity.transform.vX * friction;
+				
 			}
 			else if ( !grip )
 			{
 				vX += entity.transform.vX;
+				
 			}
 			else if ( vX == 0 )
 			{

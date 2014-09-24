@@ -28,6 +28,7 @@ class SysGraphic
 		s3d.addPass(s2d);
 		
 		engine.onResized = function() { onResize(); };
+		engine.backgroundColor = 0xFFFFFF;
 		onInit();
 	}
 	

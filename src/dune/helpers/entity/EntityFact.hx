@@ -22,7 +22,7 @@ class EntityFact
 	{
 		var g = new h2d.Graphics( sm.sysGraphic.s2d );
 		g.beginFill( Math.round( 0xFFFFFF * Math.random() ) );
-		g.lineStyle( 1, Math.round( 0xFFFFFF * Math.random() ) );
+		//g.lineStyle( 1, Math.round( 0xFFFFFF * Math.random() ) );
 		g.drawRect( 0, 0, w, h );
 		g.endFill();
 		

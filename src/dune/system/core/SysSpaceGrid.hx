@@ -210,7 +210,7 @@ class SysSpaceGrid
 			{
 				_active.remove( node );
 				_activeSleeping.push( node );
-				trace("sleep! active:" + _active.length + "/" + (_active.length+_activeSleeping.length) );
+				//trace("sleep! active:" + _active.length + "/" + (_active.length+_activeSleeping.length) );
 			}
 			else
 			{
@@ -230,7 +230,7 @@ class SysSpaceGrid
 				
 				node.lastX = t.x;
 				node.lastY = t.y;
-				trace("walk!");
+				//trace("walk!");
 			}
 		}
 	}

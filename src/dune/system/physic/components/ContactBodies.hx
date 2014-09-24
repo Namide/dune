@@ -364,8 +364,8 @@ class ContactBodies
 	function calculateReaction( body:CompBody, reac:Int/*, link:SysLink*/ ):Void
 	{
 		
-		if ( parent.typeOfSolid == CompBodyType.SOLID_TYPE_EATER &&
-			 body.typeOfSolid == CompBodyType.SOLID_TYPE_ITEM )
+		if ( (parent.typeOfSolid & CompBodyType.SOLID_TYPE_EATER == CompBodyType.SOLID_TYPE_EATER) &&
+			 (body.typeOfSolid & CompBodyType.SOLID_TYPE_ITEM == CompBodyType.SOLID_TYPE_ITEM) )
 		{
 			for ( fct in parent.onCollide )
 			{
@@ -373,11 +373,11 @@ class ContactBodies
 			}
 		}
 		
-		if ( parent.typeOfSolid == CompBodyType.SOLID_TYPE_MOVER )
+		if ( parent.typeOfSolid & CompBodyType.SOLID_TYPE_MOVER == CompBodyType.SOLID_TYPE_MOVER )
 		{
 			var shape:PhysShapePoint = body.shape;
 			if ( 	reac == BOTTOM &&
-					body.typeOfSolid == CompBodyType.SOLID_TYPE_PLATFORM )
+					body.typeOfSolid & CompBodyType.SOLID_TYPE_PLATFORM == CompBodyType.SOLID_TYPE_PLATFORM )
 			{
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
 				
@@ -386,7 +386,7 @@ class ContactBodies
 					parent.entity.transform.vY = body.entity.transform.vY;
 				}*/
 			}
-			else if ( body.typeOfSolid == CompBodyType.SOLID_TYPE_WALL )
+			else if ( body.typeOfSolid & CompBodyType.SOLID_TYPE_WALL == CompBodyType.SOLID_TYPE_WALL )
 			{
 				if ( reac == 0 )
 				{

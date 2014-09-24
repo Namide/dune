@@ -43,7 +43,9 @@ class Main
 			trace("no hitbox");
 		#end*/
 		
-		Lib.current.addChild( new Stats() );
+		var s:Stats = new Stats();
+		s.x = 800 - 69;
+		Lib.current.addChild( s );
 		
 		game = new Game();
 	}

@@ -179,7 +179,7 @@ class Game
 			psr4.h = size;
 			b4.shape = psr4;
 			b4.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
-			b4.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER | CompBodyType.SOLID_TYPE_PLATFORM;
+			b4.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER;// | CompBodyType.SOLID_TYPE_WALL;
 			ball.addBody( b4 );
 		
 		// move
@@ -194,12 +194,12 @@ class Game
 	var frameN:UInt = 0;
 	private function refresh()
 	{		
-		/*frameN++;
+		frameN++;
 		if ( frameN % 16 == 0 && frameN >> 4 < 1001 )
 		{
 			addBounceBall();
 			//trace( frameN >> 4 );
-		}*/
+		}
 		
 		systemManager.refresh(0);
 		

@@ -112,19 +112,22 @@ class ControllerPlatform extends Controller
 			if ( entity.transform.vY > stopBounceVY )
 			{
 				vY += -entity.transform.vY * bounce;
-				trace(1);
 			}
 			else
 			{
 				vY = 0;
 				grip = true;
-				trace(2);
 			}
 			
 		}
 		else if ( topWall && entity.transform.vY < 0 )
 		{
 			vY += -entity.transform.vY * bounce;
+		}
+		else if ( bottomWall )
+		{
+			vY = 0;
+			//trace(1);
 		}
 		else
 		{

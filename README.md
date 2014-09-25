@@ -17,9 +17,10 @@ todo list
 * input
 	* mouse
 	* platform
-		* jump X velocity
-		* wall jump
 		* double jump
-* helpers
-	* platform-player
-	
+* physic
+	* mover | platform - collisions
+	* faster object physic
+	* double collisions
+* optimizations
+	* array ?

@@ -179,7 +179,7 @@ class Game
 			psr4.h = size;
 			b4.shape = psr4;
 			b4.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
-			b4.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER;// | CompBodyType.SOLID_TYPE_WALL;
+			b4.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER; //| CompBodyType.SOLID_TYPE_WALL;
 			ball.addBody( b4 );
 		
 		// move

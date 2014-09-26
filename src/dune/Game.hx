@@ -8,6 +8,7 @@ import dune.models.controller.ControllerPlatform;
 import dune.models.controller.ControllerPlatformPlayer;
 import dune.models.controller.ControllerGravity;
 import dune.models.controller.ControllerMobile;
+import dune.models.example.LevelGen;
 import dune.system.graphic.components.CompDisplay2dSprite;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
@@ -43,19 +44,16 @@ class Game
 	{
 		//var tile = hxd.Res.mainChar128x128.toTile();
 		
+		var level:LevelGen = new LevelGen( systemManager );
+		level.loadJson( "level/level-1.json" );
 		
+		systemManager.refresh(0);
+		hxd.System.setLoop( refresh );
 		
 		// MOBILE LINEAR
-		/*_entity1 = new Entity();
-		var spr = new h2d.Sprite( systemManager.sysGraphic.s2d );
-		var bmp = new h2d.Bitmap(tile, spr);
-		var i:InputMobile = new InputMobile();
-		i.initX( InputMobile.TYPE_LINEAR, 50, 100, 1000 );
-		_entity1.addController( i );
-		_entity1.display = new CompDisplay2dSprite( spr );
-		systemManager.addEntity( _entity1 );*/
 		
-		var TS:Float = Settings.TILE_SIZE;
+		
+		/*var TS:Float = Settings.TILE_SIZE;
 		
 		
 		// MOBILE COS
@@ -153,7 +151,7 @@ class Game
 		systemManager.refresh(0);
 		hxd.System.setLoop( refresh );
 		
-		addBounceBall();
+		addBounceBall();*/
 	}
 	
 	private function addBounceBall():Void
@@ -194,12 +192,12 @@ class Game
 	var frameN:UInt = 0;
 	private function refresh()
 	{		
-		frameN++;
+		/*frameN++;
 		if ( frameN % 16 == 0 && frameN >> 4 < 1001 )
 		{
 			addBounceBall();
 			//trace( frameN >> 4 );
-		}
+		}*/
 		
 		systemManager.refresh(0);
 		

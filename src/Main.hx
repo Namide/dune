@@ -1,7 +1,6 @@
 package ;
 
 import dune.Game;
-import net.hires.debug.Stats;
 
 #if (flash || openfl)
 
@@ -43,9 +42,11 @@ class Main
 			trace("no hitbox");
 		#end*/
 		
-		var s:Stats = new Stats();
-		s.x = 800 - 69;
-		Lib.current.addChild( s );
+		#if flash
+			var s = new net.hires.debug.Stats();
+			s.x = 800 - 69;
+			Lib.current.addChild( s );
+		#end
 		
 		game = new Game();
 	}

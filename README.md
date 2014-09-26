@@ -24,3 +24,4 @@ todo list
 	* double collisions
 * optimizations
 	* array ?
+	

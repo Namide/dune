@@ -101,7 +101,7 @@ class LevelGen
 				psr3.w = TS;
 				psr3.h = TS;
 				psr3.anchorX = -0.25 * TS;
-				psr3.anchorY = -0.3 * TS;
+				psr3.anchorY = -0.35 * TS;
 				b3.shape = psr3;
 				e3.addBody( b3 );
 			

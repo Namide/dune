@@ -30,6 +30,9 @@ class CompDisplay2dAnim implements Display//, ComponentAnim
 	public inline function getObject():Sprite { return _graphic; }
 	
 	var _listAnimDatas:Array<AnimData>;
+	
+	var _currentAnim:String;
+	
 	var _toRight:Bool;
 	public inline function isToRight():Bool { return _toRight; }
 	public inline function setToRight(val:Bool):Void
@@ -37,17 +40,20 @@ class CompDisplay2dAnim implements Display//, ComponentAnim
 		if ( val != _toRight )
 		{
 			_graphic.scaleX = (val) ? 1 : -1;
+			_graphic.x += (val) ? _width : -_width;
 		}
 		_toRight = val;
 	}
 	
+	var _width:Float;
 	public var type(default, null):UInt;
 	
-	public function new( graphic:Anim ) 
+	public function new( graphic:Anim, width:Float ) 
 	{
 		type = ComponentType.DISPLAY_2D;// | ComponentType.ANIMATION;
 		_toRight = true;
 		_graphic = graphic;
+		_width = width;
 		_listAnimDatas = [];
 	}
 	
@@ -59,16 +65,24 @@ class CompDisplay2dAnim implements Display//, ComponentAnim
 	
 	public inline function play( label:String ):Void
 	{
-		_graphic.play( Lambda.find( _listAnimDatas, function( ad:AnimData ):Bool { return ad.label == label; } ).frames );
+		if ( label != _currentAnim )
+		{
+			if ( !Lambda.exists( _listAnimDatas, function( ad:AnimData ):Bool { return ad.label == label; } ) )
+			{
+				throw "The animation label \""+label+"\" don't exist";
+			}
+			_graphic.play( Lambda.find( _listAnimDatas, function( ad:AnimData ):Bool { return ad.label == label; } ).frames );
+			_currentAnim = label;
+		}
 	}
 	
 	public inline function setPos( x:Float, y:Float ):Void
 	{
-		_graphic.setPos( x, y );
+		_graphic.setPos( (_toRight) ? x : (x+_width), y );
 	}
 	public inline function setX( val:Float ):Void
 	{
-		_graphic.x = val;
+		_graphic.x = (_toRight) ? val : (val+_width);
 	}
 	public inline function setY( val:Float ):Void
 	{

@@ -31,15 +31,18 @@ class DisplayFact
 		//var tileGroup:TileGroup;
 		
 		var anim:Anim = new Anim( null, Settings.FRAME_ANIM, sm.sysGraphic.s2d );
-		var d:CompDisplay2dAnim = new CompDisplay2dAnim( anim );
+		var d:CompDisplay2dAnim = new CompDisplay2dAnim( anim, mc.width * scale );
+		
+		//trace(  );
 		
 		var m:Matrix = new Matrix();
 		var a:Array<Tile> = [];
 		//var animator:Animator2D = new Animator2D();
 		
-		var label:String = mc.currentLabel;
-		var first:String = label;
-		var animData:AnimData = new AnimData( label, [] );
+		var label:String = "?";
+		var first:String = mc.currentLabel;
+		//trace(first);
+		var animData:AnimData = null;//new AnimData( label, [] );
 		
 		for ( i in 0...mc.totalFrames )
 		{
@@ -48,6 +51,8 @@ class DisplayFact
 			
 			if ( mc.currentLabel != label )
 			{
+				animData = new AnimData( mc.currentLabel, [] );
+				
 				label = mc.currentLabel;
 				//animator.push( animData );
 				d.pushAnimData( animData );
@@ -64,17 +69,7 @@ class DisplayFact
 		
 		anim.frames = animData.frames;
 		
-		//d.play(first);
-		
-		//var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
-		//var bmp2 = new h2d.Bitmap(tile, spr2);
-		//e2.display = new CompDisplay2dSprite( spr2 );
-		//e2.display = EntityFact.getSolidDisplay( systemManager, 3*TS, TS );
-		
-		//var a = new Anim( a, Settings.FRAME_ANIM, sm.sysGraphic.s2d );
-		//animator.anim = a;
-		
-		//d.pushAnimData( 
+		d.play(first);
 		
 		return d;
 	}

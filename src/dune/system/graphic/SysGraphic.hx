@@ -55,8 +55,6 @@ class SysGraphic
 		{
 			s3d.addChild( entity.display.getObject() );
 		}
-		
-		
 	}
 	
 	public function remove( entity:Entity ):Void

@@ -1,4 +1,5 @@
 package dune.models.controller ;
+import dune.compBasic.Display;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
 import dune.helpers.core.TimeUtils;
@@ -52,6 +53,8 @@ class ControllerPlatformPlayer extends Controller
 	var _landmark:UInt = 0;
 	var _contacts:ContactBodies;
 	
+	var _display:Display;
+	
 	public function new() 
 	{
 		super();
@@ -95,6 +98,9 @@ class ControllerPlatformPlayer extends Controller
 		var body:CompBody = Lambda.find( value.bodies, function ( cb:CompBody ):Bool { return (cb.typeOfSolid & CompBodyType.SOLID_TYPE_MOVER == CompBodyType.SOLID_TYPE_MOVER); } );
 		if ( body == null ) throw "An entity with input keyboard must have a solid type mover in physic body";
 		_contacts = body.contacts;
+		
+		if ( !Std.is( value.display, Display) ) throw "An entity with ControllerPlatformPlayer must have a display:Display";
+		_display = value.display;
 		
 		return entity = value;
 	}
@@ -236,6 +242,22 @@ class ControllerPlatformPlayer extends Controller
 			_actionPressed = false;
 		}
 		
+		if ( entity.transform.vX < 0 ) _display.setToRight( false );
+		else if ( entity.transform.vX > 0 ) _display.setToRight( true );
+		
+		if ( bottomWall )
+		{
+			if ( entity.transform.vX == 0 ) _display.play( "stand" );
+			else							_display.play( "run" );
+		}
+		else if ( leftWall || rightWall )
+		{
+			_display.play( "wall" );
+		}
+		else
+		{
+			_display.play( "jump" );
+		}
 	}
 	
 	public override function clear():Void

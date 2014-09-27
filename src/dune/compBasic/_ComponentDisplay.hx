@@ -1,4 +1,4 @@
-package dune.system.graphic.components;
+package dune.compBasic ;
 import h2d.Sprite;
 import h3d.scene.Object;
 
@@ -16,4 +16,7 @@ interface ComponentDisplay
 	public function setX( val:Float ):Void;
 	public function setY( val:Float ):Void;
 	public function setPos( x:Float, y:Float ):Void;
+	
+	public function play( label:String ):Void;
+	
 }

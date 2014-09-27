@@ -1,5 +1,6 @@
 package dune.models.example;
 import dune.entities.Entity;
+import dune.helpers.display.DisplayFact;
 import dune.helpers.entity.EntityFact;
 import dune.models.controller.ControllerPlatformPlayer;
 import dune.system.physic.components.CompBody;
@@ -9,6 +10,7 @@ import dune.system.Settings;
 import dune.system.SysManager;
 import flash.display.Loader;
 import flash.events.Event;
+import flash.Lib;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
 import haxe.Json;
@@ -86,7 +88,8 @@ class LevelGen
 			
 			// graphic
 			
-				e3.display = EntityFact.getSolidDisplay( sm, TS, TS );
+				e3.display = DisplayFact.movieClipToDisplay2dAnim( Lib.attach( "PlayerMC" ), sm, 1.5 * Settings.TILE_SIZE / 128 );
+				//e3.display = EntityFact.getSolidDisplay( sm, TS, TS );
 			
 			// collision
 			
@@ -97,6 +100,8 @@ class LevelGen
 				var psr3:PhysShapeRect = new PhysShapeRect();
 				psr3.w = TS;
 				psr3.h = TS;
+				psr3.anchorX = -0.25 * TS;
+				psr3.anchorY = -0.3 * TS;
 				b3.shape = psr3;
 				e3.addBody( b3 );
 			

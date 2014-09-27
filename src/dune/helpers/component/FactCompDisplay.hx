@@ -1,5 +1,5 @@
 package dune.helpers.component;
-import dune.compBasic.Anim;
+
 import dune.system.graphic.components.CompDisplay2dAnim;
 import dune.system.SysManager;
 import flash.display.BitmapData;

@@ -1,8 +1,8 @@
 package dune.entities;
 
+import dune.compBasic.Display;
 import dune.compBasic.Transform;
 import dune.helpers.core.ArrayUtils;
-import dune.system.graphic.components.ComponentDisplay;
 import dune.compBasic.Controller;
 import dune.system.physic.components.CompBody;
 
@@ -20,8 +20,8 @@ class Entity
 	public var bodies(default, null):Array<CompBody>;
 	//public var attachedTo(default, null):Array<Entity>;
 	
-	public var display(default, set):ComponentDisplay;
-	private function set_display( cd:ComponentDisplay ):ComponentDisplay
+	public var display(default, set):Display;
+	private function set_display( cd:Display ):Display
 	{
 		cd.setPos( transform.x, transform.y );
 		return display = cd;

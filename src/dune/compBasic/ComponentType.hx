@@ -7,10 +7,10 @@ package dune.compBasic;
 class ComponentType
 {
 	public inline static var TRANSFORM:UInt = 1;
-	public inline static var TRANSFORM_MOVABLE:UInt = 2;
-	public inline static var TRANSFORM_PHYSIC:UInt = 4;
+	//public inline static var TRANSFORM_MOVABLE:UInt = 2;
+	//public inline static var TRANSFORM_PHYSIC:UInt = 4;
 	
-	public inline static var ANIMATION:UInt = 8;
+	//public inline static var ANIMATION:UInt = 8;
 	
 	public inline static var PHYSIC_BODY:UInt = 16;
 	

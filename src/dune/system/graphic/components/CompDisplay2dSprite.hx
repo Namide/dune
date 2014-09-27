@@ -2,13 +2,14 @@ package dune.system.graphic.components;
 
 import dune.compBasic.ComponentBasic;
 import dune.compBasic.ComponentType;
+import dune.compBasic.Display;
 import h2d.Sprite;
 
 /**
  * ...
  * @author Namide
  */
-class CompDisplay2dSprite implements ComponentDisplay
+class CompDisplay2dSprite implements Display
 {
 	var _graphic:Sprite;
 	
@@ -19,10 +20,26 @@ class CompDisplay2dSprite implements ComponentDisplay
 		return _graphic;
 	}
 	
+	var _toRight:Bool;
+	public inline function isToRight():Bool { return _toRight; }
+	public inline function setToRight(val:Bool):Void
+	{
+		if ( val != _toRight )
+		{
+			_graphic.scaleX = (val) ? 1 : -1;
+		}
+		_toRight = val;
+	}
+	
 	public function new( graphic:Sprite ) 
 	{
 		type = ComponentType.DISPLAY_2D;
 		_graphic = graphic;
+	}
+	
+	public inline function play(label:String):Void
+	{
+		throw "It has'nt animations";
 	}
 	
 	public inline function setPos( x:Float, y:Float ):Void

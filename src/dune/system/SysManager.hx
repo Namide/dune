@@ -36,7 +36,13 @@ class SysManager
 		sysPhysic = new SysPhysic();
 		//sysLink = new SysLink();
 		
-		_time = TimeUtils.getMS(); //Lib.getTimer();
+		 //Lib.getTimer();
+	}
+	
+	public function start():Void
+	{
+		_time = TimeUtils.getMS();
+		hxd.System.setLoop( refresh );
 	}
 	
 	public function addEntity( entity:Entity ):Void
@@ -67,7 +73,7 @@ class SysManager
 		_entitiesMoved.remove(entity);
 	}
 	
-	public function refresh(dt:Float):Void 
+	function refresh():Void 
 	{
 		var realTime:UInt = TimeUtils.getMS();
 		var rest:UInt = realTime - _time;

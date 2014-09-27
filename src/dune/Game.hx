@@ -37,18 +37,25 @@ class Game
 		//hxd.Res.loader = new hxd.res.Loader(hxd.res.EmbedFileSystem.create());
 		
 		systemManager = new SysManager();
+		
+		
 		systemManager.sysGraphic.onInit = run;
 	}
 	
 	public function run()
 	{
-		//var tile = hxd.Res.mainChar128x128.toTile();
-		
 		var level:LevelGen = new LevelGen( systemManager );
 		level.loadJson( "level/level-1.json" );
 		
-		systemManager.refresh(0);
-		hxd.System.setLoop( refresh );
+		systemManager.start();
+		
+		//var tile = hxd.Res.mainChar128x128.toTile();
+		
+		
+		
+		//systemManager.refresh();
+		//hxd.System.setLoop( refresh );
+		
 		
 		// MOBILE LINEAR
 		
@@ -189,17 +196,17 @@ class Game
 		
 	}
 	
-	var frameN:UInt = 0;
+	/*var frameN:UInt = 0;
 	private function refresh()
 	{		
-		/*frameN++;
+		frameN++;
 		if ( frameN % 16 == 0 && frameN >> 4 < 1001 )
 		{
 			addBounceBall();
 			//trace( frameN >> 4 );
-		}*/
+		}
 		
-		systemManager.refresh(0);
+		systemManager.refresh();
 		
-	}
+	}*/
 }

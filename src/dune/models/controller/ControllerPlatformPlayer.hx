@@ -60,8 +60,11 @@ class ControllerPlatformPlayer extends Controller
 		super();
 		beforePhysic = false;
 		
-		setRun( 10, 0.06 );
-		setJump( 1, 2, 3, 0.06, 0.2 );
+		setRun( 14, 0.06 );
+		setJump( 1.5, 3, 6, 0.06, 0.2 );
+		
+		trace( getMaxTilesXJump( 1.5 ) );
+		trace( getMaxTilesXJump( 2 ) );
 	}
 	
 	/**
@@ -72,8 +75,8 @@ class ControllerPlatformPlayer extends Controller
 	public function setRun( vel:Float, accTime:Float ):Void
 	{
 		//_groundTimeAccX = Math.round(accTime * 1000);
-		_groundAccX = Settings.getAccX( vel, Math.round(accTime * 1000) );
-		_groundVX = Settings.getVX( vel );
+		_groundAccX = ControllerPlatformPlayer.getAccX( vel, Math.round(accTime * 1000) );
+		_groundVX = ControllerPlatformPlayer.getVX( vel );
 	}
 	
 	/**
@@ -84,10 +87,10 @@ class ControllerPlatformPlayer extends Controller
 	 */
 	public function setJump( hMin:Float, hMax:Float, lMax:Float, accTime:Float, timeLock:Float ):Void
 	{
-		_jumpStartVY = Settings.getJumpStartVY( hMin );
-		_jumpVY = Settings.getJumpVY( hMax, _jumpStartVY );
-		_jumpVX = Settings.getJumpVX( lMax, _jumpStartVY, _jumpVY );
-		_jumpAccX = Settings.getAccX( _jumpVX, Math.round(accTime * 1000) );
+		_jumpStartVY = ControllerPlatformPlayer.getJumpStartVY( hMin );
+		_jumpVY = ControllerPlatformPlayer.getJumpVY( hMax, _jumpStartVY );
+		_jumpVX = ControllerPlatformPlayer.getJumpVX( lMax, _jumpStartVY, _jumpVY );
+		_jumpAccX = ControllerPlatformPlayer.getAccX( _jumpVX, Math.round(accTime * 1000) );
 		_jumpTimeLock = Math.round(timeLock * 1000);
 	}
 	
@@ -260,9 +263,94 @@ class ControllerPlatformPlayer extends Controller
 		}
 	}
 	
+	
+	
+	public inline function getMaxTilesXJump( maxTilesXJump:Float, gravity:Float = Settings.GRAVITY ):Float
+	{
+		return ControllerPlatformPlayer.maxTilesXJump( maxTilesXJump, _jumpStartVY, _jumpVX, _jumpVY, gravity );
+	}
+	
+	public inline function getMaxTilesYJump( maxTilesYJump:Float, gravity:Float = Settings.GRAVITY ):Float
+	{
+		return ControllerPlatformPlayer.maxTilesYJump( maxTilesYJump, _jumpStartVY, _jumpVX, _jumpVY, gravity );
+	}
+	
+	
+	
 	public override function clear():Void
 	{
 		
+	}
+	
+	// STATICS CALCULATIONS
+	
+	public inline static function getVX( tilesBySec:Float ):Float
+	{
+		var f:Float = 1000 / Settings.FRAME_DELAY;
+		var p:Float = tilesBySec * Settings.TILE_SIZE;
+		return p / f;
+	}
+	
+	public inline static function getAccX( distTile:Float, timeMS:UInt ):Float
+	{
+		var a:Float = distTile * Settings.TILE_SIZE / ( 1000 * timeMS / Settings.FRAME_DELAY );
+		return a * Settings.FRAME_DELAY;
+	}
+	
+	/**
+	 * 
+	 * @param	jumpTiles		To jump 4 tiles use 4
+	 * @param	gravity			In pixels added by frames
+	 * @return
+	 */
+	public inline static function getJumpStartVY( jumpTiles:Float, gravity:Float = Settings.GRAVITY ):Float
+	{
+		return Math.sqrt( 2 * gravity * jumpTiles * Settings.TILE_SIZE );
+	}
+	
+	public inline static function getJumpVY( maxTilesJump:Float, jumpStartVY:Float, gravity:Float = Settings.GRAVITY ):Float
+	{
+		return - (jumpStartVY * jumpStartVY / (2 * maxTilesJump * Settings.TILE_SIZE) - gravity );
+	}
+	
+	public inline static function getJumpVX( maxTilesJump:Float, jumpStartVY:Float, jumpVY:Float = 0, gravity:Float = Settings.GRAVITY ):Float
+	{
+		//var frames:Float = 2 * jumpStartVY / ( gravity - jumpVY );
+		return maxTilesJump * Settings.TILE_SIZE * ( gravity - jumpVY ) / ( 2 * jumpStartVY );
+	}
+	
+	static function maxTilesYJump( maxTilesXJump:Float, jumpStartVY:Float, jumpVX:Float, jumpVY:Float, gravity:Float = Settings.GRAVITY ):Float
+	{
+		maxTilesXJump *= Settings.TILE_SIZE;
+		var vY:Float = jumpStartVY;
+		var vX:Float = jumpVX;
+		var h:Float = 0;
+		var w:Float = 0;
+		while ( h >= 0 )
+		{
+			h += vY;
+			w += jumpVX;
+			if ( w > maxTilesXJump ) return h / Settings.TILE_SIZE;
+			vY += jumpVY - gravity;
+		}
+		return -1;
+	}
+	
+	static function maxTilesXJump( maxTilesYJump:Float, jumpStartVY:Float, jumpVX:Float, jumpVY:Float, gravity:Float = Settings.GRAVITY ):Float
+	{
+		maxTilesYJump *= Settings.TILE_SIZE;
+		var vY:Float = jumpStartVY;
+		var vX:Float = jumpVX;
+		var h:Float = 0;
+		var w:Float = 0;
+		while ( vY > 0 )
+		{
+			h += vY;
+			w += jumpVX;
+			if ( h > maxTilesYJump ) return w / Settings.TILE_SIZE;
+			vY += jumpVY - gravity;
+		}
+		return -1;
 	}
 	
 }

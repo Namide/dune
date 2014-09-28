@@ -5,6 +5,7 @@ import dune.system.Settings;
 import dune.system.SysManager;
 import flash.geom.Matrix;
 import flash.geom.Rectangle;
+import flash.Lib;
 import h2d.Anim;
 import flash.display.MovieClip;
 import h2d.Sprite;
@@ -29,8 +30,7 @@ class DisplayFact
 	public static function movieClipToDisplay2dAnim( mc:MovieClip, sm:SysManager, scale:Float = 1 ):CompDisplay2dAnim
 	{
 		//var tileGroup:TileGroup;
-		
-		var anim:Anim = new Anim( null, Settings.FRAME_ANIM, sm.sysGraphic.s2d );
+		var anim:Anim = new Anim( null, Lib.current.stage.frameRate , sm.sysGraphic.s2d );
 		var d:CompDisplay2dAnim = new CompDisplay2dAnim( anim, mc.width * scale );
 		
 		//trace(  );
@@ -39,7 +39,7 @@ class DisplayFact
 		var a:Array<Tile> = [];
 		//var animator:Animator2D = new Animator2D();
 		
-		var label:String = "?";
+		var label:String = null;
 		var first:String = mc.currentLabel;
 		//trace(first);
 		var animData:AnimData = null;//new AnimData( label, [] );

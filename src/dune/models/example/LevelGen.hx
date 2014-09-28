@@ -98,9 +98,9 @@ class LevelGen
 				b3.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER;
 				b3.insomniac = true;
 				var psr3:PhysShapeRect = new PhysShapeRect();
-				psr3.w = TS;
+				psr3.w = TS * 0.8;
 				psr3.h = TS;
-				psr3.anchorX = -0.25 * TS;
+				psr3.anchorX = -0.35 * TS;
 				psr3.anchorY = -0.35 * TS;
 				b3.shape = psr3;
 				e3.addBody( b3 );
@@ -108,8 +108,8 @@ class LevelGen
 			// Keyboard
 			
 				var i3:ControllerPlatformPlayer = new ControllerPlatformPlayer();
-				i3.setRun( levelDatas.playerVelX, 0.06 );
-				i3.setJump( levelDatas.playerJumpMin, levelDatas.playerJumpMax, levelDatas.playerJumpVelX, 0.06, 0.2 );
+				//i3.setRun( levelDatas.playerVelX, 0.06 );
+				//i3.setJump( levelDatas.playerJumpMin, levelDatas.playerJumpMax, levelDatas.playerJumpVelX, 0.06, 0.2 );
 				e3.addController( i3 );
 			
 		sm.addEntity( e3 );

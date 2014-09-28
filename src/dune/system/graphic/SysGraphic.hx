@@ -14,6 +14,8 @@ class SysGraphic
 	public var s3d : h3d.scene.Scene;
 	public var s2d : h2d.Scene;
 	
+	public var camera2d(default, null):Camera2d;
+	
 	public function new() 
 	{
 		engine = new h3d.Engine();
@@ -26,6 +28,8 @@ class SysGraphic
 		s3d = new h3d.scene.Scene();
 		s2d = new h2d.Scene();
 		s3d.addPass(s2d);
+		
+		camera2d = new Camera2d( s2d );
 		
 		engine.onResized = function() { onResize(); };
 		engine.backgroundColor = 0xFFFFFF;
@@ -49,7 +53,7 @@ class SysGraphic
 		entity.display.setPos( entity.transform.x, entity.transform.y );
 		if ( entity.display.type | ComponentType.DISPLAY_2D == ComponentType.DISPLAY_2D   )
 		{
-			s2d.addChild( entity.display.getObject() );
+			camera2d.display.addChild( entity.display.getObject() );
 		}
 		else if ( entity.display.type | ComponentType.DISPLAY_3D == ComponentType.DISPLAY_3D )
 		{
@@ -63,7 +67,7 @@ class SysGraphic
 		
 		if ( entity.display.type | ComponentType.DISPLAY_2D == ComponentType.DISPLAY_2D   )
 		{
-			s2d.removeChild( entity.display.getObject() );
+			camera2d.display.removeChild( entity.display.getObject() );
 		}
 		else if ( entity.display.type | ComponentType.DISPLAY_3D == ComponentType.DISPLAY_3D )
 		{

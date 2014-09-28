@@ -38,7 +38,6 @@ class Game
 		
 		systemManager = new SysManager();
 		
-		
 		systemManager.sysGraphic.onInit = run;
 	}
 	

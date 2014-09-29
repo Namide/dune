@@ -42,6 +42,8 @@ class ContactBodies
 	public var top(default, default):Array<CompBody>;
 	public var on(default, default):Array<CompBody>;
 	
+	var _toDeleteTemp:Dynamic;
+	
 	public function new( p:CompBody ) 
 	{
 		parent = p;
@@ -138,7 +140,9 @@ class ContactBodies
 		
 		//link.removeChild( parent.entity.transform );
 		
-		trace( "===" );
+		//trace( "===" );
+		
+		_toDeleteTemp = { output:"", write:false };
 		
 		for ( cp in all )
 		{
@@ -169,13 +173,17 @@ class ContactBodies
 				return -1;
 			});
 			
+			_toDeleteTemp.output += " NUM:" + allDatas.length + "\n";
 			for ( temp in allDatas )
 			{
-				trace( "->", temp.pos, temp.reac, parent.shape.aabbXMin, parent.shape.aabbYMax );
+				_toDeleteTemp.output += "{" + temp.body.entity.transform.x + "," + temp.body.entity.transform.y + "} pos:" + temp.pos + " reac:" + temp.reac + "\n";
+				//trace( "->", temp.pos, temp.reac, parent.shape.aabbXMin, parent.shape.aabbYMax );
 			}
 			
 			calculateChainReaction( allDatas/*, link*/ );
 		}
+		
+		if (  _toDeleteTemp.write && allDatas.length > 2 ) trace( _toDeleteTemp.output );
 	}	
 	
 	function getPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
@@ -191,7 +199,7 @@ class ContactBodies
 		
 		
 		// hack if the entity appear in an other
-		if ( pos == 0 && !overAuthorized )
+		/*if ( pos == 0 && !overAuthorized )
 		{
 			if ( dX == 0 && dY == 0 )
 			{
@@ -201,7 +209,7 @@ class ContactBodies
 			{
 				pos = getPosA( a, b, dX + dX, dY + dY, overAuthorized );
 			}
-		}
+		}*/
 		
 		return pos;
 	}
@@ -231,7 +239,7 @@ class ContactBodies
 		{
 			if ( data != null )
 			{
-				data.dist = Math.abs( a.aabbXMax + dY - b.aabbXMin );
+				data.dist = Math.abs( a.aabbXMax + dX - b.aabbXMin );
 			}
 			return RIGHT;
 		}
@@ -239,7 +247,7 @@ class ContactBodies
 		{
 			if ( data != null )
 			{
-				data.dist = Math.abs( a.aabbXMin + dY - b.aabbXMax );
+				data.dist = Math.abs( a.aabbXMin + dX - b.aabbXMax );
 			}
 			return LEFT;
 		}
@@ -258,12 +266,7 @@ class ContactBodies
 			var cLef:Float = b.aabbXMin;
 			var cRig:Float = b.aabbXMax;
 			
-			/*trace("complex ?", pos, dX, dY );
-			trace( pTop, pBot, pLef, pRig );
-			trace( cTop, cBot, cLef, cRig );*/
-			
-			
-			//throw "multi collision: todo";
+			_toDeleteTemp.write = true;
 			
 			if ( BitUtils.has( pos, BOTTOM ) )
 			{
@@ -448,6 +451,8 @@ class ContactBodies
 	{
 		//trace("---");
 		
+		var first:Bool = true;
+		
 		ArrayUtils.clear( all );
 		for ( data in dataList )
 		{
@@ -455,15 +460,23 @@ class ContactBodies
 			{
 				// Recalcule le positionnement
 				
-					parent.shape.updateAABB( parent.entity.transform );
-					var dX:Float = data.body.entity.transform.vX - parent.entity.transform.vX;
-					var dY:Float = data.body.entity.transform.vY - parent.entity.transform.vY;
-					data.reac = getReactPosA( parent.shape, data.body.shape, dX, dY, data );
+					if (!first)
+					{
+						parent.shape.updateAABB( parent.entity.transform );
+						var dX:Float = data.body.entity.transform.vX - parent.entity.transform.vX;
+						var dY:Float = data.body.entity.transform.vY - parent.entity.transform.vY;
+						data.reac = getReactPosA( parent.shape, data.body.shape, dX, dY, data );
+					}
+					else
+					{
+						first = false;
+					}
 					
 					calculateReaction( data.body, data.reac/*, link*/ );
 					save( data.body, data.reac );
 				
 				// ---
+				
 				all.push( data.body );
 			}
 		}
@@ -476,8 +489,8 @@ class ContactBodies
 	function calculateReaction( body:CompBody, reac:Int/*, link:SysLink*/ ):Void
 	{
 		
-		if ( (parent.typeOfSolid & CompBodyType.SOLID_TYPE_EATER == CompBodyType.SOLID_TYPE_EATER) &&
-			 (body.typeOfSolid & CompBodyType.SOLID_TYPE_ITEM == CompBodyType.SOLID_TYPE_ITEM) )
+		if ( BitUtils.has( parent.typeOfSolid, CompBodyType.SOLID_TYPE_EATER ) &&
+			 BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_ITEM ) )
 		{
 			for ( fct in parent.onCollide )
 			{
@@ -485,10 +498,10 @@ class ContactBodies
 			}
 		}
 		
-		if ( parent.typeOfSolid & CompBodyType.SOLID_TYPE_MOVER == CompBodyType.SOLID_TYPE_MOVER )
+		if ( BitUtils.has( parent.typeOfSolid, CompBodyType.SOLID_TYPE_MOVER ) )
 		{
 			var shape:PhysShapePoint = body.shape;
-			if ( 	reac == BOTTOM && BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM ) )
+			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM ) )
 			{
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
 			}
@@ -522,7 +535,7 @@ class ContactBodies
 		}
 	}
 	
-	private inline function save( body:CompBody, reac:UInt ):Void
+	private function save( body:CompBody, reac:UInt ):Void
 	{
 		if 		( reac == BOTTOM ) 	{ bottom.push( body ); }
 		else if ( reac == TOP ) 	{ top.push( body ); }

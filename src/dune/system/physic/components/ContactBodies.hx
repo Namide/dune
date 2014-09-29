@@ -1,6 +1,7 @@
 package dune.system.physic.components;
 import dune.compBasic.Transform;
 import dune.helpers.core.ArrayUtils;
+import dune.helpers.core.BitUtils;
 import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.PhysShapeType;
@@ -129,7 +130,7 @@ class ContactBodies
 			return;
 		}
 		
-		var allDatas:Array<ContactBodiesData> = new Array<ContactBodiesData>();
+		var allDatas:Array<ContactBodiesData> = [];
 		var dataActivated:Bool = all.length > 1;
 		
 		var absVX:Float = parent.entity.transform.vX;
@@ -151,8 +152,9 @@ class ContactBodies
 			else
 			{
 				var reac:Int = getReactPosA( parent.shape, cp.shape, dX, dY );
-				
-				return calculateReaction( cp, reac/*, link*/ );
+				calculateReaction( cp, reac/*, link*/ );
+				save( cp, reac );
+				return;
 			}
 			
 		}
@@ -199,7 +201,7 @@ class ContactBodies
 		
 		if ( data != null ) { data.pos = pos; }
 		
-		if ( pos & BOTTOM == BOTTOM && pos ^ BOTTOM == 0 )
+		if ( BitUtils.hasOnly( pos, BOTTOM ) ) //if ( BitUtils.has( pos, BOTTOM ) && pos ^ BOTTOM == 0 )
 		{
 			if ( data != null )
 			{
@@ -207,7 +209,7 @@ class ContactBodies
 			}
 			return BOTTOM;
 		}
-		else if ( pos & TOP == TOP && pos ^ TOP == 0 )
+		else if ( BitUtils.hasOnly( pos, TOP ) ) //else if ( BitUtils.has( pos, TOP ) && pos ^ TOP == 0 )
 		{
 			if ( data != null )
 			{
@@ -215,7 +217,7 @@ class ContactBodies
 			}
 			return TOP;
 		}
-		else if ( pos & RIGHT == RIGHT && pos ^ RIGHT == 0 )
+		else if ( BitUtils.hasOnly( pos, RIGHT ) ) //else if ( BitUtils.has( pos, RIGHT ) && pos ^ RIGHT == 0 )
 		{
 			if ( data != null )
 			{
@@ -223,7 +225,7 @@ class ContactBodies
 			}
 			return RIGHT;
 		}
-		else if ( pos & LEFT == LEFT && pos ^ LEFT == 0 )
+		else if ( BitUtils.hasOnly( pos, LEFT ) ) //else if ( BitUtils.has( pos, LEFT ) && pos ^ LEFT == 0 )
 		{
 			if ( data != null )
 			{
@@ -243,9 +245,9 @@ class ContactBodies
 			var cLef:Float = b.aabbXMin;
 			var cRig:Float = b.aabbXMax;
 			
-			if ( pos & BOTTOM == BOTTOM )
+			if ( BitUtils.has( pos, BOTTOM ) )
 			{
-				if ( pos & RIGHT == RIGHT )
+				if ( BitUtils.has( pos, RIGHT ) )
 				{
 					if ( dY / ( pBot - cTop ) < dX / (pRig - pLef) )
 					{
@@ -264,7 +266,7 @@ class ContactBodies
 						return BOTTOM;
 					}
 				}
-				else if ( pos & LEFT == LEFT )
+				else if ( BitUtils.has( pos, LEFT ) )
 				{
 					if ( dY / ( pBot - cTop ) < dX / (pLef - pRig) )
 					{
@@ -284,9 +286,9 @@ class ContactBodies
 					}
 				}
 			}
-			else if ( pos & TOP == TOP )
+			else if ( BitUtils.has( pos, TOP ) )
 			{
-				if ( pos & RIGHT == RIGHT )
+				if ( BitUtils.has( pos, RIGHT ) )
 				{
 					if ( dY / ( pTop - cBot ) > dX / (pRig - pLef) )
 					{
@@ -305,7 +307,7 @@ class ContactBodies
 						return RIGHT;
 					}
 				}
-				else if ( pos & LEFT == LEFT )
+				else if ( BitUtils.has( pos, LEFT ) )
 				{
 					if ( dY / ( pTop - cBot ) > dX / (pLef - pRig) )
 					{
@@ -351,14 +353,16 @@ class ContactBodies
 					data.reac = getReactPosA( parent.shape, data.body.shape, dX, dY, data );
 					
 					calculateReaction( data.body, data.reac/*, link*/ );
-				
+					save( data.body, data.reac );
+					
 				// ---
-				
-				
-				
 				all.push( data.body );
 			}
 		}
+		
+		//var dX:Float = body.entity.transform.vX - parent.entity.transform.vX;
+		//var dY:Float = body.entity.transform.vY - parent.entity.transform.vY;
+		//reac = getPosA( parent.shape, body.shape, dX, dY, false );
 	}
 	
 	function calculateReaction( body:CompBody, reac:Int/*, link:SysLink*/ ):Void
@@ -376,17 +380,11 @@ class ContactBodies
 		if ( parent.typeOfSolid & CompBodyType.SOLID_TYPE_MOVER == CompBodyType.SOLID_TYPE_MOVER )
 		{
 			var shape:PhysShapePoint = body.shape;
-			if ( 	reac == BOTTOM &&
-					body.typeOfSolid & CompBodyType.SOLID_TYPE_PLATFORM == CompBodyType.SOLID_TYPE_PLATFORM )
+			if ( 	reac == BOTTOM && BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM ) )
 			{
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
-				
-				/*if ( parent.entity.transform.vY > body.entity.transform.vY )
-				{
-					parent.entity.transform.vY = body.entity.transform.vY;
-				}*/
 			}
-			else if ( body.typeOfSolid & CompBodyType.SOLID_TYPE_WALL == CompBodyType.SOLID_TYPE_WALL )
+			else if ( BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) )
 			{
 				if ( reac == 0 )
 				{
@@ -398,37 +396,26 @@ class ContactBodies
 				if ( reac == BOTTOM )
 				{
 					parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
-					
-					/*if ( parent.entity.transform.vY > body.entity.transform.vY )
-					{
-						parent.entity.transform.vY = body.entity.transform.vY;
-					}*/
 				}
 				else if ( reac == TOP )
 				{
 					parent.entity.transform.y = shape.aabbYMax - PhysShapeUtils.getPosToTop( parent.shape );
-					//parent.entity.transform.vY = body.entity.transform.vY;
 				}
 				else if ( reac == RIGHT )
 				{
 					parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
-					/*if ( parent.entity.transform.vX > body.entity.transform.vX )
-					{
-						parent.entity.transform.vX = body.entity.transform.vX;
-					}*/
 				}
 				else if ( reac == LEFT )
 				{
 					parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
-					/*if ( parent.entity.transform.vX < body.entity.transform.vX )
-					{
-						parent.entity.transform.vX = body.entity.transform.vX;
-					}*/
 				}
 			}
 			
 		}
-		
+	}
+	
+	private inline function save( body:CompBody, reac:UInt ):Void
+	{
 		if 		( reac == BOTTOM ) 	{ bottom.push( body ); }
 		else if ( reac == TOP ) 	{ top.push( body ); }
 		else if ( reac == RIGHT ) 	{ right.push( body ); }

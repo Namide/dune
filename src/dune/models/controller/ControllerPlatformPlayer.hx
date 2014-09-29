@@ -137,26 +137,34 @@ class ControllerPlatformPlayer extends Controller
 			}
 			entity.transform.vY = platformVY;
 		}
-		
 		if ( leftWall )
 		{
 			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.LEFT ) )
 			{
-				if ( platformVX < body.entity.transform.vX ) platformVX = body.entity.transform.vX;
+				if ( platformVX < body.entity.transform.vX )
+				{
+					platformVX = body.entity.transform.vX;
+				}
 			}
 		}
 		if ( rightWall )
 		{
 			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.RIGHT ) )
 			{
-				if ( platformVX > body.entity.transform.vX ) platformVX = body.entity.transform.vX;
+				if ( platformVX > body.entity.transform.vX )
+				{
+					platformVX = body.entity.transform.vX;
+				}
 			}
 		}
 		if ( topWall )
 		{
 			for ( body in _contacts.getByType( CompBodyType.SOLID_TYPE_WALL , ContactBodies.TOP ) )
 			{
-				if ( entity.transform.vY < body.entity.transform.vY ) entity.transform.vY = body.entity.transform.vY;
+				if ( entity.transform.vY < body.entity.transform.vY )
+				{
+					entity.transform.vY = body.entity.transform.vY;
+				}
 			}
 		}
 		
@@ -171,7 +179,10 @@ class ControllerPlatformPlayer extends Controller
 					if ( entity.transform.vX > platformVX-_groundVX )
 					{
 						entity.transform.vX -= _groundAccX;
-						if ( entity.transform.vX < platformVX-_groundVX ) entity.transform.vX = platformVX-_groundVX;
+						if ( entity.transform.vX < platformVX - _groundVX )
+						{
+							entity.transform.vX = platformVX-_groundVX;
+						}
 					}
 				}
 				else if ( TimeUtils.getMS() > _landmark )
@@ -179,7 +190,10 @@ class ControllerPlatformPlayer extends Controller
 					if ( entity.transform.vX > -_jumpVX )
 					{
 						entity.transform.vX -= _jumpAccX;
-						if ( entity.transform.vX < -_jumpVX ) entity.transform.vX = -_jumpVX;
+						if ( entity.transform.vX < -_jumpVX )
+						{
+							entity.transform.vX = -_jumpVX;
+						}
 					}
 				}
 				
@@ -195,7 +209,10 @@ class ControllerPlatformPlayer extends Controller
 					if ( entity.transform.vX < platformVX+_groundVX )
 					{
 						entity.transform.vX += _groundAccX;
-						if ( entity.transform.vX > platformVX+_groundVX ) entity.transform.vX = platformVX+_groundVX;
+						if ( entity.transform.vX > platformVX + _groundVX )
+						{
+							entity.transform.vX = platformVX+_groundVX;
+						}
 					}
 				}
 				else if ( TimeUtils.getMS() > _landmark )
@@ -203,14 +220,20 @@ class ControllerPlatformPlayer extends Controller
 					if ( entity.transform.vX < _jumpVX )
 					{
 						entity.transform.vX += _jumpAccX;
-						if ( entity.transform.vX > _jumpVX ) entity.transform.vX = _jumpVX;
+						if ( entity.transform.vX > _jumpVX )
+						{
+							entity.transform.vX = _jumpVX;
+						}
 					}
 				}
 			}
 		}
 		else
 		{
-			if ( bottomWall  ) entity.transform.vX = platformVX;
+			if ( bottomWall  )
+			{
+				entity.transform.vX = platformVX;
+			}
 		}
 		
 		if ( kh.getKeyPressed( keyAction ) )
@@ -238,14 +261,20 @@ class ControllerPlatformPlayer extends Controller
 				entity.transform.vY -= _jumpVY;
 			}
 			
-			if ( !_actionPressed ) { _actionPressed = true; }
+			if ( !_actionPressed )
+			{
+				_actionPressed = true;
+			}
 		}
 		else if ( _actionPressed )
 		{
 			_actionPressed = false;
 		}
 		
-		if ( entity.transform.vX < 0 ) _display.setToRight( false );
+		
+		// 		ANIMATIONS
+		
+		if ( entity.transform.vX < 0 )		_display.setToRight( false );
 		else if ( entity.transform.vX > 0 ) _display.setToRight( true );
 		
 		if ( bottomWall )

@@ -22,6 +22,7 @@ todo list
 	* mover | platform - collisions
 	* faster object physic
 	* double collisions
+	* bug left wall jump -> restart contacts after chainReaction
 * optimizations
 	* array ?
 	

@@ -9,7 +9,7 @@ import dune.system.physic.shapes.PhysShapeUtils;
  * ...
  * @author Namide
  */
-class SysSpaceSimple
+class SysSpaceSimple implements SysSpace
 {
 
 	public var _active(default, null):List<CompBody>;
@@ -20,6 +20,8 @@ class SysSpaceSimple
 		_active = new List<CompBody>();
 		_passive = new List<CompBody>();
 	}
+	
+	public inline function testSleeping():Void { }
 	
 	public function hitTest():List<CompBody>
 	{
@@ -59,9 +61,8 @@ class SysSpaceSimple
 	 * Add a body in this system
 	 * 
 	 * @param	body			Body to add in the system
-	 * @param	addNowInGrid	Add the body in the grid (you must add only for the first adding)
 	 */
-	public function addBody( body:CompBody, addNowInGrid:Bool = true ):Void
+	public function addBody( body:CompBody ):Void
 	{
 		if ( body.typeOfCollision == CompBodyType.COLLISION_TYPE_PASSIVE )
 		{

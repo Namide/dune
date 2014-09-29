@@ -138,6 +138,8 @@ class ContactBodies
 		
 		//link.removeChild( parent.entity.transform );
 		
+		trace( "===" );
+		
 		for ( cp in all )
 		{
 			var dX:Float = cp.entity.transform.vX - absVX;
@@ -166,6 +168,12 @@ class ContactBodies
 				if ( a.dist > b.dist ) { return 1; }
 				return -1;
 			});
+			
+			for ( temp in allDatas )
+			{
+				trace( "->", temp.pos, temp.reac, parent.shape.aabbXMin, parent.shape.aabbYMax );
+			}
+			
 			calculateChainReaction( allDatas/*, link*/ );
 		}
 	}	
@@ -174,13 +182,16 @@ class ContactBodies
 	{
 		var pos:Int = 0;
 		
-		if ( a.aabbYMin + dY >= b.aabbYMax ) { pos |= TOP; }
-		if ( a.aabbXMax + dX <= b.aabbXMin ) { pos |= RIGHT; }
-		if ( a.aabbYMax + dY <= b.aabbYMin ) { pos |= BOTTOM; }
+		
 		if ( a.aabbXMin + dX >= b.aabbXMax ) { pos |= LEFT; }
+		if ( a.aabbXMax + dX <= b.aabbXMin ) { pos |= RIGHT; }
+		if ( a.aabbYMin + dY >= b.aabbYMax ) { pos |= TOP; }
+		if ( a.aabbYMax + dY <= b.aabbYMin ) { pos |= BOTTOM; }
+		
+		
 		
 		// hack if the entity appear in an other
-		if ( !overAuthorized && pos == 0  )
+		if ( pos == 0 && !overAuthorized )
 		{
 			if ( dX == 0 && dY == 0 )
 			{
@@ -198,10 +209,9 @@ class ContactBodies
 	function getReactPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, data:ContactBodiesData = null ):Int
 	{
 		var pos:Int = getPosA( a, b, dX, dY );
-		
 		if ( data != null ) { data.pos = pos; }
 		
-		if ( BitUtils.hasOnly( pos, BOTTOM ) ) //if ( BitUtils.has( pos, BOTTOM ) && pos ^ BOTTOM == 0 )
+		if ( BitUtils.hasOnly( pos, BOTTOM ) )
 		{
 			if ( data != null )
 			{
@@ -209,7 +219,7 @@ class ContactBodies
 			}
 			return BOTTOM;
 		}
-		else if ( BitUtils.hasOnly( pos, TOP ) ) //else if ( BitUtils.has( pos, TOP ) && pos ^ TOP == 0 )
+		else if ( BitUtils.hasOnly( pos, TOP ) )
 		{
 			if ( data != null )
 			{
@@ -217,7 +227,7 @@ class ContactBodies
 			}
 			return TOP;
 		}
-		else if ( BitUtils.hasOnly( pos, RIGHT ) ) //else if ( BitUtils.has( pos, RIGHT ) && pos ^ RIGHT == 0 )
+		else if ( BitUtils.hasOnly( pos, RIGHT ) )
 		{
 			if ( data != null )
 			{
@@ -225,7 +235,7 @@ class ContactBodies
 			}
 			return RIGHT;
 		}
-		else if ( BitUtils.hasOnly( pos, LEFT ) ) //else if ( BitUtils.has( pos, LEFT ) && pos ^ LEFT == 0 )
+		else if ( BitUtils.hasOnly( pos, LEFT ) )
 		{
 			if ( data != null )
 			{
@@ -233,8 +243,11 @@ class ContactBodies
 			}
 			return LEFT;
 		}
-		else
+		else if ( pos != 0 )
 		{
+			
+			//if ( pos == 0 ) pos = getPosA( a, b, dX, dY, false );
+			
 			var pTop:Float = a.aabbYMin;
 			var pBot:Float = a.aabbYMax;
 			var pLef:Float = a.aabbXMin;
@@ -245,15 +258,105 @@ class ContactBodies
 			var cLef:Float = b.aabbXMin;
 			var cRig:Float = b.aabbXMax;
 			
+			/*trace("complex ?", pos, dX, dY );
+			trace( pTop, pBot, pLef, pRig );
+			trace( cTop, cBot, cLef, cRig );*/
+			
+			
+			//throw "multi collision: todo";
+			
 			if ( BitUtils.has( pos, BOTTOM ) )
 			{
 				if ( BitUtils.has( pos, RIGHT ) )
 				{
-					if ( dY / ( pBot - cTop ) < dX / (pRig - pLef) )
+					if ( pBot + dY - cTop > pRig + dX - cLef )
 					{
 						if ( data != null )
 						{
-							data.dist = Math.abs( a.aabbXMax + dY - b.aabbXMin );
+							data.dist = pRig + dX - cLef;
+						}
+						return BOTTOM;
+					}
+					else
+					{
+						if ( data != null )
+						{
+							data.dist = pBot + dY - cTop;
+						}
+						return RIGHT;
+					}
+				}
+				else if ( BitUtils.has( pos, LEFT ) )
+				{
+					if ( pBot + dY - cTop < pLef + dX - cRig )
+					{
+						if ( data != null )
+						{
+							data.dist = pLef + dX - cRig;
+						}
+						return BOTTOM;
+					}
+					else
+					{
+						if ( data != null )
+						{
+							data.dist = pBot + dY - cTop;
+						}
+						return LEFT;
+					}
+				}
+			}
+			else if ( BitUtils.has( pos, TOP ) )
+			{
+				if ( BitUtils.has( pos, RIGHT ) )
+				{
+					if ( pTop + dY - cBot < pRig + dX - cLef )
+					{
+						if ( data != null )
+						{
+							data.dist = pRig + dX - cLef;
+						}
+						return TOP;
+					}
+					else
+					{
+						if ( data != null )
+						{
+							data.dist = pTop + dY - cBot;
+						}
+						return RIGHT;
+					}
+				}
+				else if ( BitUtils.has( pos, LEFT ) )
+				{
+					if ( pTop + dY - cBot < pLef + dX - cRig )
+					{
+						if ( data != null )
+						{
+							data.dist = pLef + dX - cRig;
+						}
+						return TOP;
+					}
+					else
+					{
+						if ( data != null )
+						{
+							data.dist = pTop + dY - cBot;
+						}
+						return LEFT;
+					}
+				}
+			}
+			
+			/*if ( BitUtils.has( pos, BOTTOM ) )
+			{
+				if ( BitUtils.has( pos, RIGHT ) )
+				{					
+					if ( dY + ( pBot - cTop ) <= dX + (pRig - cLef) )
+					{
+						if ( data != null )
+						{
+							data.dist = pRig + dX - cLef;
 						}
 						return RIGHT;
 					}
@@ -261,18 +364,21 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = Math.abs( a.aabbYMax + dY - b.aabbYMin );
+							data.dist = pBot + dY - cTop;
 						}
 						return BOTTOM;
 					}
 				}
 				else if ( BitUtils.has( pos, LEFT ) )
 				{
-					if ( dY / ( pBot - cTop ) < dX / (pLef - pRig) )
+					
+					trace("-?-", dY, pBot, cTop, dX, pLef, cRig );
+					
+					if ( dY + ( pBot - cTop ) <= dX + (pLef - cRig) )
 					{
 						if ( data != null )
 						{
-							data.dist = Math.abs( a.aabbXMin + dY - b.aabbXMax );
+							data.dist = pLef + dX - cRig;
 						}
 						return LEFT;
 					}
@@ -280,7 +386,7 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = Math.abs( a.aabbYMax + dY - b.aabbYMin );
+							data.dist = pBot + dY - cTop;
 						}
 						return BOTTOM;
 					}
@@ -290,11 +396,11 @@ class ContactBodies
 			{
 				if ( BitUtils.has( pos, RIGHT ) )
 				{
-					if ( dY / ( pTop - cBot ) > dX / (pRig - pLef) )
+					if ( dY + ( pTop - cBot ) > dX + (pRig - cLef) )
 					{
 						if ( data != null )
 						{
-							data.dist = Math.abs( a.aabbYMin + dY - b.aabbYMax );
+							data.dist = pTop + dY - cBot;
 						}
 						return TOP;
 					}
@@ -302,18 +408,18 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = Math.abs( a.aabbXMax + dY - b.aabbXMin );
+							data.dist = pRig + dX - cLef;
 						}
 						return RIGHT;
 					}
 				}
 				else if ( BitUtils.has( pos, LEFT ) )
 				{
-					if ( dY / ( pTop - cBot ) > dX / (pLef - pRig) )
+					if ( dY + ( pTop - cBot ) > dX + (pLef - cRig) )
 					{
 						if ( data != null )
 						{
-							data.dist = Math.abs( a.aabbYMin + dY - b.aabbYMax );
+							data.dist = pTop + dY - cBot;
 						}
 						return TOP;
 					}
@@ -321,12 +427,12 @@ class ContactBodies
 					{
 						if ( data != null )
 						{
-							data.dist = Math.abs( a.aabbXMin + dY - b.aabbXMax );
+							data.dist = pLef + dX - cRig;
 						}
 						return LEFT;
 					}
 				}
-			}
+			}*/
 		}
 		
 		return 0;
@@ -340,6 +446,8 @@ class ContactBodies
 	 */
 	function calculateChainReaction( dataList:Array<ContactBodiesData>/*, link:SysLink*/ ):Void
 	{
+		//trace("---");
+		
 		ArrayUtils.clear( all );
 		for ( data in dataList )
 		{
@@ -354,7 +462,7 @@ class ContactBodies
 					
 					calculateReaction( data.body, data.reac/*, link*/ );
 					save( data.body, data.reac );
-					
+				
 				// ---
 				all.push( data.body );
 			}

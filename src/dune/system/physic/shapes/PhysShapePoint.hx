@@ -36,4 +36,9 @@ class PhysShapePoint
 		aabbYMin =
 		aabbYMax = pe.y - anchorY;
 	}
+	
+	public function toString():String
+	{
+		return "[PhysShape x:{"+aabbXMin+","+aabbXMax+"} y:{"+aabbYMin+","+aabbYMax+"}]";
+	}
 }

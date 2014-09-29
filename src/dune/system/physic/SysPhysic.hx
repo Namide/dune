@@ -1,8 +1,9 @@
 package dune.system.physic;
 
 import dune.helpers.core.TimeUtils;
+import dune.system.core.SysSpace;
 import dune.system.physic.components.CompBody;
-import dune.system.core.SysSpaceGrid;
+//import dune.system.core.SysSpaceGrid;
 
 #if (debugHitbox && (flash || openfl))
 	import flash.display.Sprite;
@@ -18,7 +19,7 @@ class SysPhysic
 	/**
 	 * Scene of the bodies
 	 */
-	public var space(default, null):SysSpaceGrid;
+	public var space(default, null):SysSpace;
 	
 	#if (debugHitbox && (flash || openfl ))
 		var _sceneHitBox:Sprite;
@@ -26,7 +27,7 @@ class SysPhysic
 	
 	public function new() 
 	{
-		space = new SysSpaceGrid();
+		space = new dune.system.core.SysSpaceSimple();
 		
 		#if (debugHitbox && (flash || openfl ))
 			_sceneHitBox = new Sprite();

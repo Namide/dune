@@ -150,7 +150,7 @@ class Node
  * ...
  * @author Namide
  */
-class SysSpaceGrid
+class SysSpaceGrid implements SysSpace
 {
 	public var _active(default, null):Array<Node>;
 	public var _activeSleeping(default, null):Array<Node>;

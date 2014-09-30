@@ -114,6 +114,8 @@ class LevelGen
 			
 		sm.addEntity( e3 );
 		
+		//var constructed:Dynamic = { };
+		
 		for ( j in 0...levelDatas.solids.length )
 		{
 			for ( i in 0...levelDatas.solids[j].length )
@@ -130,5 +132,11 @@ class LevelGen
 			}
 		}
 	}
+	
+	/*function merge( a:Array<Array<Int>>, iMin:Int, jMin:Int, c:Dynamic )
+	{
+		var iMax:Int, jMax:Int;
+		if (  )
+	}*/
 	
 }

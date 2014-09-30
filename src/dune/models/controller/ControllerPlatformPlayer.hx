@@ -119,6 +119,7 @@ class ControllerPlatformPlayer extends Controller
 		var rightWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.RIGHT );
 		var topWall:Bool = 		_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP );
 		
+		//trace( _contacts.mainCollide );
 		//trace( bottomWall, leftWall, rightWall, topWall );
 		
 		entity.transform.vY += Settings.GRAVITY;

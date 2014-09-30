@@ -166,7 +166,7 @@ class ContactBodies
 				data.reac = getReactPosA( parent.shape, cp.shape, dX, dY, data, overAutorized );
 				allDatas.push( data );
 				
-				trace( "{" + data.body.entity.transform.x + "," + data.body.entity.transform.y + "} pos:" + data.pos + " reac:" + data.reac + " dist:" + data.dist );
+				//trace( "{" + data.body.entity.transform.x + "," + data.body.entity.transform.y + "} pos:" + data.pos + " reac:" + data.reac + " dist:" + data.dist );
 			}
 			else
 			{
@@ -195,14 +195,14 @@ class ContactBodies
 			//_toDeleteTemp.output += " NUM:" + allDatas.length + "\n";
 			
 			//trace("---");
-			for ( temp in allDatas )
+			/*for ( temp in allDatas )
 			{
 				if ( allDatas.length > 2 ) 
 					trace( "pos:" + temp.pos + " reac:" + temp.reac + " dist:" + temp.dist );
 					
 				//trace( "->", temp.pos, temp.reac, parent.shape.aabbXMin, parent.shape.aabbYMax );
 				//trace( temp.pos, temp.dist );
-			}
+			}*/
 			
 			calculateChainReaction( allDatas/*, link*/ );
 		}
@@ -593,7 +593,7 @@ class ContactBodies
 	
 	private function save( body:CompBody, reac:UInt ):Void
 	{
-		trace( "save:"+reac );
+		//trace( "save:"+reac );
 		
 		if 		( reac == BOTTOM ) 	{ bottom.push( body ); }
 		else if ( reac == TOP ) 	{ top.push( body ); }

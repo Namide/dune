@@ -6,7 +6,7 @@ package dune.system;
  */
 class Settings
 {
-	public static inline var FRAME_DELAY:UInt = 40; // =20; - 50 FPS => 1000 / 50
+	public static inline var FRAME_DELAY:UInt = 20; // =20; - 50 FPS => 1000 / 50
 	public static inline var GRAVITY:Float =  40 / Settings.FRAME_DELAY;
 	
 	//public static inline var FRAME_ANIM:UInt = 100;

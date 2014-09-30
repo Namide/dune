@@ -271,7 +271,8 @@ class ContactBodies
 			var cLef:Float = b.aabbXMin;
 			var cRig:Float = b.aabbXMax;
 			
-			_toDeleteTemp.write = true;
+			//_toDeleteTemp.write = true;
+			_toDeleteTemp.output += "dx: "+dX+" dy:"+dY+"\n";
 			
 			if ( BitUtils.has( pos, BOTTOM ) )
 			{

@@ -124,6 +124,9 @@ class ControllerPlatformPlayer extends Controller
 		
 		entity.transform.vY += Settings.GRAVITY;
 		
+		trace(leftWall);
+		trace( "1. vX:" + entity.transform.vX );
+		
 		var platformVX:Float = 0;
 		if ( bottomWall )
 		{
@@ -171,10 +174,10 @@ class ControllerPlatformPlayer extends Controller
 			}
 		}
 		
+		trace( "2. vX:" + entity.transform.vX );
 		
 		if ( kh.getKeyPressed( keyLeft ) )
 		{
-			
 			if ( !leftWall )
 			{
 				if ( bottomWall )
@@ -239,6 +242,8 @@ class ControllerPlatformPlayer extends Controller
 			}
 		}
 		
+		trace( "4. vX:" + entity.transform.vX );
+		
 		if ( kh.getKeyPressed( keyAction ) )
 		{
 			if ( bottomWall )
@@ -264,6 +269,7 @@ class ControllerPlatformPlayer extends Controller
 				entity.transform.vY -= _jumpVY;
 			}
 			
+			
 			if ( !_actionPressed )
 			{
 				_actionPressed = true;
@@ -274,6 +280,7 @@ class ControllerPlatformPlayer extends Controller
 			_actionPressed = false;
 		}
 		
+		trace( "4. vX:" + entity.transform.vX );
 		
 		// 		ANIMATIONS
 		

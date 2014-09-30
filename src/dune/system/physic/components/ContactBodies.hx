@@ -44,10 +44,13 @@ class ContactBodies
 	public var top(default, default):Array<CompBody>;
 	public var on(default, default):Array<CompBody>;
 	
+	var _vX:Float;
+	var _vY:Float;
+	
 	//public var moveInDirection:UInt = 0;
 	//public var isCrush:Bool = false;
 	
-	var _toDeleteTemp:Dynamic;
+	//var _toDeleteTemp:Dynamic;
 	
 	public function new( p:CompBody ) 
 	{
@@ -142,19 +145,19 @@ class ContactBodies
 		//moveInDirection = 0;
 		//isCrush = false;
 		
-		var absVX:Float = parent.entity.transform.vX;
-		var absVY:Float = parent.entity.transform.vY;
+		_vX = parent.entity.transform.vX;
+		_vY = parent.entity.transform.vY;
 		
 		//link.removeChild( parent.entity.transform );
 		
 		//trace( "===" );
 		
-		_toDeleteTemp = { output:"", write:false };
+		//_toDeleteTemp = { output:"", write:false };
 		
 		for ( cp in all )
 		{
-			var dX:Float = cp.entity.transform.vX - absVX;
-			var dY:Float = cp.entity.transform.vY - absVY;
+			var dX:Float = cp.entity.transform.vX - _vX;
+			var dY:Float = cp.entity.transform.vY - _vY;
 			var overAutorized:Bool = !BitUtils.has( cp.typeOfSolid, CompBodyType.SOLID_TYPE_WALL );
 			
 			if ( dataActivated )
@@ -162,6 +165,8 @@ class ContactBodies
 				var data:ContactBodiesData = new ContactBodiesData( cp );
 				data.reac = getReactPosA( parent.shape, cp.shape, dX, dY, data, overAutorized );
 				allDatas.push( data );
+				
+				trace( "{" + data.body.entity.transform.x + "," + data.body.entity.transform.y + "} pos:" + data.pos + " reac:" + data.reac + " dist:" + data.dist );
 			}
 			else
 			{
@@ -187,20 +192,22 @@ class ContactBodies
 				return -1;
 			});
 			
-			_toDeleteTemp.output += " NUM:" + allDatas.length + "\n";
+			//_toDeleteTemp.output += " NUM:" + allDatas.length + "\n";
 			
-			trace("---");
+			//trace("---");
 			for ( temp in allDatas )
 			{
-				_toDeleteTemp.output += "{" + temp.body.entity.transform.x + "," + temp.body.entity.transform.y + "} pos:" + temp.pos + " reac:" + temp.reac + " dist:"+temp.dist+"\n";
+				if ( allDatas.length > 2 ) 
+					trace( "pos:" + temp.pos + " reac:" + temp.reac + " dist:" + temp.dist );
+					
 				//trace( "->", temp.pos, temp.reac, parent.shape.aabbXMin, parent.shape.aabbYMax );
-				trace( temp.pos, temp.dist );
+				//trace( temp.pos, temp.dist );
 			}
 			
 			calculateChainReaction( allDatas/*, link*/ );
 		}
 		
-		if (  _toDeleteTemp.write && allDatas.length > 2 ) trace( _toDeleteTemp.output );
+		//if (  _toDeleteTemp.write && allDatas.length > 2 ) trace( _toDeleteTemp.output );
 	}	
 	
 	function getPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
@@ -290,8 +297,8 @@ class ContactBodies
 			
 			//if ( pos == 0 ) pos = getPosA( a, b, dX, dY, false );
 			
-			_toDeleteTemp.write = true;
-			_toDeleteTemp.output += "dx: " + dX + " dy:" + dY + "\n";
+			//_toDeleteTemp.write = true;
+			//_toDeleteTemp.output += "dx: " + dX + " dy:" + dY + "\n";
 			
 			if ( BitUtils.has( pos, BOTTOM ) )
 			{
@@ -481,6 +488,8 @@ class ContactBodies
 	function calculateChainReaction( dataList:Array<ContactBodiesData>/*, link:SysLink*/ ):Void
 	{
 		var first:Bool = true;
+		_vX = parent.entity.transform.vX;
+		_vY = parent.entity.transform.vY;
 		
 		ArrayUtils.clear( all );
 		for ( data in dataList )
@@ -489,17 +498,17 @@ class ContactBodies
 			{
 				// Recalcule le positionnement
 				
-					if (!first)
+					/*if (!first)
 					{
 						parent.shape.updateAABB( parent.entity.transform );
-						var dX:Float = data.body.entity.transform.vX - parent.entity.transform.vX;
-						var dY:Float = data.body.entity.transform.vY - parent.entity.transform.vY;
+						var dX:Float = data.body.entity.transform.vX - _vX;
+						var dY:Float = data.body.entity.transform.vY - _vY;
 						data.reac = getReactPosA( parent.shape, data.body.shape, dX, dY, data );
 					}
 					else
 					{
 						first = false;
-					}
+					}*/
 					
 					calculateReaction( data.body, data.reac/*, link*/ );
 					save( data.body, data.reac );
@@ -534,17 +543,18 @@ class ContactBodies
 				//if ( BitUtils.has(reac, TOP) ) { isCrush = true; return; }
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
 				//moveInDirection |= BOTTOM;
+				if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
 			}
 			else if ( BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) )
 			{
 				
 				if ( reac == 0 )
 				{
-					var dX:Float = body.entity.transform.vX - parent.entity.transform.vX;
-					var dY:Float = body.entity.transform.vY - parent.entity.transform.vY;
-					trace( "->" + reac, dX, dY );
+					var dX:Float = body.entity.transform.vX - _vX;
+					var dY:Float = body.entity.transform.vY - _vY;
+					//trace( "->" + reac, dX, dY );
 					reac = getPosA( parent.shape, body.shape, dX, dY, false );
-					trace( "=>" + reac );
+					//trace( "=>" + reac );
 				}
 				
 				
@@ -552,18 +562,21 @@ class ContactBodies
 				{
 					//if ( BitUtils.has(reac, TOP) ) { isCrush = true; return; }
 					parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
+					if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
 					//moveInDirection |= BOTTOM;
 				}
 				else if ( reac == TOP )
 				{
 					//if ( BitUtils.has(reac, BOTTOM) ) { isCrush = true; return; }
 					parent.entity.transform.y = shape.aabbYMax - PhysShapeUtils.getPosToTop( parent.shape );
+					if ( _vY < body.entity.transform.vY ) _vY = body.entity.transform.vY;
 					//moveInDirection |= TOP;
 				}
 				else if ( reac == RIGHT )
 				{
 					//if ( BitUtils.has(reac, LEFT) ) { isCrush = true; return; }
 					parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
+					if ( _vX > body.entity.transform.vX ) _vX = body.entity.transform.vX;
 					//moveInDirection |= RIGHT;
 				}
 				else if ( reac == LEFT )
@@ -571,6 +584,7 @@ class ContactBodies
 					//if ( BitUtils.has(reac, RIGHT) ) { isCrush = true; return; }
 					parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
 					//moveInDirection |= LEFT;
+					if ( _vX < body.entity.transform.vX ) _vX = body.entity.transform.vX;
 				}
 			}
 			
@@ -579,6 +593,8 @@ class ContactBodies
 	
 	private function save( body:CompBody, reac:UInt ):Void
 	{
+		trace( "save:"+reac );
+		
 		if 		( reac == BOTTOM ) 	{ bottom.push( body ); }
 		else if ( reac == TOP ) 	{ top.push( body ); }
 		else if ( reac == RIGHT ) 	{ right.push( body ); }

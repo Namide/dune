@@ -11,14 +11,16 @@ import dune.system.physic.shapes.PhysShapeUtils;
  */
 class SysSpaceSimple implements SysSpace
 {
-
-	public var _active(default, null):List<CompBody>;
-	public var _passive(default, null):List<CompBody>;
+	public var all(default, null):List<CompBody>;
+	
+	var _active(default, null):List<CompBody>;
+	var _passive(default, null):List<CompBody>;
 	
 	public function new() 
 	{
 		_active = new List<CompBody>();
 		_passive = new List<CompBody>();
+		all = new List<CompBody>();
 	}
 	
 	public inline function testSleeping():Void { }
@@ -72,6 +74,7 @@ class SysSpaceSimple implements SysSpace
 		{
 			_active.push( body );
 		}
+		all.push( body );
 	}
 	
 	/**
@@ -90,5 +93,10 @@ class SysSpaceSimple implements SysSpace
 		{
 			_active.remove( body );
 		}
+		all.remove( body );
 	}
+	
+	#if (debugHitbox && (flash || openfl ))
+		public inline function draw(scene:flash.display.Sprite):Void { }
+	#end
 }

@@ -152,6 +152,8 @@ class Node
  */
 class SysSpaceGrid implements SysSpace
 {
+	public var all(default, null):List<CompBody>;
+	
 	public var _active(default, null):Array<Node>;
 	public var _activeSleeping(default, null):Array<Node>;
 	public var _passive(default, null):Array<Node>;
@@ -168,6 +170,7 @@ class SysSpaceGrid implements SysSpace
 		_active = [];
 		_activeSleeping = [];
 		_passive = [];
+		all = [];
 		init();
 	}
 	
@@ -304,7 +307,7 @@ class SysSpaceGrid implements SysSpace
 		{
 			_active.push( node );
 		}
-		
+		all.push( body );
 	}
 	
 	/**
@@ -326,6 +329,7 @@ class SysSpaceGrid implements SysSpace
 			var node:Node = Lambda.find( _active, function( n:Node ):Bool { return n.body == body; } );
 			_active.remove( node );
 		}
+		all.remove( body );
 	}
 	
 	#if (debugHitbox && (flash || openfl ))

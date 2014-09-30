@@ -53,14 +53,9 @@ class SysPhysic
 			
 			space.draw( _sceneHitBox );
 			
-			for ( compBody in space._active )
+			for ( compBody in space.all )
 			{
-				compBody.body.draw( _sceneHitBox );
-			}
-			
-			for ( compBody in space._passive )
-			{
-				compBody.body.draw( _sceneHitBox );
+				compBody.draw( _sceneHitBox );
 			}
 			
 		#end

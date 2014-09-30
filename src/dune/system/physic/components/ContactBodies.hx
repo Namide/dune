@@ -42,6 +42,9 @@ class ContactBodies
 	public var top(default, default):Array<CompBody>;
 	public var on(default, default):Array<CompBody>;
 	
+	public var moveInDirection:UInt = 0;
+	public var isCrush:Bool = false;
+	
 	var _toDeleteTemp:Dynamic;
 	
 	public function new( p:CompBody ) 
@@ -134,6 +137,8 @@ class ContactBodies
 		
 		var allDatas:Array<ContactBodiesData> = [];
 		var dataActivated:Bool = all.length > 1;
+		moveInDirection = 0;
+		isCrush = false;
 		
 		var absVX:Float = parent.entity.transform.vX;
 		var absVY:Float = parent.entity.transform.vY;
@@ -503,7 +508,9 @@ class ContactBodies
 			var shape:PhysShapePoint = body.shape;
 			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM ) )
 			{
+				if ( BitUtils.has(reac, TOP) ) { isCrush = true; return; }
 				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
+				moveInDirection |= BOTTOM;
 			}
 			else if ( BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) )
 			{
@@ -516,19 +523,27 @@ class ContactBodies
 				
 				if ( reac == BOTTOM )
 				{
+					if ( BitUtils.has(reac, TOP) ) { isCrush = true; return; }
 					parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
+					moveInDirection |= BOTTOM;
 				}
 				else if ( reac == TOP )
 				{
+					if ( BitUtils.has(reac, BOTTOM) ) { isCrush = true; return; }
 					parent.entity.transform.y = shape.aabbYMax - PhysShapeUtils.getPosToTop( parent.shape );
+					moveInDirection |= TOP;
 				}
 				else if ( reac == RIGHT )
 				{
+					if ( BitUtils.has(reac, LEFT) ) { isCrush = true; return; }
 					parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
+					moveInDirection |= RIGHT;
 				}
 				else if ( reac == LEFT )
 				{
+					if ( BitUtils.has(reac, RIGHT) ) { isCrush = true; return; }
 					parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
+					moveInDirection |= LEFT;
 				}
 			}
 			

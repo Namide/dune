@@ -3,7 +3,6 @@ import dune.compBasic.Transform;
 import dune.helpers.core.ArrayUtils;
 import dune.helpers.core.BitUtils;
 import dune.system.physic.components.ContactBodies.ContactBodiesData;
-import dune.system.physic.components.ContactBodies.RectLimits;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.PhysShapeType;
 import dune.system.physic.shapes.PhysShapeUtils;
@@ -11,126 +10,19 @@ import dune.system.physic.shapes.PhysShapeUtils;
 
 class ContactBodiesData
 {
-	//public var dist(default, default):Float;
+	public var dist(default, default):Float;
 	public var body(default, default):CompBody;
-	//public var reac(default, default):Int;
+	public var reac(default, default):Int;
 	
 	public var pos(default, default):Int;
-	//public var limit(default, default):Float;
+	public var limit(default, default):Float;
 	//public var priority(default, default):Bool;
 	
 	public function new( compBody:CompBody ) 
 	{
 		body = compBody;
-		//limit = Math.NaN;
-		pos = -1;
-		//reac = -1;
+		limit = Math.NaN;
 		//priority = false;
-	}
-}
-
-class RectLimits
-{
-	var topLimit:Float;
-	var botLimit:Float;
-	var lefLimit:Float;
-	var rigLimit:Float;
-	
-	public function new( compBody:CompBody ) 
-	{
-		clear();
-	}
-	
-	public function clear():Void
-	{
-		topLimit = Math.NaN;
-		botLimit = Math.NaN;
-		lefLimit = Math.NaN;
-		rigLimit = Math.NaN;
-	}
-	
-	public function addMultiLimit( dir:Int, cbd:ContactBodiesData ):Void
-	{
-		var shape:PhysShapePoint = cbd.body.shape;
-		if ( BitUtils.has( cbd.pos, ContactBodies.TOP ) )
-		{
-			if ( Math.isNaN(topLimit) || shape.aabbYMax == topLimit )
-			{
-				cbd.reac = ContactBodies.TOP;
-				return true;
-			}
-		}
-		
-		if ( BitUtils.has( cbd.pos, ContactBodies.BOTTOM ) )
-		{
-			if ( Math.isNaN(botLimit) || shape.aabbYMin > botLimit )
-			{
-				cbd.reac = ContactBodies.BOTTOM;
-				return true;
-			}
-		}	
-		
-		if ( BitUtils.has( cbd.pos, ContactBodies.LEFT ) )
-		{
-			if ( Math.isNaN(lefLimit) || shape.aabbXMax < lefLimit )
-			{
-				cbd.reac = ContactBodies.LEFT;
-				return true;
-			}
-		}	
-		
-		if ( BitUtils.has( cbd.pos, ContactBodies.RIGHT ) )
-		{
-			if ( Math.isNaN(rigLimit) || shape.aabbXMin < rigLimit )
-			{
-				cbd.reac = ContactBodies.RIGHT;
-				return true;
-			}
-		}
-		
-		return false;
-	}
-	
-	public function addLimit( dir:Int, shape:PhysShapePoint ):Bool
-	{
-		if ( dir == 0 )
-		{
-			return true;
-		}
-		else if ( dir == ContactBodies.TOP )
-		{
-			if ( Math.isNaN(topLimit) || shape.aabbYMax < topLimit )
-			{
-				topLimit = shape.aabbYMax;
-			}
-			return true;
-		}
-		else if ( dir == ContactBodies.BOTTOM )
-		{
-			if ( Math.isNaN(botLimit) || shape.aabbYMin > botLimit )
-			{
-				topLimit = shape.aabbYMin;
-			}
-			return true;
-		}	
-		else if ( dir == ContactBodies.LEFT )
-		{
-			if ( Math.isNaN(lefLimit) || shape.aabbXMax < lefLimit )
-			{
-				lefLimit = shape.aabbXMax;
-			}
-			return true;
-		}	
-		else if ( dir == ContactBodies.RIGHT )
-		{
-			if ( Math.isNaN(rigLimit) || shape.aabbXMin < rigLimit )
-			{
-				rigLimit = shape.aabbXMin;
-			}
-			return true;
-		}
-		
-		return false;
 	}
 }
 
@@ -158,7 +50,7 @@ class ContactBodies
 	var _vX:Float;
 	var _vY:Float;
 	
-	var _rectLimits:RectLimits;
+	var _firstContact:ContactBodiesData;
 	
 	//var _toDeleteTemp:Dynamic;
 	
@@ -172,8 +64,6 @@ class ContactBodies
 		left = [];
 		top = [];
 		on = [];
-		
-		_rectLimits = new RectLimits( p );
 	}
 	
 	// has (_data & value) == value;
@@ -240,7 +130,7 @@ class ContactBodies
 		ArrayUtils.clear( top );
 		ArrayUtils.clear( on );
 		
-		_rectLimits.clear();
+		_firstContact = null;
 	}
 	
 	/**
@@ -255,11 +145,18 @@ class ContactBodies
 		}
 		
 		var allDatas:Array<ContactBodiesData> = [];
-		var rest:Array<ContactBodiesData> = [];
+		var dataActivated:Bool = all.length > 1;
+		//moveInDirection = 0;
+		//isCrush = false;
 		
 		_vX = parent.entity.transform.vX;
 		_vY = parent.entity.transform.vY;
 		
+		//link.removeChild( parent.entity.transform );
+		
+		//trace( "===" );
+		
+		//_toDeleteTemp = { output:"", write:false };
 		
 		for ( cp in all )
 		{
@@ -267,69 +164,57 @@ class ContactBodies
 			var dY:Float = cp.entity.transform.vY - _vY;
 			var overAutorized:Bool = !BitUtils.has( cp.typeOfSolid, CompBodyType.SOLID_TYPE_WALL );
 			
-			/*if ( dataActivated )
-			{*/
+			if ( dataActivated )
+			{
 				var data:ContactBodiesData = new ContactBodiesData( cp );
-				data.pos = getPosA( parent.shape, cp.shape, dX, dY, overAutorized );
-				//data.reac = getReactPosA( parent.shape, cp.shape, dX, dY, data, overAutorized );
-				
-				if ( _rectLimits.addLimit( data.pos, cp.shape ) ) 
-				{
-					allDatas.push( data );
-				}
-				else
-				{
-					rest.push( data );
-				}
+				data.reac = getReactPosA( parent.shape, cp.shape, dX, dY, data, overAutorized );
+				allDatas.push( data );
 				
 				//trace( "{" + data.body.entity.transform.x + "," + data.body.entity.transform.y + "} pos:" + data.pos + " reac:" + data.reac + " dist:" + data.dist );
-			/*}
+			}
 			else
 			{
 				var reac:Int = getReactPosA( parent.shape, cp.shape, dX, dY, overAutorized );
 				calculateItem( cp );
-				calculateReaction( cp, reac );
+				calculateReaction( cp, reac/*, link*/ );
 				save( cp, reac );
 				return;
-			}*/
-			
-		}
-		
-		trace( "multi body:" + rest.length );
-		for ( cbd in rest )
-		{
-			if ( _rectLimits.addMultiLimit( cbd.pos, cbd ) )
-			{
-				rest.remove( cbd );
-				allDatas.push( cbd );
 			}
-		}
-		
-		trace( "last body:" + rest.length );
-		for ( cbd in rest )
-		{
-			var dX:Float = cbd.body.entity.transform.vX - _vX;
-			var dY:Float = cbd.body.entity.transform.vY - _vY;
-			var overAutorized:Bool = !BitUtils.has( cp.typeOfSolid, CompBodyType.SOLID_TYPE_WALL );
 			
-			cbd.pos = getReactPosA( parent.shape, cbd.body.shape, dX, dY, overAutorized );
-			_rectLimits.addLimit( cbd.pos, cbd );
-			allDatas.push( cbd );
 		}
 		
-		
-		//calculateChainReaction( allDatas/*, link*/ );
-		
-		for ( cbd in allDatas )
+		if ( dataActivated )
 		{
-			calculateItem( cbd.body );
-			//calculateReaction( data.body, data.reac );
-			save( cbd.body, cbd.pos );
+			allDatas.sort( function( a:ContactBodiesData, b:ContactBodiesData ):Int
+			{
+				if ( a.dist > b.dist ) { return 1; }
+				/*else if ( a.dist == b.dist )
+				{
+					if ( a.priority ) { return -1; }
+					else if ( b.priority ) { return 1; }
+					return -1;
+				}*/
+				return -1;
+			});
+			
+			//_toDeleteTemp.output += " NUM:" + allDatas.length + "\n";
+			
+			for ( temp in allDatas )
+			{
+				if ( allDatas.length > 1 )
+				{
+					if ( temp == allDatas[0] ) trace("---");
+					trace( "pos:" + temp.pos + " reac:" + temp.reac + " dist:" + temp.dist );
+				}
+					
+				//trace( "->", temp.pos, temp.reac, parent.shape.aabbXMin, parent.shape.aabbYMax );
+				//trace( temp.pos, temp.dist );
+			}
+			
+			calculateChainReaction( allDatas/*, link*/ );
 		}
 		
-		
-		moveAndDispatch(;
-		
+		//if (  _toDeleteTemp.write && allDatas.length > 2 ) trace( _toDeleteTemp.output );
 	}	
 	
 	function getPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
@@ -363,7 +248,7 @@ class ContactBodies
 		return pos;
 	}
 	
-	function getReactPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
+	function getReactPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, data:ContactBodiesData = null, overAuthorized:Bool = true ):Int
 	{
 		var pos:Int = getPosA( a, b, dX, dY, overAuthorized );
 		if ( data != null ) { data.pos = pos; }
@@ -381,32 +266,71 @@ class ContactBodies
 		
 		if ( BitUtils.hasOnly( pos, BOTTOM ) )
 		{
+			if ( data != null )
+			{
+				data.dist = pBot + dY - cTop;
+				//data.priority = true;
+				//data.dist = Math.abs( a.aabbYMax + dY - b.aabbYMin );
+			}
 			return BOTTOM;
 		}
 		else if ( BitUtils.hasOnly( pos, TOP ) )
 		{
+			if ( data != null )
+			{
+				data.dist = pTop + dY - cBot;
+				//data.priority = true;
+				//data.dist = Math.abs( a.aabbYMin + dY - b.aabbYMax );
+			}
 			return TOP;
 		}
 		else if ( BitUtils.hasOnly( pos, RIGHT ) )
 		{
+			if ( data != null )
+			{
+				data.dist = pRig + dX - cLef;
+				//data.priority = true;
+				//data.dist = Math.abs( a.aabbXMax + dX - b.aabbXMin );
+			}
 			return RIGHT;
 		}
 		else if ( BitUtils.hasOnly( pos, LEFT ) )
 		{
+			if ( data != null )
+			{
+				data.dist = pLef + dX - cRig;
+				//data.priority = true;
+				//data.dist = Math.abs( a.aabbXMin + dX - b.aabbXMax );
+			}
 			return LEFT;
 		}
 		else if ( pos != 0 )
 		{
+			
+			//if ( pos == 0 ) pos = getPosA( a, b, dX, dY, false );
+			
+			//_toDeleteTemp.write = true;
+			//_toDeleteTemp.output += "dx: " + dX + " dy:" + dY + "\n";
+			
 			if ( BitUtils.has( pos, BOTTOM ) )
 			{
 				if ( BitUtils.has( pos, RIGHT ) )
 				{
 					if ( pBot + dY - cTop > pRig + dX - cLef )
 					{
+						if ( data != null )
+						{
+							data.dist = pBot + dY - cTop;
+						}
 						return BOTTOM;
 					}
 					else
 					{
+						if ( data != null )
+						{
+							data.dist = pRig + dX - cLef;
+							
+						}
 						return RIGHT;
 					}
 				}
@@ -414,10 +338,18 @@ class ContactBodies
 				{
 					if ( pBot + dY - cTop < pLef + dX - cRig )
 					{
+						if ( data != null )
+						{
+							data.dist = pBot + dY - cTop;
+						}
 						return BOTTOM;
 					}
 					else
 					{
+						if ( data != null )
+						{
+							data.dist = pLef + dX - cRig;
+						}
 						return LEFT;
 					}
 				}
@@ -428,10 +360,18 @@ class ContactBodies
 				{
 					if ( pTop + dY - cBot < pRig + dX - cLef )
 					{
+						if ( data != null )
+						{
+							data.dist = pTop + dY - cBot;
+						}
 						return TOP;
 					}
 					else
 					{
+						if ( data != null )
+						{
+							data.dist = pRig + dX - cLef;
+						}
 						return RIGHT;
 					}
 				}
@@ -439,15 +379,113 @@ class ContactBodies
 				{
 					if ( pTop + dY - cBot < pLef + dX - cRig )
 					{
+						if ( data != null )
+						{
+							data.dist = pTop + dY - cBot;
+						}
 						return TOP;
 					}
 					else
 					{
+						if ( data != null )
+						{
+							data.dist = pLef + dX - cRig;
+						}
 						return LEFT;
 					}
 				}
 			}
 			
+			/*if ( BitUtils.has( pos, BOTTOM ) )
+			{
+				if ( BitUtils.has( pos, RIGHT ) )
+				{					
+					if ( dY + ( pBot - cTop ) <= dX + (pRig - cLef) )
+					{
+						if ( data != null )
+						{
+							data.dist = pRig + dX - cLef;
+						}
+						return RIGHT;
+					}
+					else
+					{
+						if ( data != null )
+						{
+							data.dist = pBot + dY - cTop;
+						}
+						return BOTTOM;
+					}
+				}
+				else if ( BitUtils.has( pos, LEFT ) )
+				{
+					
+					trace("-?-", dY, pBot, cTop, dX, pLef, cRig );
+					
+					if ( dY + ( pBot - cTop ) <= dX + (pLef - cRig) )
+					{
+						if ( data != null )
+						{
+							data.dist = pLef + dX - cRig;
+						}
+						return LEFT;
+					}
+					else
+					{
+						if ( data != null )
+						{
+							data.dist = pBot + dY - cTop;
+						}
+						return BOTTOM;
+					}
+				}
+			}
+			else if ( BitUtils.has( pos, TOP ) )
+			{
+				if ( BitUtils.has( pos, RIGHT ) )
+				{
+					if ( dY + ( pTop - cBot ) > dX + (pRig - cLef) )
+					{
+						if ( data != null )
+						{
+							data.dist = pTop + dY - cBot;
+						}
+						return TOP;
+					}
+					else
+					{
+						if ( data != null )
+						{
+							data.dist = pRig + dX - cLef;
+						}
+						return RIGHT;
+					}
+				}
+				else if ( BitUtils.has( pos, LEFT ) )
+				{
+					if ( dY + ( pTop - cBot ) > dX + (pLef - cRig) )
+					{
+						if ( data != null )
+						{
+							data.dist = pTop + dY - cBot;
+						}
+						return TOP;
+					}
+					else
+					{
+						if ( data != null )
+						{
+							data.dist = pLef + dX - cRig;
+						}
+						return LEFT;
+					}
+				}
+			}*/
+		}
+		
+		if ( data != null )
+		{
+			data.dist = Math.POSITIVE_INFINITY;
 		}
 		
 		return 0;

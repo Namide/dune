@@ -171,8 +171,10 @@ class ControllerPlatformPlayer extends Controller
 			}
 		}
 		
+		
 		if ( kh.getKeyPressed( keyLeft ) )
 		{
+			
 			if ( !leftWall )
 			{
 				if ( bottomWall )
@@ -245,13 +247,13 @@ class ControllerPlatformPlayer extends Controller
 				if ( kh.getKeyPressed( keyLeft ) ) 			entity.transform.vX = -_jumpVX;
 				else if ( kh.getKeyPressed( keyRight ) ) 	entity.transform.vX = _jumpVX;
 			}
-			else if ( leftWall && !_actionPressed )
+			else if ( leftWall /*&& !_actionPressed*/ )
 			{
 				entity.transform.vY = - _jumpStartVY;
 				entity.transform.vX = _jumpVX;
 				_landmark = TimeUtils.getMS() + _jumpTimeLock;
 			}
-			else if ( rightWall && !_actionPressed )
+			else if ( rightWall /*&& !_actionPressed*/ )
 			{
 				entity.transform.vY = - _jumpStartVY;
 				entity.transform.vX = - _jumpVX;
@@ -262,7 +264,6 @@ class ControllerPlatformPlayer extends Controller
 				entity.transform.vY -= _jumpVY;
 			}
 			
-			
 			if ( !_actionPressed )
 			{
 				_actionPressed = true;
@@ -272,6 +273,7 @@ class ControllerPlatformPlayer extends Controller
 		{
 			_actionPressed = false;
 		}
+		
 		
 		// 		ANIMATIONS
 		

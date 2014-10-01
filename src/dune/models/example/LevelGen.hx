@@ -114,37 +114,29 @@ class LevelGen
 			
 		sm.addEntity( e3 );
 		
-		var constructed:Dynamic = { };
+		//var constructed:Dynamic = { };
 		
 		for ( j in 0...levelDatas.solids.length )
 		{
 			for ( i in 0...levelDatas.solids[j].length )
 			{
-				var type:UInt = levelDatas.solids[j][i];
-				if ( type != 0 && constructed[i + "-" + j] == null )
-				{
-					if ( type == LevelData.SOLID_PLATFORM )
-						EntityFact.addSolid( sm, i*TS, j*TS, TS, TS, CompBodyType.SOLID_TYPE_PLATFORM );
-			
-					else if ( type == LevelData.SOLID_WALL )
-						EntityFact.addSolid( sm, i*TS, j*TS, TS, TS, CompBodyType.SOLID_TYPE_WALL );
-				}
+				var type:UInt = Std.int( levelDatas.solids[j][i] );
+				
+				if ( type == LevelData.SOLID_PLATFORM )
+					EntityFact.addSolid( sm, i*TS, j*TS, TS, TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		
+				else if ( type == LevelData.SOLID_WALL )
+					EntityFact.addSolid( sm, i*TS, j*TS, TS, TS, CompBodyType.SOLID_TYPE_WALL );
+				
+				
 			}
 		}
 	}
 	
-	function merge( a:Array<Array<Int>>, iMin:Int, jMin:Int, c:Dynamic )
+	/*function merge( a:Array<Array<Int>>, iMin:Int, jMin:Int, c:Dynamic )
 	{
 		var iMax:Int, jMax:Int;
-		var i:Int = iMin;
-		var j:Int = jMin;
-		
-		while( levelDatas.solids[jMin][iMin+1] )
-			while ( levelDatas.solids[jMin][iMin + 1] )
-			{
-				
-			}
-			
-	}
+		if (  )
+	}*/
 	
 }

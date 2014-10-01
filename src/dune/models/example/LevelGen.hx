@@ -13,6 +13,7 @@ import flash.events.Event;
 import flash.Lib;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
+import flash.utils.Object;
 import haxe.Json;
 
 class LevelData
@@ -77,7 +78,7 @@ class LevelGen
 		construct(level);
 	}
 	
-	private function construct( levelDatas:LevelData ):Void
+	function construct( levelDatas:LevelData ):Void
 	{
 		var TS:Float = Settings.TILE_SIZE;
 		
@@ -114,29 +115,63 @@ class LevelGen
 			
 		sm.addEntity( e3 );
 		
-		//var constructed:Dynamic = { };
+		var constructed:Array<String> = [];
 		
 		for ( j in 0...levelDatas.solids.length )
 		{
 			for ( i in 0...levelDatas.solids[j].length )
 			{
-				var type:UInt = Std.int( levelDatas.solids[j][i] );
+				
+				merge( levelDatas.solids, i, j, constructed, sm );
+				/*var type:UInt = Std.int( levelDatas.solids[j][i] );
 				
 				if ( type == LevelData.SOLID_PLATFORM )
 					EntityFact.addSolid( sm, i*TS, j*TS, TS, TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		
 				else if ( type == LevelData.SOLID_WALL )
-					EntityFact.addSolid( sm, i*TS, j*TS, TS, TS, CompBodyType.SOLID_TYPE_WALL );
+					EntityFact.addSolid( sm, i*TS, j*TS, TS, TS, CompBodyType.SOLID_TYPE_WALL );*/
 				
 				
 			}
 		}
 	}
 	
-	/*function merge( a:Array<Array<Int>>, iMin:Int, jMin:Int, c:Dynamic )
+	function merge( a:Array<Array<UInt>>, iMin:Int, jMin:Int, c:Array<String>, sm:SysManager ):Void
 	{
-		var iMax:Int, jMax:Int;
-		if (  )
-	}*/
+		var i:Int = iMin;
+		var j:Int = jMin;
+		var type:UInt = Std.int( a[j][i] );
+		if ( type != LevelData.SOLID_PLATFORM && type != LevelData.SOLID_WALL ) return;
+		
+		var iMax:Int = -1;
+		var jMax:Int = -1;
+		var TS:Float = Settings.TILE_SIZE;
+		
+		while ( j < a.length && a[j][i] == type && !Lambda.has( c, posToStr(i,j) ) )
+		{
+			jMax = j;
+			while ( i < a[j].length && a[j][i] == type && !Lambda.has( c, posToStr(i,j) ) )
+			{
+				if ( j == jMin ) iMax = i;
+				c.push( posToStr(i,j) );
+				i++;
+			}
+			
+			if ( iMax < --i ) iMax = i;
+			
+			i = iMin;
+			j++;
+		}
+		
+		
+		if ( iMax < iMin || jMax < jMin ) return;
+		
+		EntityFact.addSolid( sm, iMin*TS, jMin*TS, (1+iMax-iMin)*TS, (1+jMax-jMin)*TS, type );
+	}
+	
+	function posToStr( i:Int, j:Int ):String
+	{
+		return Std.string(i) + "-" + Std.string(j);
+	}
 	
 }

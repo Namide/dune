@@ -31,10 +31,10 @@ class ContactBodiesData
 
 class RectLimits
 {
-	var topLimit:Float;
-	var botLimit:Float;
-	var lefLimit:Float;
-	var rigLimit:Float;
+	public var topLimit(default, null):Float;
+	public var botLimit(default, null):Float;
+	public var lefLimit(default, null):Float;
+	public var rigLimit(default, null):Float;
 	
 	public function new( compBody:CompBody ) 
 	{
@@ -49,86 +49,109 @@ class RectLimits
 		rigLimit = Math.NaN;
 	}
 	
-	public function addMultiLimit( dir:Int, cbd:ContactBodiesData ):Void
+	public function hasLimit( dir:Int ):Bool
 	{
+		if ( dir == ContactBodies.TOP ) 	return !Math.isNaN(topLimit);
+		if ( dir == ContactBodies.BOTTOM ) 	return !Math.isNaN(botLimit);
+		if ( dir == ContactBodies.LEFT ) 	return !Math.isNaN(lefLimit);
+		if ( dir == ContactBodies.RIGHT ) 	return !Math.isNaN(rigLimit);
+		return false;
+	}
+	
+	public function addMultiLimit( dir:Int, cbd:ContactBodiesData ):Bool
+	{
+		var solidType:UInt = cbd.body.typeOfSolid;
 		var shape:PhysShapePoint = cbd.body.shape;
-		if ( BitUtils.has( cbd.pos, ContactBodies.TOP ) )
+		
+		if ( BitUtils.has( solidType, CompBodyType.SOLID_TYPE_PLATFORM ) ||
+			BitUtils.has( solidType, CompBodyType.SOLID_TYPE_WALL ))
 		{
-			if ( Math.isNaN(topLimit) || shape.aabbYMax == topLimit )
+			if ( BitUtils.has( cbd.pos, ContactBodies.BOTTOM ) )
 			{
-				cbd.reac = ContactBodies.TOP;
-				return true;
-			}
+				if ( Math.isNaN(botLimit) || shape.aabbYMin > botLimit )
+				{
+					cbd.pos = ContactBodies.BOTTOM;
+					return true;
+				}
+			}	
 		}
-		
-		if ( BitUtils.has( cbd.pos, ContactBodies.BOTTOM ) )
+		else if ( BitUtils.has( solidType, CompBodyType.SOLID_TYPE_WALL ) )
 		{
-			if ( Math.isNaN(botLimit) || shape.aabbYMin > botLimit )
+			if ( BitUtils.has( cbd.pos, ContactBodies.TOP ) )
 			{
-				cbd.reac = ContactBodies.BOTTOM;
-				return true;
+				if ( Math.isNaN(topLimit) || shape.aabbYMax == topLimit )
+				{
+					cbd.pos = ContactBodies.TOP;
+					return true;
+				}
 			}
-		}	
-		
-		if ( BitUtils.has( cbd.pos, ContactBodies.LEFT ) )
-		{
-			if ( Math.isNaN(lefLimit) || shape.aabbXMax < lefLimit )
+			
+			if ( BitUtils.has( cbd.pos, ContactBodies.LEFT ) )
 			{
-				cbd.reac = ContactBodies.LEFT;
-				return true;
-			}
-		}	
-		
-		if ( BitUtils.has( cbd.pos, ContactBodies.RIGHT ) )
-		{
-			if ( Math.isNaN(rigLimit) || shape.aabbXMin < rigLimit )
+				if ( Math.isNaN(lefLimit) || shape.aabbXMax < lefLimit )
+				{
+					cbd.pos = ContactBodies.LEFT;
+					return true;
+				}
+			}	
+			
+			if ( BitUtils.has( cbd.pos, ContactBodies.RIGHT ) )
 			{
-				cbd.reac = ContactBodies.RIGHT;
-				return true;
+				if ( Math.isNaN(rigLimit) || shape.aabbXMin < rigLimit )
+				{
+					cbd.pos = ContactBodies.RIGHT;
+					return true;
+				}
 			}
 		}
 		
 		return false;
 	}
 	
-	public function addLimit( dir:Int, shape:PhysShapePoint ):Bool
+	public function addLimit( dir:Int, shape:PhysShapePoint, solidType:UInt ):Bool
 	{
 		if ( dir == 0 )
 		{
 			return true;
 		}
-		else if ( dir == ContactBodies.TOP )
-		{
-			if ( Math.isNaN(topLimit) || shape.aabbYMax < topLimit )
-			{
-				topLimit = shape.aabbYMax;
-			}
-			return true;
-		}
-		else if ( dir == ContactBodies.BOTTOM )
+		if ( dir == ContactBodies.BOTTOM &&
+			( BitUtils.has( solidType, CompBodyType.SOLID_TYPE_PLATFORM ) ||
+			BitUtils.has( solidType, CompBodyType.SOLID_TYPE_WALL ) ) )
 		{
 			if ( Math.isNaN(botLimit) || shape.aabbYMin > botLimit )
 			{
-				topLimit = shape.aabbYMin;
-			}
-			return true;
-		}	
-		else if ( dir == ContactBodies.LEFT )
-		{
-			if ( Math.isNaN(lefLimit) || shape.aabbXMax < lefLimit )
-			{
-				lefLimit = shape.aabbXMax;
-			}
-			return true;
-		}	
-		else if ( dir == ContactBodies.RIGHT )
-		{
-			if ( Math.isNaN(rigLimit) || shape.aabbXMin < rigLimit )
-			{
-				rigLimit = shape.aabbXMin;
+				botLimit = shape.aabbYMin;
 			}
 			return true;
 		}
+		else if ( BitUtils.has( solidType, CompBodyType.SOLID_TYPE_WALL ) )
+		{
+			if ( dir == ContactBodies.TOP )
+			{
+				if ( Math.isNaN(topLimit) || shape.aabbYMax < topLimit )
+				{
+					topLimit = shape.aabbYMax;
+				}
+				return true;
+			}
+			else if ( dir == ContactBodies.LEFT )
+			{
+				if ( Math.isNaN(lefLimit) || shape.aabbXMax < lefLimit )
+				{
+					lefLimit = shape.aabbXMax;
+				}
+				return true;
+			}	
+			else if ( dir == ContactBodies.RIGHT )
+			{
+				if ( Math.isNaN(rigLimit) || shape.aabbXMin < rigLimit )
+				{
+					rigLimit = shape.aabbXMin;
+				}
+				return true;
+			}
+		}
+		
 		
 		return false;
 	}
@@ -273,7 +296,7 @@ class ContactBodies
 				data.pos = getPosA( parent.shape, cp.shape, dX, dY, overAutorized );
 				//data.reac = getReactPosA( parent.shape, cp.shape, dX, dY, data, overAutorized );
 				
-				if ( _rectLimits.addLimit( data.pos, cp.shape ) ) 
+				if ( _rectLimits.addLimit( data.pos, cp.shape, cp.typeOfSolid ) ) 
 				{
 					allDatas.push( data );
 				}
@@ -295,7 +318,7 @@ class ContactBodies
 			
 		}
 		
-		trace( "multi body:" + rest.length );
+		//trace( "multi body:" + rest.length );
 		for ( cbd in rest )
 		{
 			if ( _rectLimits.addMultiLimit( cbd.pos, cbd ) )
@@ -305,15 +328,15 @@ class ContactBodies
 			}
 		}
 		
-		trace( "last body:" + rest.length );
+		//trace( "last body:" + rest.length );
 		for ( cbd in rest )
 		{
 			var dX:Float = cbd.body.entity.transform.vX - _vX;
 			var dY:Float = cbd.body.entity.transform.vY - _vY;
-			var overAutorized:Bool = !BitUtils.has( cp.typeOfSolid, CompBodyType.SOLID_TYPE_WALL );
+			var overAutorized:Bool = !BitUtils.has( cbd.body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL );
 			
 			cbd.pos = getReactPosA( parent.shape, cbd.body.shape, dX, dY, overAutorized );
-			_rectLimits.addLimit( cbd.pos, cbd );
+			_rectLimits.addLimit( cbd.pos, cbd.body.shape, cbd.body.typeOfSolid );
 			allDatas.push( cbd );
 		}
 		
@@ -328,9 +351,52 @@ class ContactBodies
 		}
 		
 		
-		moveAndDispatch(;
+		applyLimits();
 		
-	}	
+	}
+	
+	
+	function applyLimits():Void
+	{
+		if ( _rectLimits.hasLimit(BOTTOM) )
+		{
+			if ( _rectLimits.hasLimit(TOP) )
+			{
+				var y:Float = _rectLimits.botLimit - PhysShapeUtils.getPosToBottom( parent.shape );
+				y += _rectLimits.topLimit - PhysShapeUtils.getPosToTop( parent.shape );
+				y *= 0.5;
+				parent.entity.transform.y = y;
+			}
+			else
+			{
+				parent.entity.transform.y = _rectLimits.botLimit - PhysShapeUtils.getPosToBottom( parent.shape );
+			}
+		}
+		else if( _rectLimits.hasLimit(TOP) )
+		{
+			parent.entity.transform.y = _rectLimits.topLimit - PhysShapeUtils.getPosToTop( parent.shape );
+		}
+		
+		if ( _rectLimits.hasLimit(LEFT) )
+		{
+			if ( _rectLimits.hasLimit(RIGHT) )
+			{
+				var x:Float = _rectLimits.lefLimit - PhysShapeUtils.getPosToLeft( parent.shape );
+				x += _rectLimits.rigLimit - PhysShapeUtils.getPosToRight( parent.shape );
+				x *= 0.5;
+				parent.entity.transform.x = x;
+			}
+			else
+			{
+				parent.entity.transform.x = _rectLimits.lefLimit - PhysShapeUtils.getPosToLeft( parent.shape );
+			}
+		}
+		else if ( _rectLimits.hasLimit(RIGHT) )
+		{
+			parent.entity.transform.x = _rectLimits.rigLimit - PhysShapeUtils.getPosToRight( parent.shape );
+		}
+	}
+	
 	
 	function getPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
 	{
@@ -366,7 +432,6 @@ class ContactBodies
 	function getReactPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
 	{
 		var pos:Int = getPosA( a, b, dX, dY, overAuthorized );
-		if ( data != null ) { data.pos = pos; }
 		
 		var pTop:Float = a.aabbYMin;
 		var pBot:Float = a.aabbYMax;
@@ -459,7 +524,7 @@ class ContactBodies
 	 * 
 	 * @param	dataList
 	 */
-	function calculateChainReaction( dataList:Array<ContactBodiesData>/*, link:SysLink*/ ):Void
+	/*function calculateChainReaction( dataList:Array<ContactBodiesData> ):Void
 	{
 		var first:Bool = true;
 		_vX = parent.entity.transform.vX;
@@ -470,37 +535,18 @@ class ContactBodies
 		{
 			if ( PhysShapeUtils.hitTest( parent.shape, data.body.shape ) )
 			{
-				// Recalcule le positionnement
+				if ( !first && data.dist >= 0 )
+				{
+					re
+					trace('exclude :', data.reac );
+					continue;
+				}
 				
-					/*if (!first)
-					{
-						parent.shape.updateAABB( parent.entity.transform );
-						var dX:Float = data.body.entity.transform.vX - _vX;
-						var dY:Float = data.body.entity.transform.vY - _vY;
-						data.reac = getReactPosA( parent.shape, data.body.shape, dX, dY, data );
-					}
-					else
-					{
-						first = addFirstContact( data );
-					}*/
+				calculateItem( data.body );
+				calculateReaction( data.body, data.reac );
+				save( data.body, data.reac );
+				first = false;
 					
-					if ( !first && data.dist >= 0 )
-					{
-						trace('exclude :', data.reac );
-						continue;
-					}
-					
-					//calculateFirstContact( data );
-					calculateItem( data.body );
-					calculateReaction( data.body, data.reac/*, link*/ );
-					save( data.body, data.reac );
-					first = false;
-					
-					
-					
-					
-				// ---
-				
 				all.push( data.body );
 			}
 		}
@@ -508,13 +554,13 @@ class ContactBodies
 		//var dX:Float = body.entity.transform.vX - parent.entity.transform.vX;
 		//var dY:Float = body.entity.transform.vY - parent.entity.transform.vY;
 		//reac = getPosA( parent.shape, body.shape, dX, dY, false );
-	}
+	}*/
 	
 	/**
 	 * Change reac if first contact has same limits (like a wall with few tiles)
 	 * @param	data
 	 */
-	function calculateFirstContact( data:ContactBodiesData ):Void
+	/*function calculateFirstContact( data:ContactBodiesData ):Void
 	{
 		var shape:PhysShapePoint = data.body.shape;
 		
@@ -570,7 +616,7 @@ class ContactBodies
 			//trace( "->", data.reac, data.limit );
 			
 		}
-	}
+	}*/
 	
 	function calculateItem( body:CompBody ):Void
 	{

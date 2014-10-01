@@ -170,7 +170,7 @@ class SysSpaceGrid implements SysSpace
 		_active = [];
 		_activeSleeping = [];
 		_passive = [];
-		all = [];
+		all = new List<CompBody>();
 		init();
 	}
 	

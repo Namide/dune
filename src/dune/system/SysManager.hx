@@ -86,7 +86,7 @@ class SysManager
 		
 		while ( rest >= Settings.FRAME_DELAY )
 		{
-			sysPhysic.refresh( Settings.FRAME_DELAY/*, sysLink*/ );
+			sysPhysic.refresh( Settings.FRAME_DELAY );
 			
 			if ( rest < Settings.FRAME_DELAY + Settings.FRAME_DELAY )
 			{

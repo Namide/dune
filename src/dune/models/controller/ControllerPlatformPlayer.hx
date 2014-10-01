@@ -241,25 +241,25 @@ class ControllerPlatformPlayer extends Controller
 		
 		if ( kh.getKeyPressed( keyAction ) )
 		{
-			if ( bottomWall )
+			if ( bottomWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
 				if ( kh.getKeyPressed( keyLeft ) ) 			entity.transform.vX = -_jumpVX;
 				else if ( kh.getKeyPressed( keyRight ) ) 	entity.transform.vX = _jumpVX;
 			}
-			else if ( leftWall /*&& !_actionPressed*/ )
+			else if ( leftWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
 				entity.transform.vX = _jumpVX;
 				_landmark = TimeUtils.getMS() + _jumpTimeLock;
 			}
-			else if ( rightWall /*&& !_actionPressed*/ )
+			else if ( rightWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
 				entity.transform.vX = - _jumpVX;
 				_landmark = TimeUtils.getMS() + _jumpTimeLock;
 			}
-			else if ( !topWall )
+			else if ( !topWall && !bottomWall && !leftWall && !rightWall )
 			{
 				entity.transform.vY -= _jumpVY;
 			}

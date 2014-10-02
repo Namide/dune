@@ -24,7 +24,7 @@
     <option noInlineOnDebug="False" />
     <option mainClass="Main" />
     <option enabledebug="True" />
-    <option additional="-D resourcesPath=assets&#xA;-lib heaps&#xA;#-D debugHitbox&#xA;#--no-traces&#xA;-swf-lib assets/ressources.swf&#xA;--help" />
+    <option additional="-D resourcesPath=assets&#xA;-lib heaps&#xA;#-D debugHitbox&#xA;#--no-traces&#xA;-swf-lib assets/ressources.swf&#xA;" />
   </build>
   <!-- haxelib libraries -->
   <haxelib>

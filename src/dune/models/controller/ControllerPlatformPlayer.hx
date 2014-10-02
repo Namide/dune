@@ -45,7 +45,8 @@ class ControllerPlatformPlayer extends Controller
 	var _jumpStartVY:Float;
 	var _jumpAccX:Float;
 	var _jumpVY:Float;
-	var _jumpVX:Float;
+	var _jumpVXMin:Float;
+	var _jumpVXMax:Float;
 	var _jumpTimeLock:UInt;
 	
 	var _actionPressed:Bool = false;
@@ -60,11 +61,13 @@ class ControllerPlatformPlayer extends Controller
 		super();
 		beforePhysic = false;
 		
+		/*setRun( 14, 0.06 );
+		setJump( 1.5, 3, 6, 0.06, 0.2 );*/
 		setRun( 14, 0.06 );
-		setJump( 1.5, 3, 6, 0.06, 0.2 );
+		setJump( 1.5, 3, 3, 6, 0.06, 0.2 );
 		
-		trace( getMaxTilesXJump( 1.5 ) );
-		trace( getMaxTilesXJump( 2 ) );
+		//trace( getMaxTilesXJump( 1.5 ) );
+		//trace( getMaxTilesXJump( 2 ) );
 	}
 	
 	/**
@@ -85,12 +88,13 @@ class ControllerPlatformPlayer extends Controller
 	 * @param	hMax		Maximal height of the jump in tiles
 	 * @param	lMax		Length of the jump in tiles
 	 */
-	public function setJump( hMin:Float, hMax:Float, lMax:Float, accTime:Float, timeLock:Float ):Void
+	public function setJump( hMin:Float, hMax:Float, lMin:Float, lMax:Float, accTime:Float, timeLock:Float ):Void
 	{
 		_jumpStartVY = ControllerPlatformPlayer.getJumpStartVY( hMin );
 		_jumpVY = ControllerPlatformPlayer.getJumpVY( hMax, _jumpStartVY );
-		_jumpVX = ControllerPlatformPlayer.getJumpVX( lMax, _jumpStartVY, _jumpVY );
-		_jumpAccX = ControllerPlatformPlayer.getAccX( _jumpVX, Math.round(accTime * 1000) );
+		_jumpVXMin = ControllerPlatformPlayer.getJumpVX( lMin, _jumpStartVY, _jumpVY );
+		_jumpVXMax = ControllerPlatformPlayer.getJumpVX( lMax, _jumpStartVY, _jumpVY );
+		_jumpAccX = ControllerPlatformPlayer.getAccX( _jumpVXMax, Math.round(accTime * 1000) );
 		_jumpTimeLock = Math.round(timeLock * 1000);
 	}
 	
@@ -123,6 +127,8 @@ class ControllerPlatformPlayer extends Controller
 		//trace( bottomWall, leftWall, rightWall, topWall );
 		
 		entity.transform.vY += Settings.GRAVITY;
+		
+		
 		
 		var platformVX:Float = 0;
 		if ( bottomWall )
@@ -190,12 +196,12 @@ class ControllerPlatformPlayer extends Controller
 				}
 				else if ( TimeUtils.getMS() > _landmark )
 				{
-					if ( entity.transform.vX > -_jumpVX )
+					if ( entity.transform.vX > -_jumpVXMax )
 					{
 						entity.transform.vX -= _jumpAccX;
-						if ( entity.transform.vX < -_jumpVX )
+						if ( entity.transform.vX < -_jumpVXMax )
 						{
-							entity.transform.vX = -_jumpVX;
+							entity.transform.vX = -_jumpVXMax;
 						}
 					}
 				}
@@ -220,12 +226,12 @@ class ControllerPlatformPlayer extends Controller
 				}
 				else if ( TimeUtils.getMS() > _landmark )
 				{
-					if ( entity.transform.vX < _jumpVX )
+					if ( entity.transform.vX < _jumpVXMax )
 					{
 						entity.transform.vX += _jumpAccX;
-						if ( entity.transform.vX > _jumpVX )
+						if ( entity.transform.vX > _jumpVXMax )
 						{
-							entity.transform.vX = _jumpVX;
+							entity.transform.vX = _jumpVXMax;
 						}
 					}
 				}
@@ -237,6 +243,11 @@ class ControllerPlatformPlayer extends Controller
 			{
 				entity.transform.vX = platformVX;
 			}
+			else if ( !topWall && !leftWall && !rightWall )
+			{
+				if ( entity.transform.vX > _jumpVXMin ) entity.transform.vX = _jumpVXMin;
+				if ( entity.transform.vX < -_jumpVXMin ) entity.transform.vX = -_jumpVXMin;
+			}
 		}
 		
 		if ( kh.getKeyPressed( keyAction ) )
@@ -244,22 +255,23 @@ class ControllerPlatformPlayer extends Controller
 			if ( bottomWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
-				if ( kh.getKeyPressed( keyLeft ) ) 			entity.transform.vX = -_jumpVX;
-				else if ( kh.getKeyPressed( keyRight ) ) 	entity.transform.vX = _jumpVX;
+				if ( kh.getKeyPressed( keyLeft ) ) 			entity.transform.vX = -_jumpVXMax;
+				else if ( kh.getKeyPressed( keyRight ) ) 	entity.transform.vX = _jumpVXMax;
 			}
 			else if ( leftWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
-				entity.transform.vX = _jumpVX;
+				entity.transform.vX = _jumpVXMax;
 				_landmark = TimeUtils.getMS() + _jumpTimeLock;
 			}
 			else if ( rightWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
-				entity.transform.vX = - _jumpVX;
+				entity.transform.vX = - _jumpVXMax;
 				_landmark = TimeUtils.getMS() + _jumpTimeLock;
 			}
-			else if ( !topWall && !bottomWall && !leftWall && !rightWall )
+			else if ( 	(!topWall && !bottomWall && !leftWall && !rightWall) ||
+						(!topWall && !bottomWall && _actionPressed ) )
 			{
 				entity.transform.vY -= _jumpVY;
 			}
@@ -299,12 +311,12 @@ class ControllerPlatformPlayer extends Controller
 	
 	public inline function getMaxTilesXJump( maxTilesXJump:Float, gravity:Float = Settings.GRAVITY ):Float
 	{
-		return ControllerPlatformPlayer.maxTilesXJump( maxTilesXJump, _jumpStartVY, _jumpVX, _jumpVY, gravity );
+		return ControllerPlatformPlayer.maxTilesXJump( maxTilesXJump, _jumpStartVY, _jumpVXMax, _jumpVY, gravity );
 	}
 	
 	public inline function getMaxTilesYJump( maxTilesYJump:Float, gravity:Float = Settings.GRAVITY ):Float
 	{
-		return ControllerPlatformPlayer.maxTilesYJump( maxTilesYJump, _jumpStartVY, _jumpVX, _jumpVY, gravity );
+		return ControllerPlatformPlayer.maxTilesYJump( maxTilesYJump, _jumpStartVY, _jumpVXMax, _jumpVY, gravity );
 	}
 	
 	

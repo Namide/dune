@@ -40,7 +40,7 @@ class LevelData
 		playerJumpMax = dat.player.jumpMax;
 		playerJumpVelX = dat.player.jumpVelocity;
 		
-		solids = dat.level;
+		solids = dat.grid;
 	}
 	
 	
@@ -143,30 +143,40 @@ class LevelGen
 		var type:UInt = Std.int( a[j][i] );
 		if ( type != LevelData.SOLID_PLATFORM && type != LevelData.SOLID_WALL ) return;
 		
-		var iMax:Int = -1;
-		var jMax:Int = -1;
+		if ( Lambda.has( c, posToStr(i, j) ) ) return;
+		
+		var iMax:Int = iMin;
+		var jMax:Int = jMin;
 		var TS:Float = Settings.TILE_SIZE;
 		
-		while ( j < a.length && a[j][i] == type && !Lambda.has( c, posToStr(i,j) ) )
+		/*trace(a);
+		trace(a.length);
+		trace(a[j+1].length);
+		trace(a[j+1][i]);*/
+		
+		//if ( j == 3 && i == 1 ) trace( a[j][i] == type );
+		
+		if ( i+1 < a[j].length && a[j][i+1] == type && !Lambda.has( c, posToStr(i,j) ) )
 		{
-			jMax = j;
 			while ( i < a[j].length && a[j][i] == type && !Lambda.has( c, posToStr(i,j) ) )
 			{
-				if ( j == jMin ) iMax = i;
-				c.push( posToStr(i,j) );
+				iMax = i;
+				c.push( posToStr(i, j) );
 				i++;
 			}
-			
-			if ( iMax < --i ) iMax = i;
-			
-			i = iMin;
-			j++;
+		}
+		else if ( j+1 < a.length && i < a[j+1].length && a[j+1][i] == type && !Lambda.has( c, posToStr(i,j) ) )
+		{
+			while ( j < a.length && a[j][i] == type && !Lambda.has( c, posToStr(i,j) ) )
+			{
+				jMax = j;
+				c.push( posToStr(i, j) );
+				j++;
+			}
 		}
 		
-		
-		if ( iMax < iMin || jMax < jMin ) return;
-		
 		EntityFact.addSolid( sm, iMin*TS, jMin*TS, (1+iMax-iMin)*TS, (1+jMax-jMin)*TS, type );
+		
 	}
 	
 	function posToStr( i:Int, j:Int ):String

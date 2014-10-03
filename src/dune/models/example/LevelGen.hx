@@ -3,6 +3,7 @@ import dune.entities.Entity;
 import dune.helpers.display.DisplayFact;
 import dune.helpers.entity.EntityFact;
 import dune.models.controller.ControllerPlatformPlayer;
+import dune.models.example.LevelGen.TileData;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
 import dune.system.physic.shapes.PhysShapeRect;
@@ -16,34 +17,54 @@ import flash.net.URLRequest;
 import flash.utils.Object;
 import haxe.Json;
 
-class LevelData
+class TileData
 {
-	public static inline var SOLID_EMPTY:UInt = 0;
-	public static inline var SOLID_WALL:UInt = 1;
-	public static inline var SOLID_PLATFORM:UInt = 2;
-	
-	public var playerPosX(default,default):Float;
-	public var playerPosY(default,default):Float;
-	public var playerVelX(default,default):Float;
-	public var playerJumpMin(default,default):Float;
-	public var playerJumpMax(default,default):Float;
-	public var playerJumpVelX(default,default):Float;
-	
-	public var solids(default, default):Array<Array<UInt>>;
+	public var id:UInt;
+	public var type:String;
 	
 	public function new( dat:Dynamic ) 
 	{
-		playerPosX = dat.player.x;
-		playerPosY = dat.player.y;
-		playerVelX = dat.player.runVelocity;
-		playerJumpMin = dat.player.jumpMin;
-		playerJumpMax = dat.player.jumpMax;
-		playerJumpVelX = dat.player.jumpVelocity;
+		id = dat.id;
+		type = dat.type;
+	}
+}
+
+class LevelData
+{
+	/*public static inline var SOLID_EMPTY:UInt = 0;
+	public static inline var SOLID_WALL:UInt = 1;
+	public static inline var SOLID_PLATFORM:UInt = 2;*/
+	
+	var _tiles:Array<TileData>;	
+	public var grid(default, null):Array<Array<UInt>>;
+	
+	public function new( dat:Dynamic ) 
+	{
+		_tiles = [];
 		
-		solids = dat.grid;
+		var datTiles:Array<Dynamic> = cast( dat.tiles, Array<Dynamic> );
+		
+		for ( tileDyn in datTiles )
+		{
+			_tiles.push( new TileData( tileDyn ) );
+		}
+		
+		grid = dat.grid;
 	}
 	
-	
+	public function getTile(i:Int, j:Int):TileData
+	{
+		var getTile:TileData->Bool = function( td:TileData ):Bool { return td.id == grid[j][i]; };
+		
+		if ( 	j < grid.length &&
+				i < grid[j].length &&
+				Lambda.exists( _tiles, getTile )
+				)
+		{
+			return Lambda.find( _tiles, getTile );
+		}
+		return null;
+	}
 }
 
 /**
@@ -54,6 +75,7 @@ class LevelGen
 {
 
 	public var onLoaded:LevelData -> Void;
+	
 	var sm:SysManager;
 	
 	public function new( sm:SysManager ) 
@@ -78,14 +100,14 @@ class LevelGen
 		construct(level);
 	}
 	
-	function construct( levelDatas:LevelData ):Void
+	function constrPlayer( i:Float, j:Float ):Void
 	{
 		var TS:Float = Settings.TILE_SIZE;
 		
 		// PLAYER
 		var e3 = new Entity();
-		e3.transform.x = levelDatas.playerPosX * TS;
-		e3.transform.y = levelDatas.playerPosY * TS;
+		e3.transform.x = i;
+		e3.transform.y = j;
 			
 			// graphic
 			
@@ -109,39 +131,30 @@ class LevelGen
 			// Keyboard
 			
 				var i3:ControllerPlatformPlayer = new ControllerPlatformPlayer();
-				//i3.setRun( levelDatas.playerVelX, 0.06 );
-				//i3.setJump( levelDatas.playerJumpMin, levelDatas.playerJumpMax, levelDatas.playerJumpVelX, 0.06, 0.2 );
 				e3.addController( i3 );
 			
 		sm.addEntity( e3 );
-		
+	}
+	
+	function construct( levelDatas:LevelData ):Void
+	{
 		var constructed:Array<String> = [];
-		
-		for ( j in 0...levelDatas.solids.length )
+		for ( j in 0...levelDatas.grid.length )
 		{
-			for ( i in 0...levelDatas.solids[j].length )
+			for ( i in 0...levelDatas.grid[j].length )
 			{
-				
-				merge( levelDatas.solids, i, j, constructed, sm );
-				/*var type:UInt = Std.int( levelDatas.solids[j][i] );
-				
-				if ( type == LevelData.SOLID_PLATFORM )
-					EntityFact.addSolid( sm, i*TS, j*TS, TS, TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		
-				else if ( type == LevelData.SOLID_WALL )
-					EntityFact.addSolid( sm, i*TS, j*TS, TS, TS, CompBodyType.SOLID_TYPE_WALL );*/
-				
-				
+				tileAnalyse( levelDatas, i, j, constructed );
 			}
 		}
 	}
 	
-	function merge( a:Array<Array<UInt>>, iMin:Int, jMin:Int, c:Array<String>, sm:SysManager ):Void
+	function tileAnalyse( levelDatas:LevelData, iMin:Int, jMin:Int, c:Array<String> ):Void
 	{
 		var i:Int = iMin;
 		var j:Int = jMin;
-		var type:UInt = Std.int( a[j][i] );
-		if ( type != LevelData.SOLID_PLATFORM && type != LevelData.SOLID_WALL ) return;
+		
+		var tile:TileData = levelDatas.getTile( i, j );
+		if ( tile == null ) return;
 		
 		if ( Lambda.has( c, posToStr(i, j) ) ) return;
 		
@@ -149,25 +162,18 @@ class LevelGen
 		var jMax:Int = jMin;
 		var TS:Float = Settings.TILE_SIZE;
 		
-		/*trace(a);
-		trace(a.length);
-		trace(a[j+1].length);
-		trace(a[j+1][i]);*/
-		
-		//if ( j == 3 && i == 1 ) trace( a[j][i] == type );
-		
-		if ( i+1 < a[j].length && a[j][i+1] == type && !Lambda.has( c, posToStr(i,j) ) )
+		if ( levelDatas.getTile( i+1, j ) == tile && !Lambda.has( c, posToStr(i,j) ) )
 		{
-			while ( i < a[j].length && a[j][i] == type && !Lambda.has( c, posToStr(i,j) ) )
+			while ( levelDatas.getTile( i, j ) == tile && !Lambda.has( c, posToStr(i,j) ) )
 			{
 				iMax = i;
 				c.push( posToStr(i, j) );
 				i++;
 			}
 		}
-		else if ( j+1 < a.length && i < a[j+1].length && a[j+1][i] == type && !Lambda.has( c, posToStr(i,j) ) )
+		else if ( levelDatas.getTile( i, j+1 ) == tile && !Lambda.has( c, posToStr(i,j) ) )
 		{
-			while ( j < a.length && a[j][i] == type && !Lambda.has( c, posToStr(i,j) ) )
+			while ( levelDatas.getTile( i, j ) == tile && !Lambda.has( c, posToStr(i,j) ) )
 			{
 				jMax = j;
 				c.push( posToStr(i, j) );
@@ -175,7 +181,12 @@ class LevelGen
 			}
 		}
 		
-		EntityFact.addSolid( sm, iMin*TS, jMin*TS, (1+iMax-iMin)*TS, (1+jMax-jMin)*TS, type );
+		if ( tile.type == "platform" )
+			EntityFact.addSolid( sm, iMin*TS, jMin*TS, (1+iMax-iMin)*TS, (1+jMax-jMin)*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		else if ( tile.type == "wall" )
+			EntityFact.addSolid( sm, iMin*TS, jMin*TS, (1+iMax-iMin)*TS, (1+jMax-jMin)*TS, CompBodyType.SOLID_TYPE_WALL );
+		else if ( tile.type == "spawn" )
+			constrPlayer( iMin*TS, jMin*TS );
 		
 	}
 	

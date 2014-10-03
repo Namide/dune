@@ -49,7 +49,7 @@ class ControllerMobile extends Controller
 		time = 0;
 	}
 	
-	public function initY( type:UInt, /*y:Float,*/ dist:UInt, time:UInt, pause:UInt = 0, loop:Bool = true ):Void
+	public function initY( type:UInt, /*y:Float,*/ dist:Float, time:UInt, pause:UInt = 0, loop:Bool = true ):Void
 	{
 		moveTypeY = type;
 		moveDistY = dist;

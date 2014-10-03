@@ -2,6 +2,7 @@ package dune.models.example;
 import dune.entities.Entity;
 import dune.helpers.display.DisplayFact;
 import dune.helpers.entity.EntityFact;
+import dune.models.controller.ControllerMobile;
 import dune.models.controller.ControllerPlatformPlayer;
 import dune.models.example.LevelGen.TileData;
 import dune.system.physic.components.CompBody;
@@ -21,11 +22,13 @@ class TileData
 {
 	public var id:UInt;
 	public var type:String;
+	public var datas:Dynamic;
 	
 	public function new( dat:Dynamic ) 
 	{
 		id = dat.id;
 		type = dat.type;
+		datas = dat.datas;
 	}
 }
 
@@ -97,46 +100,10 @@ class LevelGen
 		var dat:Dynamic = Json.parse( Std.string(loader.data) );
 		
 		var level:LevelData = new LevelData( dat );
-		construct(level);
+		gridAnalyse(level);
 	}
 	
-	function constrPlayer( i:Float, j:Float ):Void
-	{
-		var TS:Float = Settings.TILE_SIZE;
-		
-		// PLAYER
-		var e3 = new Entity();
-		e3.transform.x = i;
-		e3.transform.y = j;
-			
-			// graphic
-			
-				e3.display = DisplayFact.movieClipToDisplay2dAnim( Lib.attach( "PlayerMC" ), sm, 1.5 * Settings.TILE_SIZE / 128 );
-				//e3.display = EntityFact.getSolidDisplay( sm, TS, TS );
-			
-			// collision
-			
-				var b3:CompBody = new CompBody();
-				b3.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
-				b3.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER;
-				b3.insomniac = true;
-				var psr3:PhysShapeRect = new PhysShapeRect();
-				psr3.w = TS * 0.8;
-				psr3.h = TS;
-				psr3.anchorX = -0.35 * TS;
-				psr3.anchorY = -0.35 * TS;
-				b3.shape = psr3;
-				e3.addBody( b3 );
-			
-			// Keyboard
-			
-				var i3:ControllerPlatformPlayer = new ControllerPlatformPlayer();
-				e3.addController( i3 );
-			
-		sm.addEntity( e3 );
-	}
-	
-	function construct( levelDatas:LevelData ):Void
+	function gridAnalyse( levelDatas:LevelData ):Void
 	{
 		var constructed:Array<String> = [];
 		for ( j in 0...levelDatas.grid.length )
@@ -182,12 +149,104 @@ class LevelGen
 		}
 		
 		if ( tile.type == "platform" )
-			EntityFact.addSolid( sm, iMin*TS, jMin*TS, (1+iMax-iMin)*TS, (1+jMax-jMin)*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+			EntityFact.addSolid( sm, iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		else if ( tile.type == "wall" )
-			EntityFact.addSolid( sm, iMin*TS, jMin*TS, (1+iMax-iMin)*TS, (1+jMax-jMin)*TS, CompBodyType.SOLID_TYPE_WALL );
+			EntityFact.addSolid( sm, iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, CompBodyType.SOLID_TYPE_WALL );
 		else if ( tile.type == "spawn" )
-			constrPlayer( iMin*TS, jMin*TS );
+			addPlayer( iMin * TS, jMin * TS );
+		else if ( tile.type == "mobile" )
+			addMobile( iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, tile.datas );
 		
+	}
+	
+	function addMobile( i:Float, j:Float, w:Float, h:Float, datas:Dynamic ):Void
+	{
+		var e2 = new Entity();
+		e2.transform.x = i;
+		e2.transform.y = j;
+		
+		var tweens:Dynamic =
+		{
+			cos:ControllerMobile.TYPE_COS,
+			linear:ControllerMobile.TYPE_LINEAR,
+			sin:ControllerMobile.TYPE_SIN
+		}
+		
+		var solidType:Dynamic =
+		{
+			cos:ControllerMobile.TYPE_COS,
+			linear:ControllerMobile.TYPE_LINEAR,
+			sin:ControllerMobile.TYPE_SIN
+		}
+		
+		
+			// graphic
+			
+				//var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
+				//var bmp2 = new h2d.Bitmap(tile, spr2);
+				//e2.display = new CompDisplay2dSprite( spr2 );
+				e2.display = EntityFact.getSolidDisplay( sm, w, h );
+			
+			// move
+			
+				var i2:ControllerMobile = new ControllerMobile();
+				
+				if ( datas.moveX != null )
+					i2.initX( tweens[datas.moveX.type], datas.moveX.dist * Settings.TILE_SIZE, datas.moveX.time );
+				
+				if ( datas.moveY != null )
+					i2.initY( tweens[datas.moveY.type], datas.moveY.dist * Settings.TILE_SIZE, datas.moveY.time );
+				
+				e2.addController( i2 );
+				
+			// collision
+			
+				var b2:CompBody = new CompBody();
+				var psr2:PhysShapeRect = new PhysShapeRect();
+				psr2.w = w;
+				psr2.h = h;
+				b2.shape = psr2;
+				b2.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
+				b2.typeOfSolid = CompBodyType.SOLID_TYPE_WALL;
+				e2.addBody( b2 );
+				
+		sm.addEntity( e2 );
+	}
+	
+	function addPlayer( i:Float, j:Float ):Void
+	{
+		var TS:Float = Settings.TILE_SIZE;
+		
+		// PLAYER
+		var e3 = new Entity();
+		e3.transform.x = i;
+		e3.transform.y = j;
+			
+			// graphic
+			
+				e3.display = DisplayFact.movieClipToDisplay2dAnim( Lib.attach( "PlayerMC" ), sm, 1.5 * Settings.TILE_SIZE / 128 );
+				//e3.display = EntityFact.getSolidDisplay( sm, TS, TS );
+			
+			// collision
+			
+				var b3:CompBody = new CompBody();
+				b3.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
+				b3.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER;
+				b3.insomniac = true;
+				var psr3:PhysShapeRect = new PhysShapeRect();
+				psr3.w = TS * 0.8;
+				psr3.h = TS;
+				psr3.anchorX = -0.35 * TS;
+				psr3.anchorY = -0.35 * TS;
+				b3.shape = psr3;
+				e3.addBody( b3 );
+			
+			// Keyboard
+			
+				var i3:ControllerPlatformPlayer = new ControllerPlatformPlayer();
+				e3.addController( i3 );
+			
+		sm.addEntity( e3 );
 	}
 	
 	function posToStr( i:Int, j:Int ):String

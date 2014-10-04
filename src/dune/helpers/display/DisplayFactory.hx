@@ -1,29 +1,33 @@
-package dune.helpers.display ;
+package dune.helpers.display;
 
 import dune.system.graphic.components.Display2dAnim;
+import dune.system.Settings;
 import dune.system.SysManager;
-import flash.display.BitmapData;
-import flash.display.MovieClip;
 import flash.geom.Matrix;
+import flash.geom.Rectangle;
+import flash.Lib;
 import h2d.Anim;
-import h2d.Bitmap;
+import flash.display.MovieClip;
+import h2d.Sprite;
 import h2d.Tile;
 import h2d.TileGroup;
-import h3d.mat.Texture;
+import hxd.BitmapData;
+
+
 
 /**
  * ...
- * @author namide.com
+ * @author Namide
  */
 class DisplayFactory
 {
 
 	public function new() 
 	{
-		
+		throw "Static class!";
 	}
 	
-	public inline static function mcToDisplay2dAnim( mc:MovieClip, scale:Float = 1.0, innerTex:Texture ):Anim
+	/*static function movieClipToSpriteSheet( mc:MovieClip, innerTex:h3d.mat.Texture, scale:Float = 1.0 ):Array<AnimData>
 	{
 		var tile : Tile;
 		
@@ -40,13 +44,10 @@ class DisplayFactory
 		}
 		
 		var side = Math.ceil( Math.sqrt(surf) );
-		
 		var width = 1;
 		while ( side > width ) width <<= 1;
-		
 		var height = width;
 		while ( width * height >> 1 > surf ) height >>= 1;
-		
 		var all, bmp;
 		
 		do {
@@ -127,27 +128,75 @@ class DisplayFactory
 			
 			for( t in all ) t.setTexture(innerTex);
 			
-			innerTex.realloc = function() { mcToDisplay2dAnim( mc, scale, innerTex ); };
+			innerTex.realloc = function() { movieClipToSpriteSheet( mc, innerTex, scale ); };
 		}
 		else innerTex.uploadPixels( pixels );
 		
 		pixels.dispose();
 		
 		
-		
-		
-		
-		
-		
 		var spr = new Anim( mc.totalFrames, 1000/SysManager.FRAME_DELAY, systemManager.sysGraphic.s2d );
 		var bmp = new h2d.Bitmap(tile, spr);
 		
-		
 		var ca:Display2dAnim = new Display2dAnim( spr );
 		ca.addAnim( );
+	}*/
+	
+	static function movieClipToTiles( mc:MovieClip, textScale:Float, quality:Float ):Array<AnimData>
+	{
+		var list:Array<AnimData> = [];
 		
+		
+		var m:Matrix = new Matrix();
+		m.createBox( textScale * quality, textScale * quality, 0, 0, 0 );
+		
+		var label:String = null;
+		var animData:AnimData = null;
+		
+		for ( i in 0...mc.totalFrames )
+		{
+			mc.gotoAndStop(i + 1);
+			
+			if ( mc.currentLabel != label )
+			{
+				animData = new AnimData( mc.currentLabel, [] );
+				
+				label = mc.currentLabel;
+				list.push( animData );
+			}
+			
+			var bd = new flash.display.BitmapData( Math.floor(mc.width), Math.floor(mc.height), true, 0x00FFFFFF );
+			bd.draw( mc, m );
+			var hbd = hxd.BitmapData.fromNative( bd ); 
+			var t:Tile = Tile.fromBitmap( hbd );
+			//t.setSize( Math.round(t.width * quality), Math.round(t.height * quality) );
+			//t.setSize( 256, 256 );
+			//trace(t.width);
+			
+			bd.dispose();
+			animData.frames.push( t );
+		}
+		
+		return list;
 	}
 	
-	
+	public static function movieClipToDisplay2dAnim( mc:MovieClip, sm:SysManager, textScale:Float, quality:Float = Settings.TEXT_QUALITY ):Display2dAnim
+	{
+		var anim:Anim = new Anim( null, Lib.current.stage.frameRate , sm.sysGraphic.s2d );
+		anim.setScale( 1 / quality );
+		var d:Display2dAnim = new Display2dAnim( anim, mc.width * textScale );
+		
+		var first:String = mc.currentLabel;
+		var a:Array<AnimData> = movieClipToTiles( mc, textScale, quality );
+		
+		for ( ad in a )
+		{
+			d.pushAnimData( ad );
+		}
+		
+		d.play(first);
+		
+		return d;
+	}
 	
 }

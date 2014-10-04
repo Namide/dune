@@ -1,7 +1,7 @@
 package dune.models.example;
 import dune.entities.Entity;
-import dune.helpers.display.DisplayFact;
-import dune.helpers.entity.EntityFact;
+import dune.helpers.display.DisplayFactory;
+import dune.helpers.entity.EntityFactory;
 import dune.models.controller.ControllerMobile;
 import dune.models.controller.ControllerPlatformPlayer;
 import dune.models.example.LevelGen.TileData;
@@ -149,9 +149,9 @@ class LevelGen
 		}
 		
 		if ( tile.type == "platform" )
-			EntityFact.addSolid( sm, iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, CompBodyType.SOLID_TYPE_PLATFORM );
+			EntityFactory.addSolid( sm, iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, CompBodyType.SOLID_TYPE_PLATFORM );
 		else if ( tile.type == "wall" )
-			EntityFact.addSolid( sm, iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, CompBodyType.SOLID_TYPE_WALL );
+			EntityFactory.addSolid( sm, iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, CompBodyType.SOLID_TYPE_WALL );
 		else if ( tile.type == "spawn" )
 			addPlayer( iMin * TS, jMin * TS );
 		else if ( tile.type == "mobile" )
@@ -184,7 +184,7 @@ class LevelGen
 				//var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
 				//var bmp2 = new h2d.Bitmap(tile, spr2);
 				//e2.display = new CompDisplay2dSprite( spr2 );
-				e2.display = EntityFact.getSolidDisplay( sm, w, h );
+				e2.display = EntityFactory.getSolidDisplay( sm, w, h );
 			
 			// move
 			
@@ -223,7 +223,7 @@ class LevelGen
 			
 			// graphic
 			
-				e3.display = DisplayFact.movieClipToDisplay2dAnim( Lib.attach( "PlayerMC" ), sm, 1.5 * Settings.TILE_SIZE / 128 );
+				e3.display = DisplayFactory.movieClipToDisplay2dAnim( Lib.attach( "PlayerMC" ), sm, 1.5 * Settings.TILE_SIZE / 128 );
 				//e3.display = EntityFact.getSolidDisplay( sm, TS, TS );
 			
 			// collision
@@ -236,7 +236,7 @@ class LevelGen
 				psr3.w = TS * 0.8;
 				psr3.h = TS;
 				psr3.anchorX = -0.35 * TS;
-				psr3.anchorY = -0.35 * TS;
+				psr3.anchorY = -0.4 * TS;
 				b3.shape = psr3;
 				e3.addBody( b3 );
 			

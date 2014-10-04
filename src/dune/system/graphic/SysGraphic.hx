@@ -33,6 +33,9 @@ class SysGraphic
 		
 		engine.onResized = function() { onResize(); };
 		engine.backgroundColor = 0xFFFFFF;
+		
+		trace(engine.driverName(true));
+		
 		onInit();
 	}
 	

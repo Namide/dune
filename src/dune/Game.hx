@@ -3,7 +3,7 @@ package dune;
 import dune.compBasic.ComponentType;
 import dune.compBasic.Transform;
 import dune.entities.Entity;
-import dune.helpers.entity.EntityFact;
+import dune.helpers.entity.EntityFactory;
 import dune.models.controller.ControllerPlatform;
 import dune.models.controller.ControllerPlatformPlayer;
 import dune.models.controller.ControllerGravity;
@@ -173,7 +173,7 @@ class Game
 		
 		// graphic
 		
-			ball.display = EntityFact.getSolidDisplay( systemManager, size, size );
+			ball.display = EntityFactory.getSolidDisplay( systemManager, size, size );
 		
 		// collision
 		

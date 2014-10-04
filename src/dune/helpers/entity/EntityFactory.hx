@@ -10,7 +10,7 @@ import dune.system.SysManager;
  * ...
  * @author Namide
  */
-class EntityFact
+class EntityFactory
 {
 
 	public function new() 

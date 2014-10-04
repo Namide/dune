@@ -3,7 +3,7 @@ package dune.compBasic;
 /**
 * @author Namide
 */
-interface Display
+interface IDisplay
 {
 	public var type(default, null):UInt;
 	public function clear():Void;

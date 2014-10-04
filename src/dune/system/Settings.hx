@@ -9,9 +9,10 @@ class Settings
 	public static inline var FRAME_DELAY:UInt = 20; // =20; - 50 FPS => 1000 / 50
 	public static inline var GRAVITY:Float =  40 / Settings.FRAME_DELAY;
 	
+	public static inline var TEXT_QUALITY:Float =  1;
 	//public static inline var FRAME_ANIM:UInt = 100;
 	
-	public static inline var TILE_SIZE:UInt = 32;
+	public static inline var TILE_SIZE:UInt = 40;
 	//public inline static var TILE_SIZE:UInt = 32;
 	
 	public static inline var X_MIN:UInt = - TILE_SIZE;

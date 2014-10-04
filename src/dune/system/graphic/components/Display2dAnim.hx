@@ -1,8 +1,8 @@
 package dune.system.graphic.components;
 
-import dune.compBasic.ComponentBasic;
+import dune.compBasic.Component;
 import dune.compBasic.ComponentType;
-import dune.compBasic.Display;
+import dune.compBasic.IDisplay;
 import dune.helpers.core.ArrayUtils;
 import h2d.Anim;
 import h2d.Sprite;
@@ -23,7 +23,7 @@ class AnimData
  * ...
  * @author Namide
  */
-class CompDisplay2dAnim implements Display//, ComponentAnim
+class Display2dAnim implements IDisplay//, ComponentAnim
 {
 
 	var _graphic:Anim;
@@ -39,8 +39,9 @@ class CompDisplay2dAnim implements Display//, ComponentAnim
 	{
 		if ( val != _toRight )
 		{
-			_graphic.scaleX = (val) ? 1 : -1;
-			_graphic.x += (val) ? _width : -_width;
+			var q:Float = _graphic.scaleY;
+			_graphic.scaleX = (val) ? q : -q;
+			_graphic.x += (val) ? _width * q : -_width * q;
 		}
 		_toRight = val;
 	}

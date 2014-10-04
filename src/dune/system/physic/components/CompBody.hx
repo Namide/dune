@@ -1,11 +1,11 @@
 package dune.system.physic.components;
 
-import dune.compBasic.ComponentBasic;
+import dune.compBasic.Component;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
-import dune.system.physic.shapes.PhysShapeCircle;
-import dune.system.physic.shapes.PhysShapePoint;
-import dune.system.physic.shapes.PhysShapeType;
+import dune.system.physic.shapes.ShapeCircle;
+import dune.system.physic.shapes.ShapePoint;
+import dune.system.physic.shapes.ShapeType;
 
 #if (debugHitbox && (flash || openfl))
 	import flash.display.Sprite;
@@ -15,7 +15,7 @@ import dune.system.physic.shapes.PhysShapeType;
  * ...
  * @author Namide
  */
-class CompBody implements ComponentBasic
+class CompBody implements Component
 {
 	/**
 	 * Entity attached to the body
@@ -27,7 +27,7 @@ class CompBody implements ComponentBasic
 	/**
 	 * Delimit the shape of this body
 	 */
-	public var shape(default, default):PhysShapePoint;
+	public var shape(default, default):ShapePoint;
 	
 	/**
 	 * Other body in contact with this one
@@ -81,7 +81,7 @@ class CompBody implements ComponentBasic
 		{
 			scene.graphics.lineStyle( 1, (typeOfSolid == CompBodyType.COLLISION_TYPE_ACTIVE) ? 0xFF0000 : 0x0000FF );
 			
-			if ( shape.type == PhysShapeType.POINT )
+			if ( shape.type == ShapeType.POINT )
 			{
 				scene.graphics.moveTo( shape.aabbXMin - 5, shape.aabbYMin - 5 );
 				scene.graphics.lineTo( shape.aabbXMax + 5, shape.aabbYMax + 5 );
@@ -91,18 +91,18 @@ class CompBody implements ComponentBasic
 				scene.graphics.lineTo( shape.aabbXMin + 5, shape.aabbYMax + 5 );
 				scene.graphics.endFill();
 			}
-			else if ( shape.type == PhysShapeType.RECT )
+			else if ( shape.type == ShapeType.RECT )
 			{
 				scene.graphics.drawRect( 	shape.aabbXMin,
 											shape.aabbYMin,
 											shape.aabbXMax - shape.aabbXMin,
 											shape.aabbYMax - shape.aabbYMin );
 			}
-			else if ( shape.type == PhysShapeType.CIRCLE )
+			else if ( shape.type == ShapeType.CIRCLE )
 			{
 				scene.graphics.drawCircle( 	(shape.aabbXMax - shape.aabbXMin) * 0.5 + shape.aabbXMin,
 											(shape.aabbYMax - shape.aabbYMin) * 0.5 + shape.aabbYMin,
-											cast( shape, PhysShapeCircle ).r );
+											cast( shape, ShapeCircle ).r );
 			}
 			
 			

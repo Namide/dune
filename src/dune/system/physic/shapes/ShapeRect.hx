@@ -5,7 +5,7 @@ import dune.compBasic.Transform;
  * ...
  * @author Namide
  */
-class PhysShapeRect extends PhysShapePoint
+class ShapeRect extends ShapePoint
 {
 
 	public var w(default, default):Float;
@@ -14,7 +14,7 @@ class PhysShapeRect extends PhysShapePoint
 	public function new() 
 	{
 		super();
-		type = PhysShapeType.RECT;
+		type = ShapeType.RECT;
 		
 		w = 0.0;
 		h = 0.0;

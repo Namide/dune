@@ -1,15 +1,15 @@
 package dune.system.graphic.components;
 
-import dune.compBasic.ComponentBasic;
+import dune.compBasic.Component;
 import dune.compBasic.ComponentType;
-import dune.compBasic.Display;
+import dune.compBasic.IDisplay;
 import h2d.Sprite;
 
 /**
  * ...
  * @author Namide
  */
-class CompDisplay2dSprite implements Display
+class Display2dSprite implements IDisplay
 {
 	var _graphic:Sprite;
 	

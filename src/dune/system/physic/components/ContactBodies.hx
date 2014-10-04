@@ -4,9 +4,9 @@ import dune.helpers.core.ArrayUtils;
 import dune.helpers.core.BitUtils;
 import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.components.ContactBodies.RectLimits;
-import dune.system.physic.shapes.PhysShapePoint;
-import dune.system.physic.shapes.PhysShapeType;
-import dune.system.physic.shapes.PhysShapeUtils;
+import dune.system.physic.shapes.ShapePoint;
+import dune.system.physic.shapes.ShapeType;
+import dune.system.physic.shapes.ShapeUtils;
 //import flash.Lib;
 
 class ContactBodiesData
@@ -61,7 +61,7 @@ class RectLimits
 	public function addMultiLimit( dir:Int, cbd:ContactBodiesData ):Bool
 	{
 		var solidType:UInt = cbd.body.typeOfSolid;
-		var shape:PhysShapePoint = cbd.body.shape;
+		var shape:ShapePoint = cbd.body.shape;
 		
 		if ( BitUtils.has( solidType, CompBodyType.SOLID_TYPE_PLATFORM ) ||
 			BitUtils.has( solidType, CompBodyType.SOLID_TYPE_WALL ))
@@ -108,7 +108,7 @@ class RectLimits
 		return false;
 	}
 	
-	public function addLimit( dir:Int, shape:PhysShapePoint, solidType:UInt ):Bool
+	public function addLimit( dir:Int, shape:ShapePoint, solidType:UInt ):Bool
 	{
 		if ( dir == 0 )
 		{
@@ -362,43 +362,43 @@ class ContactBodies
 		{
 			if ( _rectLimits.hasLimit(TOP) )
 			{
-				var y:Float = _rectLimits.botLimit - PhysShapeUtils.getPosToBottom( parent.shape );
-				y += _rectLimits.topLimit - PhysShapeUtils.getPosToTop( parent.shape );
+				var y:Float = _rectLimits.botLimit - ShapeUtils.getPosToBottom( parent.shape );
+				y += _rectLimits.topLimit - ShapeUtils.getPosToTop( parent.shape );
 				y *= 0.5;
 				parent.entity.transform.y = y;
 			}
 			else
 			{
-				parent.entity.transform.y = _rectLimits.botLimit - PhysShapeUtils.getPosToBottom( parent.shape );
+				parent.entity.transform.y = _rectLimits.botLimit - ShapeUtils.getPosToBottom( parent.shape );
 			}
 		}
 		else if( _rectLimits.hasLimit(TOP) )
 		{
-			parent.entity.transform.y = _rectLimits.topLimit - PhysShapeUtils.getPosToTop( parent.shape );
+			parent.entity.transform.y = _rectLimits.topLimit - ShapeUtils.getPosToTop( parent.shape );
 		}
 		
 		if ( _rectLimits.hasLimit(LEFT) )
 		{
 			if ( _rectLimits.hasLimit(RIGHT) )
 			{
-				var x:Float = _rectLimits.lefLimit - PhysShapeUtils.getPosToLeft( parent.shape );
-				x += _rectLimits.rigLimit - PhysShapeUtils.getPosToRight( parent.shape );
+				var x:Float = _rectLimits.lefLimit - ShapeUtils.getPosToLeft( parent.shape );
+				x += _rectLimits.rigLimit - ShapeUtils.getPosToRight( parent.shape );
 				x *= 0.5;
 				parent.entity.transform.x = x;
 			}
 			else
 			{
-				parent.entity.transform.x = _rectLimits.lefLimit - PhysShapeUtils.getPosToLeft( parent.shape );
+				parent.entity.transform.x = _rectLimits.lefLimit - ShapeUtils.getPosToLeft( parent.shape );
 			}
 		}
 		else if ( _rectLimits.hasLimit(RIGHT) )
 		{
-			parent.entity.transform.x = _rectLimits.rigLimit - PhysShapeUtils.getPosToRight( parent.shape );
+			parent.entity.transform.x = _rectLimits.rigLimit - ShapeUtils.getPosToRight( parent.shape );
 		}
 	}
 	
 	
-	function getPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
+	function getPosA( a:ShapePoint, b:ShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
 	{
 		var pos:Int = 0;
 		
@@ -415,7 +415,6 @@ class ContactBodies
 		// hack if the entity appear in an other
 		if ( pos == 0 && !overAuthorized )
 		{
-			trace("!!");
 			if ( dX == 0 && dY == 0 )
 			{
 				pos = getPosA( a, b, dX, dY - 1, overAuthorized );
@@ -429,7 +428,7 @@ class ContactBodies
 		return pos;
 	}
 	
-	function getReactPosA( a:PhysShapePoint, b:PhysShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
+	function getReactPosA( a:ShapePoint, b:ShapePoint, dX:Float, dY:Float, overAuthorized:Bool = true ):Int
 	{
 		var pos:Int = getPosA( a, b, dX, dY, overAuthorized );
 		
@@ -562,7 +561,7 @@ class ContactBodies
 	 */
 	/*function calculateFirstContact( data:ContactBodiesData ):Void
 	{
-		var shape:PhysShapePoint = data.body.shape;
+		var shape:ShapePoint = data.body.shape;
 		
 		if ( _firstContact == null &&
 			 ( BitUtils.has( data.body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) ||
@@ -638,7 +637,7 @@ class ContactBodies
 		if ( BitUtils.has( parent.typeOfSolid, CompBodyType.SOLID_TYPE_MOVER ) )
 		{
 			var body:CompBody = data.body;
-			var shape:PhysShapePoint = body.shape;
+			var shape:ShapePoint = body.shape;
 			var reac:UInt = data.reac;
 			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM ) )
 			{
@@ -684,10 +683,10 @@ class ContactBodies
 	{
 		if ( BitUtils.has( parent.typeOfSolid, CompBodyType.SOLID_TYPE_MOVER ) )
 		{
-			var shape:PhysShapePoint = body.shape;
+			var shape:ShapePoint = body.shape;
 			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM ) )
 			{
-				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
+				parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
 				if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
 			}
 			else if ( BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) )
@@ -705,28 +704,28 @@ class ContactBodies
 				if ( reac == BOTTOM )
 				{
 					//if ( BitUtils.has(reac, TOP) ) { isCrush = true; return; }
-					parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
+					parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
 					if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
 					//moveInDirection |= BOTTOM;
 				}
 				else if ( reac == TOP )
 				{
 					//if ( BitUtils.has(reac, BOTTOM) ) { isCrush = true; return; }
-					parent.entity.transform.y = shape.aabbYMax - PhysShapeUtils.getPosToTop( parent.shape );
+					parent.entity.transform.y = shape.aabbYMax - ShapeUtils.getPosToTop( parent.shape );
 					if ( _vY < body.entity.transform.vY ) _vY = body.entity.transform.vY;
 					//moveInDirection |= TOP;
 				}
 				else if ( reac == RIGHT )
 				{
 					//if ( BitUtils.has(reac, LEFT) ) { isCrush = true; return; }
-					parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
+					parent.entity.transform.x = shape.aabbXMin - ShapeUtils.getPosToRight( parent.shape );
 					if ( _vX > body.entity.transform.vX ) _vX = body.entity.transform.vX;
 					//moveInDirection |= RIGHT;
 				}
 				else if ( reac == LEFT )
 				{
 					//if ( BitUtils.has(reac, RIGHT) ) { isCrush = true; return; }
-					parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
+					parent.entity.transform.x = shape.aabbXMax - ShapeUtils.getPosToLeft( parent.shape );
 					//moveInDirection |= LEFT;
 					if ( _vX < body.entity.transform.vX ) _vX = body.entity.transform.vX;
 				}

@@ -3,7 +3,7 @@ package dune.system.core ;
 import dune.helpers.core.ArrayUtils;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
-import dune.system.physic.shapes.PhysShapeUtils;
+import dune.system.physic.shapes.ShapeUtils;
 
 /**
  * ...
@@ -42,7 +42,7 @@ class SysSpaceSimple implements SysSpace
 				if ( first ) physBodyPassive.shape.updateAABB( physBodyPassive.entity.transform );
 				
 				if ( 	physBody.contacts.all.indexOf( physBodyPassive ) < 0 &&
-						PhysShapeUtils.hitTest( physBody.shape, physBodyPassive.shape ) )
+						ShapeUtils.hitTest( physBody.shape, physBodyPassive.shape ) )
 				{
 					physBody.contacts.push( physBodyPassive );
 					if ( !isAffected )

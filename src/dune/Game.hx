@@ -9,11 +9,11 @@ import dune.models.controller.ControllerPlatformPlayer;
 import dune.models.controller.ControllerGravity;
 import dune.models.controller.ControllerMobile;
 import dune.models.example.LevelGen;
-import dune.system.graphic.components.CompDisplay2dSprite;
+import dune.system.graphic.components.Display2dSprite;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
-import dune.system.physic.shapes.PhysShapeRect;
-import dune.system.physic.shapes.PhysShapeType;
+import dune.system.physic.shapes.ShapeRect;
+import dune.system.physic.shapes.ShapeType;
 import dune.system.Settings;
 import dune.system.SysManager;
 import h2d.comp.Input;
@@ -178,7 +178,7 @@ class Game
 		// collision
 		
 			var b4:CompBody = new CompBody();
-			var psr4:PhysShapeRect = new PhysShapeRect();
+			var psr4:ShapeRect = new ShapeRect();
 			psr4.w = size;
 			psr4.h = size;
 			b4.shape = psr4;

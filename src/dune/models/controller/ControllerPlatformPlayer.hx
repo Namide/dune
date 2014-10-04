@@ -1,5 +1,5 @@
 package dune.models.controller ;
-import dune.compBasic.Display;
+import dune.compBasic.IDisplay;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
 import dune.helpers.core.TimeUtils;
@@ -54,7 +54,7 @@ class ControllerPlatformPlayer extends Controller
 	var _landmark:UInt = 0;
 	var _contacts:ContactBodies;
 	
-	var _display:Display;
+	var _display:IDisplay;
 	
 	public function new() 
 	{
@@ -65,9 +65,6 @@ class ControllerPlatformPlayer extends Controller
 		setJump( 1.5, 3, 6, 0.06, 0.2 );*/
 		setRun( 14, 0.06 );
 		setJump( 1.5, 3, 3, 6, 0.06, 0.2 );
-		
-		//trace( getMaxTilesXJump( 1.5 ) );
-		//trace( getMaxTilesXJump( 2 ) );
 	}
 	
 	/**
@@ -77,7 +74,6 @@ class ControllerPlatformPlayer extends Controller
 	 */
 	public function setRun( vel:Float, accTime:Float ):Void
 	{
-		//_groundTimeAccX = Math.round(accTime * 1000);
 		_groundAccX = ControllerPlatformPlayer.getAccX( vel, Math.round(accTime * 1000) );
 		_groundVX = ControllerPlatformPlayer.getVX( vel );
 	}
@@ -106,7 +102,7 @@ class ControllerPlatformPlayer extends Controller
 		if ( body == null ) throw "An entity with input keyboard must have a solid type mover in physic body";
 		_contacts = body.contacts;
 		
-		if ( !Std.is( value.display, Display) ) throw "An entity with ControllerPlatformPlayer must have a display:Display";
+		if ( !Std.is( value.display, IDisplay) ) throw "An entity with ControllerPlatformPlayer must have a display:Display";
 		_display = value.display;
 		
 		return entity = value;
@@ -123,12 +119,7 @@ class ControllerPlatformPlayer extends Controller
 		var rightWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.RIGHT );
 		var topWall:Bool = 		_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP );
 		
-		//trace( _contacts.mainCollide );
-		//trace( bottomWall, leftWall, rightWall, topWall );
-		
 		entity.transform.vY += Settings.GRAVITY;
-		
-		
 		
 		var platformVX:Float = 0;
 		if ( bottomWall )
@@ -289,13 +280,13 @@ class ControllerPlatformPlayer extends Controller
 		
 		// 		ANIMATIONS
 		
-		if ( entity.transform.vX < 0 )		_display.setToRight( false );
-		else if ( entity.transform.vX > 0 ) _display.setToRight( true );
+		if ( entity.transform.vX < platformVX )		_display.setToRight( false );
+		else if ( entity.transform.vX > platformVX ) _display.setToRight( true );
 		
 		if ( bottomWall )
 		{
-			if ( entity.transform.vX == 0 ) _display.play( "stand" );
-			else							_display.play( "run" );
+			if ( entity.transform.vX == platformVX ) 	_display.play( "stand" );
+			else										_display.play( "run" );
 		}
 		else if ( leftWall || rightWall )
 		{

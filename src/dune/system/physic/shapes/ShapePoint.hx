@@ -5,7 +5,7 @@ import dune.compBasic.Transform;
  * ...
  * @author Namide
  */
-class PhysShapePoint
+class ShapePoint
 {
 	
 	public var aabbXMin(default, null):Float;
@@ -20,7 +20,7 @@ class PhysShapePoint
 	
 	private function new()
 	{
-		type = PhysShapeType.POINT;
+		type = ShapeType.POINT;
 		anchorX = 0;
 		anchorY = 0;
 	}

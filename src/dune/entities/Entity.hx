@@ -1,6 +1,6 @@
 package dune.entities;
 
-import dune.compBasic.Display;
+import dune.compBasic.IDisplay;
 import dune.compBasic.Transform;
 import dune.helpers.core.ArrayUtils;
 import dune.compBasic.Controller;
@@ -18,10 +18,9 @@ class Entity
 	
 	public var controllers(default, null):Array<Controller>;
 	public var bodies(default, null):Array<CompBody>;
-	//public var attachedTo(default, null):Array<Entity>;
 	
-	public var display(default, set):Display;
-	private function set_display( cd:Display ):Display
+	public var display(default, set):IDisplay;
+	private function set_display( cd:IDisplay ):IDisplay
 	{
 		cd.setPos( transform.x, transform.y );
 		return display = cd;
@@ -41,12 +40,9 @@ class Entity
 		
 		if ( controllers == null ) 	{ controllers = []; }
 		if ( bodies == null ) 		{ bodies = []; }
-		//if ( attachedTo == null ) { attachedTo = []; }
 		
 		for ( input in controllers )	{ input.clear(); }
 		for ( body in bodies ) 			{ body.clear(); }
-		
-		//ArrayUtils.clear( attachedTo );
 	}
 	
 	public function addBody( body:CompBody ):Void

@@ -4,7 +4,7 @@ package dune.system.physic.shapes;
  * ...
  * @author Namide
  */
-class PhysShapeType
+class ShapeType
 {
 	public inline static var POINT:UInt = 1;
 	public inline static var CIRCLE:UInt = 2;

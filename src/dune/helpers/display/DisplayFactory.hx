@@ -1,6 +1,6 @@
-package dune.helpers.component;
+package dune.helpers.display ;
 
-import dune.system.graphic.components.CompDisplay2dAnim;
+import dune.system.graphic.components.Display2dAnim;
 import dune.system.SysManager;
 import flash.display.BitmapData;
 import flash.display.MovieClip;
@@ -15,7 +15,7 @@ import h3d.mat.Texture;
  * ...
  * @author namide.com
  */
-class FactCompDisplay
+class DisplayFactory
 {
 
 	public function new() 
@@ -25,10 +25,7 @@ class FactCompDisplay
 	
 	public inline static function mcToDisplay2dAnim( mc:MovieClip, scale:Float = 1.0, innerTex:Texture ):Anim
 	{
-		
 		var tile : Tile;
-		//------------------------------
-		
 		
 		var surf = 0;
 		var sizes = [];
@@ -146,14 +143,9 @@ class FactCompDisplay
 		var bmp = new h2d.Bitmap(tile, spr);
 		
 		
-		var ca:CompDisplay2dAnim = new CompDisplay2dAnim( spr );
+		var ca:Display2dAnim = new Display2dAnim( spr );
 		ca.addAnim( );
 		
-		//TileGroup.
-		
-		/*var anim:Anim = new Anim( mc.totalFrames, 1000 / SysManager.FRAME_DELAY, systemManager.sysGraphic.s2d );
-		var bmp2 = new Bitmap(tile, spr2);
-		e2.display = new CompDisplay2dSprite( spr2 );*/
 	}
 	
 	

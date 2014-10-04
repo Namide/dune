@@ -19,8 +19,7 @@
 			"type":"mobile",
 			"datas":
 			{
-				"solid":"wall",
-				"tween":"cos",
+				"type":"platform",
 				"moveX":{ "type":"cos", "time":2000, "dist":3 }
 			}
 		},

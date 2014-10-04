@@ -6,7 +6,7 @@ import dune.system.core.SysSpaceGrid.Grid;
 import dune.system.core.SysSpaceGrid.Node;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
-import dune.system.physic.shapes.PhysShapeUtils;
+import dune.system.physic.shapes.ShapeUtils;
 
 #if (debugHitbox && (flash || openfl))
 	import flash.display.Sprite;
@@ -274,7 +274,7 @@ class SysSpaceGrid implements SysSpace
 			var contacts:Array<Node> = _grid.getContacts( node );
 			for ( node2 in contacts )
 			{
-				if ( PhysShapeUtils.hitTest( b.shape, node2.body.shape ) )
+				if ( ShapeUtils.hitTest( b.shape, node2.body.shape ) )
 				{
 					b.contacts.push( node2.body );
 					if ( !isAffected )

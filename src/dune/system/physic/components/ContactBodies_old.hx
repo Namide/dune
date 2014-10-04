@@ -4,8 +4,8 @@ import dune.helpers.core.ArrayUtils;
 import dune.helpers.core.BitUtils;
 import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;
-import dune.system.physic.shapes.PhysShapeType;
-import dune.system.physic.shapes.PhysShapeUtils;
+import dune.system.physic.shapes.ShapeType;
+import dune.system.physic.shapes.ShapeUtils;
 //import flash.Lib;
 
 class ContactBodiesData
@@ -506,7 +506,7 @@ class ContactBodies
 		ArrayUtils.clear( all );
 		for ( data in dataList )
 		{
-			if ( PhysShapeUtils.hitTest( parent.shape, data.body.shape ) )
+			if ( ShapeUtils.hitTest( parent.shape, data.body.shape ) )
 			{
 				// Recalcule le positionnement
 				
@@ -679,7 +679,7 @@ class ContactBodies
 			var shape:PhysShapePoint = body.shape;
 			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM ) )
 			{
-				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
+				parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
 				if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
 			}
 			else if ( BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) )
@@ -697,28 +697,28 @@ class ContactBodies
 				if ( reac == BOTTOM )
 				{
 					//if ( BitUtils.has(reac, TOP) ) { isCrush = true; return; }
-					parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
+					parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
 					if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
 					//moveInDirection |= BOTTOM;
 				}
 				else if ( reac == TOP )
 				{
 					//if ( BitUtils.has(reac, BOTTOM) ) { isCrush = true; return; }
-					parent.entity.transform.y = shape.aabbYMax - PhysShapeUtils.getPosToTop( parent.shape );
+					parent.entity.transform.y = shape.aabbYMax - ShapeUtils.getPosToTop( parent.shape );
 					if ( _vY < body.entity.transform.vY ) _vY = body.entity.transform.vY;
 					//moveInDirection |= TOP;
 				}
 				else if ( reac == RIGHT )
 				{
 					//if ( BitUtils.has(reac, LEFT) ) { isCrush = true; return; }
-					parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
+					parent.entity.transform.x = shape.aabbXMin - ShapeUtils.getPosToRight( parent.shape );
 					if ( _vX > body.entity.transform.vX ) _vX = body.entity.transform.vX;
 					//moveInDirection |= RIGHT;
 				}
 				else if ( reac == LEFT )
 				{
 					//if ( BitUtils.has(reac, RIGHT) ) { isCrush = true; return; }
-					parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
+					parent.entity.transform.x = shape.aabbXMax - ShapeUtils.getPosToLeft( parent.shape );
 					//moveInDirection |= LEFT;
 					if ( _vX < body.entity.transform.vX ) _vX = body.entity.transform.vX;
 				}

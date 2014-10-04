@@ -7,7 +7,7 @@ import dune.models.controller.ControllerPlatformPlayer;
 import dune.models.example.LevelGen.TileData;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
-import dune.system.physic.shapes.PhysShapeRect;
+import dune.system.physic.shapes.ShapeRect;
 import dune.system.Settings;
 import dune.system.SysManager;
 import flash.display.Loader;
@@ -174,9 +174,8 @@ class LevelGen
 		
 		var solidType:Dynamic =
 		{
-			cos:ControllerMobile.TYPE_COS,
-			linear:ControllerMobile.TYPE_LINEAR,
-			sin:ControllerMobile.TYPE_SIN
+			wall:CompBodyType.SOLID_TYPE_PLATFORM,
+			platform:CompBodyType.SOLID_TYPE_WALL
 		}
 		
 		
@@ -202,12 +201,12 @@ class LevelGen
 			// collision
 			
 				var b2:CompBody = new CompBody();
-				var psr2:PhysShapeRect = new PhysShapeRect();
+				var psr2:ShapeRect = new ShapeRect();
 				psr2.w = w;
 				psr2.h = h;
 				b2.shape = psr2;
 				b2.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
-				b2.typeOfSolid = CompBodyType.SOLID_TYPE_WALL;
+				b2.typeOfSolid = solidType[datas.type];
 				e2.addBody( b2 );
 				
 		sm.addEntity( e2 );
@@ -233,7 +232,7 @@ class LevelGen
 				b3.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
 				b3.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER;
 				b3.insomniac = true;
-				var psr3:PhysShapeRect = new PhysShapeRect();
+				var psr3:ShapeRect = new ShapeRect();
 				psr3.w = TS * 0.8;
 				psr3.h = TS;
 				psr3.anchorX = -0.35 * TS;

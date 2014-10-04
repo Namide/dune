@@ -4,7 +4,7 @@ package dune.compBasic;
  * ...
  * @author Namide
  */
-interface ComponentBasic
+interface Component
 {
 
 	public var type(default, null):UInt;

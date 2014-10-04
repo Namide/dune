@@ -1,9 +1,9 @@
 package dune.helpers.entity;
 import dune.entities.Entity;
-import dune.system.graphic.components.CompDisplay2dSprite;
+import dune.system.graphic.components.Display2dSprite;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
-import dune.system.physic.shapes.PhysShapeRect;
+import dune.system.physic.shapes.ShapeRect;
 import dune.system.SysManager;
 
 /**
@@ -18,7 +18,7 @@ class EntityFact
 		throw "this class is static!";
 	}
 	
-	public static function getSolidDisplay( sm:SysManager, w:Float, h:Float ):CompDisplay2dSprite
+	public static function getSolidDisplay( sm:SysManager, w:Float, h:Float ):Display2dSprite
 	{
 		var g = new h2d.Graphics( sm.sysGraphic.s2d );
 		g.beginFill( Math.round( 0xFFFFFF * Math.random() ) );
@@ -26,7 +26,7 @@ class EntityFact
 		g.drawRect( 0, 0, w, h );
 		g.endFill();
 		
-		return new CompDisplay2dSprite( g );
+		return new Display2dSprite( g );
 	}
 	
 	public static function addSolid( sm:SysManager, x:Float, y:Float, w:Float, h:Float, solidType:UInt = CompBodyType.SOLID_TYPE_WALL ):Entity
@@ -42,7 +42,7 @@ class EntityFact
 		// collision
 		
 			var b4:CompBody = new CompBody();
-			var psr4:PhysShapeRect = new PhysShapeRect();
+			var psr4:ShapeRect = new ShapeRect();
 			psr4.w = w;
 			psr4.h = h;
 			b4.shape = psr4;

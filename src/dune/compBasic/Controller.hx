@@ -1,13 +1,13 @@
 package dune.compBasic ;
 
-import dune.compBasic.ComponentBasic;
+import dune.compBasic.Component;
 import dune.entities.Entity;
 
 /**
  * ...
  * @author Namide
  */
-class Controller implements ComponentBasic
+class Controller implements Component
 {
 	/**
 	 * Entity attached to the body

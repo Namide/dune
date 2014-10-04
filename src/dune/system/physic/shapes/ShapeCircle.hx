@@ -1,12 +1,10 @@
 package dune.system.physic.shapes;
 import dune.compBasic.Transform;
-import dune.system.physic.shapes.PhysShapePoint;
-
 /**
  * ...
  * @author Namide
  */
-class PhysShapeCircle extends PhysShapePoint
+class ShapeCircle extends ShapePoint
 {
 
 	public var r(default, default):Float;
@@ -14,7 +12,7 @@ class PhysShapeCircle extends PhysShapePoint
 	public function new() 
 	{
 		super();
-		type = PhysShapeType.CIRCLE;
+		type = ShapeType.CIRCLE;
 		
 		r = 0.0;
 	}

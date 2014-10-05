@@ -3,8 +3,9 @@ import dune.compBasic.IDisplay;
 import dune.entities.Entity;
 import dune.helpers.core.ArrayUtils;
 import dune.helpers.core.TimeUtils;
-import dune.helpers.keyboard.KeyboardHandler;
 import dune.compBasic.Controller;
+import dune.inputs.core.IInput;
+import dune.inputs.KeyboardHandler;
 import dune.system.physic.components.CompBody;
 import dune.system.physic.components.CompBodyType;
 import dune.system.physic.components.ContactBodies;
@@ -41,9 +42,9 @@ class ControllerPlatformPlayer extends Controller
 	
 	var _groundTimeAccX:UInt;  	// milliseconds
 	var _groundVX:Float;		// tiles / sec
-	var _groundAccX:Float;
+	//var _groundAccX:Float;
 	var _jumpStartVY:Float;
-	var _jumpAccX:Float;
+	//var _jumpAccX:Float;
 	var _jumpVY:Float;
 	var _jumpVXMin:Float;
 	var _jumpVXMax:Float;
@@ -55,6 +56,7 @@ class ControllerPlatformPlayer extends Controller
 	var _contacts:ContactBodies;
 	
 	var _display:IDisplay;
+	var _input:IInput;
 	
 	public function new() 
 	{
@@ -65,6 +67,8 @@ class ControllerPlatformPlayer extends Controller
 		setJump( 1.5, 3, 6, 0.06, 0.2 );*/
 		setRun( 14, 0.06 );
 		setJump( 1.5, 3, 3, 6, 0.06, 0.2 );
+		
+		_input = new KeyboardHandler();
 	}
 	
 	/**
@@ -74,7 +78,7 @@ class ControllerPlatformPlayer extends Controller
 	 */
 	public function setRun( vel:Float, accTime:Float ):Void
 	{
-		_groundAccX = ControllerPlatformPlayer.getAccX( vel, Math.round(accTime * 1000) );
+		//_groundAccX = ControllerPlatformPlayer.getAccX( vel, Math.round(accTime * 1000) );
 		_groundVX = ControllerPlatformPlayer.getVX( vel );
 	}
 	
@@ -90,7 +94,7 @@ class ControllerPlatformPlayer extends Controller
 		_jumpVY = ControllerPlatformPlayer.getJumpVY( hMax, _jumpStartVY );
 		_jumpVXMin = ControllerPlatformPlayer.getJumpVX( lMin, _jumpStartVY, _jumpVY );
 		_jumpVXMax = ControllerPlatformPlayer.getJumpVX( lMax, _jumpStartVY, _jumpVY );
-		_jumpAccX = ControllerPlatformPlayer.getAccX( _jumpVXMax, Math.round(accTime * 1000) );
+		//_jumpAccX = ControllerPlatformPlayer.getAccX( _jumpVXMax, Math.round(accTime * 1000) );
 		_jumpTimeLock = Math.round(timeLock * 1000);
 	}
 	
@@ -110,14 +114,14 @@ class ControllerPlatformPlayer extends Controller
 	
 	public override function execute( dt:UInt ):Void
 	{
-		var kh:KeyboardHandler = KeyboardHandler.getInstance();
-		
 		var bottomWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) || 
 								_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM );
 		
 		var leftWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.LEFT );
 		var rightWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.RIGHT );
 		var topWall:Bool = 		_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP );
+		
+		var xAxis:Float = _input.getX();
 		
 		entity.transform.vY += Settings.GRAVITY;
 		
@@ -168,24 +172,36 @@ class ControllerPlatformPlayer extends Controller
 			}
 		}
 		
-		
-		if ( kh.getKeyPressed( keyLeft ) )
+		if ( xAxis != 0 )
 		{
-			
-			if ( !leftWall )
+			if ( xAxis < 0 && !leftWall )
 			{
 				if ( bottomWall )
 				{
 					if ( entity.transform.vX > platformVX-_groundVX )
 					{
-						entity.transform.vX -= _groundAccX;
+						entity.transform.vX = platformVX + xAxis * _groundVX;
+						/*entity.transform.vX -= _groundAccX;
 						if ( entity.transform.vX < platformVX - _groundVX )
 						{
 							entity.transform.vX = platformVX-_groundVX;
-						}
+						}*/
 					}
 				}
-				else if ( TimeUtils.getMS() > _landmark )
+				else if ( entity.transform.vX > -_jumpVXMax )
+				{
+					entity.transform.vX = xAxis * _jumpVXMax;
+					/*entity.transform.vX -= _jumpAccX;
+					if ( entity.transform.vX < -_jumpVXMax )
+					{
+						entity.transform.vX = -_jumpVXMax;
+					}*/
+				}
+				/*else
+				{
+					entity.transform.vX = xAxis * _jumpVXMax;
+				}*/
+				/*else if ( TimeUtils.getMS() > _landmark )
 				{
 					if ( entity.transform.vX > -_jumpVXMax )
 					{
@@ -195,39 +211,38 @@ class ControllerPlatformPlayer extends Controller
 							entity.transform.vX = -_jumpVXMax;
 						}
 					}
-				}
-				
+				}*/
 			}
-			
-		}
-		else if ( kh.getKeyPressed( keyRight ) ) 
-		{
-			if ( !rightWall )
+			else
 			{
-				if ( bottomWall  )
+				if ( !rightWall )
 				{
-					if ( entity.transform.vX < platformVX+_groundVX )
+					if ( bottomWall  )
 					{
-						entity.transform.vX += _groundAccX;
-						if ( entity.transform.vX > platformVX + _groundVX )
+						if ( entity.transform.vX < platformVX + _groundVX )
 						{
-							entity.transform.vX = platformVX+_groundVX;
+							entity.transform.vX = platformVX + xAxis * _groundVX;
+							/*entity.transform.vX += _groundAccX;
+							if ( entity.transform.vX > platformVX + _groundVX )
+							{
+								entity.transform.vX = platformVX+_groundVX;
+							}*/
 						}
 					}
-				}
-				else if ( TimeUtils.getMS() > _landmark )
-				{
-					if ( entity.transform.vX < _jumpVXMax )
+					else if ( entity.transform.vX < _jumpVXMax )
 					{
-						entity.transform.vX += _jumpAccX;
+						entity.transform.vX = xAxis * _jumpVXMax;
+						/*entity.transform.vX += _jumpAccX;
 						if ( entity.transform.vX > _jumpVXMax )
 						{
 							entity.transform.vX = _jumpVXMax;
-						}
+						}*/
 					}
+					
 				}
 			}
 		}
+		
 		else
 		{
 			if ( bottomWall  )
@@ -241,13 +256,14 @@ class ControllerPlatformPlayer extends Controller
 			}
 		}
 		
-		if ( kh.getKeyPressed( keyAction ) )
+		var b1:Float = _input.getB1();
+		if ( b1 > 0 )//kh.getKeyPressed( keyAction ) )
 		{
 			if ( bottomWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
-				if ( kh.getKeyPressed( keyLeft ) ) 			entity.transform.vX = -_jumpVXMax;
-				else if ( kh.getKeyPressed( keyRight ) ) 	entity.transform.vX = _jumpVXMax;
+				if ( xAxis < 0 ) 		entity.transform.vX = -_jumpVXMax;
+				else if ( xAxis > 0 ) 	entity.transform.vX = _jumpVXMax;
 			}
 			else if ( leftWall && !_actionPressed )
 			{
@@ -280,8 +296,8 @@ class ControllerPlatformPlayer extends Controller
 		
 		// 		ANIMATIONS
 		
-		if ( entity.transform.vX < platformVX )		_display.setToRight( false );
-		else if ( entity.transform.vX > platformVX ) _display.setToRight( true );
+		if ( entity.transform.vX < platformVX )			_display.setToRight( false );
+		else if ( entity.transform.vX > platformVX ) 	_display.setToRight( true );
 		
 		if ( bottomWall )
 		{
@@ -326,11 +342,11 @@ class ControllerPlatformPlayer extends Controller
 		return p / f;
 	}
 	
-	public inline static function getAccX( distTile:Float, timeMS:UInt ):Float
+	/*public inline static function getAccX( distTile:Float, timeMS:UInt ):Float
 	{
 		var a:Float = distTile * Settings.TILE_SIZE / ( 1000 * timeMS / Settings.FRAME_DELAY );
 		return a * Settings.FRAME_DELAY;
-	}
+	}*/
 	
 	/**
 	 * 

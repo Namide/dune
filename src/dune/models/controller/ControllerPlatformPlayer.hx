@@ -121,7 +121,7 @@ class ControllerPlatformPlayer extends Controller
 		var rightWall:Bool = 	_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.RIGHT );
 		var topWall:Bool = 		_contacts.hasTypeOfSolid( CompBodyType.SOLID_TYPE_WALL, ContactBodies.TOP );
 		
-		var xAxis:Float = _input.getX();
+		var xAxis:Float = _input.getAxisX();
 		
 		entity.transform.vY += Settings.GRAVITY;
 		

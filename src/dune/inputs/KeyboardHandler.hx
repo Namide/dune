@@ -62,13 +62,13 @@ class KeyboardHandler implements IInput
 	
 	
 	
-	public inline function getX():Float
+	public inline function getAxisX():Float
 	{
 		var o:Float = getFloat( keyRight );
 		if ( o <= 0 ) o = -getFloat( keyLeft );
 		return o;
 	}
-	public inline function getY():Float
+	public inline function getAxisY():Float
 	{
 		var o:Float = getFloat( keyTop );
 		if ( o <= 0 ) o = -getFloat( keyBottom );

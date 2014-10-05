@@ -1,6 +1,7 @@
 package ;
 
 import dune.Game;
+import flash.ui.GameInput;
 
 #if (flash || openfl)
 
@@ -41,6 +42,8 @@ class Main
 		#else
 			trace("no hitbox");
 		#end*/
+		
+		trace( flash.ui.GameInput.numDevices );
 		
 		#if flash
 			var s = new net.hires.debug.Stats();

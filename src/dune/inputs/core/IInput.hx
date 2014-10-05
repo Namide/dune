@@ -6,8 +6,8 @@ package dune.inputs.core;
 
 interface IInput 
 {
-	public function getX():Float;
-	public function getY():Float;
+	public function getAxisX():Float;
+	public function getAxisY():Float;
 	
 	public function getB1():Float;
 	public function getB2():Float;

@@ -1,6 +1,6 @@
 package dune.model.factory ;
 
-import dune.system.graphic.components.Display2dAnim;
+import dune.system.graphic.component.Display2dAnim;
 import dune.system.Settings;
 import dune.system.SysManager;
 import flash.geom.Matrix;

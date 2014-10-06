@@ -1,4 +1,4 @@
-package dune.composition ;
+package dune.component ;
 
 /**
  * ...

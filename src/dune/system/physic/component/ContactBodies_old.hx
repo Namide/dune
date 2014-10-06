@@ -1,8 +1,8 @@
-package dune.system.physic.components;
-import dune.composition.Transform;
+package dune.system.physic.component ;
+import dune.component.Transform;
 import dune.helper.core.ArrayUtils;
 import dune.helper.core.BitUtils;
-import dune.system.physic.components.ContactBodies.ContactBodiesData;
+import dune.system.physic.component.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.ShapeType;
 import dune.system.physic.shapes.ShapeUtils;

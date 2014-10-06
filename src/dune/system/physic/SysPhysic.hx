@@ -3,7 +3,7 @@ package dune.system.physic;
 import dune.helper.core.TimeUtils;
 import dune.system.core.ISpace;
 import dune.system.core.SpaceGrid;
-import dune.system.physic.components.Body;
+import dune.system.physic.component.Body;
 //import dune.system.core.SysSpaceGrid;
 
 #if (debugHitbox && (flash || openfl))

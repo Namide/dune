@@ -1,6 +1,5 @@
-package dune.system.physic.components;
-
-import dune.composition.Component;
+package dune.system.physic.component;
+import dune.component.Component;
 import dune.entity.Entity;
 import dune.helper.core.ArrayUtils;
 import dune.system.physic.shapes.ShapeCircle;
@@ -17,12 +16,12 @@ import dune.system.physic.shapes.ShapeType;
  */
 class Body implements Component
 {
+	public var type(default, null):UInt;
+	
 	/**
-	 * Entity attached to the body
+	 * Entity attached to the transform component
 	 */
 	public var entity(default, default):Entity;
-	
-	public var type(default, null):UInt;
 	
 	/**
 	 * Delimit the shape of this body

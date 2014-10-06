@@ -1,14 +1,14 @@
 package dune.model.controller ;
-import dune.composition.IDisplay;
+import dune.component.IDisplay;
 import dune.entity.Entity;
 import dune.helper.core.ArrayUtils;
 import dune.helper.core.TimeUtils;
-import dune.composition.Controller;
+import dune.component.Controller;
 import dune.input.core.IInput;
 import dune.input.KeyboardHandler;
-import dune.system.physic.components.Body;
-import dune.system.physic.components.BodyType;
-import dune.system.physic.components.ContactBodies;
+import dune.system.physic.component.Body;
+import dune.system.physic.component.BodyType;
+import dune.system.physic.component.ContactBodies;
 import dune.system.Settings;
 
 

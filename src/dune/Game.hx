@@ -1,7 +1,7 @@
 package dune;
 
-import dune.composition.ComponentType;
-import dune.composition.Transform;
+import dune.component.ComponentType;
+import dune.component.Transform;
 import dune.entity.Entity;
 import dune.model.controller.ControllerPlatform;
 import dune.model.controller.ControllerPlatformPlayer;
@@ -9,9 +9,9 @@ import dune.model.controller.ControllerGravity;
 import dune.model.controller.ControllerMobile;
 import dune.model.example.LevelGen;
 import dune.model.factory.EntityFactory;
-import dune.system.graphic.components.Display2dSprite;
-import dune.system.physic.components.Body;
-import dune.system.physic.components.BodyType;
+import dune.system.graphic.component.Display2dSprite;
+import dune.system.physic.component.Body;
+import dune.system.physic.component.BodyType;
 import dune.system.physic.shapes.ShapeRect;
 import dune.system.physic.shapes.ShapeType;
 import dune.system.Settings;

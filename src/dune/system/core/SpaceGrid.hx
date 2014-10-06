@@ -1,11 +1,11 @@
 package dune.system.core;
 
-import dune.composition.Transform;
+import dune.component.Transform;
 import dune.helper.core.FloatUtils;
 import dune.system.core.SpaceGrid.Grid;
 import dune.system.core.SpaceGrid.Node;
-import dune.system.physic.components.Body;
-import dune.system.physic.components.BodyType;
+import dune.system.physic.component.Body;
+import dune.system.physic.component.BodyType;
 import dune.system.physic.shapes.ShapeUtils;
 
 #if (debugHitbox && (flash || openfl))

@@ -5,8 +5,8 @@ import dune.model.controller.ControllerMobile;
 import dune.model.controller.ControllerPlatformPlayer;
 import dune.model.example.LevelGen.TileData;
 import dune.model.factory.EntityFactory;
-import dune.system.physic.components.Body;
-import dune.system.physic.components.BodyType;
+import dune.system.physic.component.Body;
+import dune.system.physic.component.BodyType;
 import dune.system.physic.shapes.ShapeRect;
 import dune.system.Settings;
 import dune.system.SysManager;
@@ -110,12 +110,12 @@ class LevelGen
 		{
 			for ( i in 0...levelDatas.grid[j].length )
 			{
-				tileAnalyse( levelDatas, i, j, constructed );
+				tileAnalyseSize( levelDatas, i, j, constructed );
 			}
 		}
 	}
 	
-	function tileAnalyse( levelDatas:LevelData, iMin:Int, jMin:Int, c:Array<String> ):Void
+	function tileAnalyseSize( levelDatas:LevelData, iMin:Int, jMin:Int, c:Array<String> ):Void
 	{
 		var i:Int = iMin;
 		var j:Int = jMin;
@@ -127,7 +127,6 @@ class LevelGen
 		
 		var iMax:Int = iMin;
 		var jMax:Int = jMin;
-		var TS:Float = Settings.TILE_SIZE;
 		
 		if ( levelDatas.getTile( i+1, j ) == tile && !Lambda.has( c, posToStr(i,j) ) )
 		{
@@ -148,15 +147,21 @@ class LevelGen
 			}
 		}
 		
-		if ( tile.type == "platform" )
-			EntityFactory.addSolid( sm, iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, BodyType.SOLID_TYPE_PLATFORM );
-		else if ( tile.type == "wall" )
-			EntityFactory.addSolid( sm, iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, BodyType.SOLID_TYPE_WALL );
-		else if ( tile.type == "spawn" )
-			addPlayer( iMin * TS, jMin * TS );
-		else if ( tile.type == "mobile" )
-			addMobile( iMin * TS, jMin * TS, (1 + iMax - iMin) * TS, (1 + jMax - jMin) * TS, tile.datas );
+		tileAnalyseType( iMin, jMin, 1 + iMax - iMin, 1 + jMax - jMin, tile );
+	}
+	
+	function tileAnalyseType( xTile:Int, yTile:Int, wTile:Int, hTile:Int, tile:TileData ):Void
+	{
+		var TS:Float = Settings.TILE_SIZE;
 		
+		if ( tile.type == "platform" )
+			EntityFactory.addSolid( sm, xTile * TS, yTile * TS, wTile * TS, hTile * TS, BodyType.SOLID_TYPE_PLATFORM );
+		else if ( tile.type == "wall" )
+			EntityFactory.addSolid( sm, xTile * TS, yTile * TS, wTile * TS, hTile * TS, BodyType.SOLID_TYPE_WALL );
+		else if ( tile.type == "spawn" )
+			addPlayer( xTile * TS, yTile * TS );
+		else if ( tile.type == "mobile" )
+			addMobile( xTile * TS, yTile * TS, wTile * TS, hTile * TS, tile.datas );
 	}
 	
 	function addMobile( i:Float, j:Float, w:Float, h:Float, datas:Dynamic ):Void

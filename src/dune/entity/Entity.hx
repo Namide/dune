@@ -1,10 +1,10 @@
 package dune.entity ;
 
-import dune.composition.IDisplay;
-import dune.composition.Transform;
+import dune.component.IDisplay;
+import dune.component.Transform;
 import dune.helper.core.ArrayUtils;
-import dune.composition.Controller;
-import dune.system.physic.components.Body;
+import dune.component.Controller;
+import dune.system.physic.component.Body;
 
 /**
  * ...

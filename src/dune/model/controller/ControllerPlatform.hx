@@ -1,9 +1,9 @@
 package dune.model.controller ;
 import dune.entity.Entity;
-import dune.composition.Controller;
-import dune.system.physic.components.Body;
-import dune.system.physic.components.BodyType;
-import dune.system.physic.components.ContactBodies;
+import dune.component.Controller;
+import dune.system.physic.component.Body;
+import dune.system.physic.component.BodyType;
+import dune.system.physic.component.ContactBodies;
 import dune.system.Settings;
 import dune.system.SysManager;
 

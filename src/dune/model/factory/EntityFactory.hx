@@ -1,9 +1,9 @@
 package dune.model.factory ;
 import dune.entity.Entity;
-import dune.system.graphic.components.Display2dSprite;
+import dune.system.graphic.component.Display2dSprite;
 import dune.model.factory.EntityFactory.EntityFactory;
-import dune.system.physic.components.Body;
-import dune.system.physic.components.BodyType;
+import dune.system.physic.component.Body;
+import dune.system.physic.component.BodyType;
 import dune.system.physic.shapes.ShapeRect;
 import dune.system.SysManager;
 

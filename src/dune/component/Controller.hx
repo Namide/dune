@@ -1,6 +1,6 @@
-package dune.composition ;
+package dune.component ;
 
-import dune.composition.Component;
+import dune.component.Component;
 import dune.entity.Entity;
 
 /**

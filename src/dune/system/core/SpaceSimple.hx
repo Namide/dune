@@ -1,7 +1,7 @@
 package dune.system.core ;
 
 import dune.helper.core.ArrayUtils;
-import dune.system.physic.components.Body;
+import dune.system.physic.component.Body;
 import dune.system.physic.components.BodyType;
 import dune.system.physic.shapes.ShapeUtils;
 

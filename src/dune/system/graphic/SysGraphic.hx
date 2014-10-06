@@ -1,6 +1,6 @@
 package dune.system.graphic;
 
-import dune.composition.ComponentType;
+import dune.component.ComponentType;
 import dune.entity.Entity;
 import h2d.Sprite;
 

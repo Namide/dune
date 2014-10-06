@@ -1,6 +1,6 @@
 package dune.model.controller ;
 import dune.entity.Entity;
-import dune.composition.Controller;
+import dune.component.Controller;
 import dune.system.Settings;
 import dune.system.SysManager;
 

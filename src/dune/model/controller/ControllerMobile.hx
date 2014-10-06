@@ -1,6 +1,6 @@
 package dune.model.controller ;
 
-import dune.composition.Controller;
+import dune.component.Controller;
 import dune.entity.Entity;
 
 

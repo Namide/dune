@@ -1,4 +1,4 @@
-package dune.system.physic.components;
+package dune.system.physic.component;
 
 /**
  * ...

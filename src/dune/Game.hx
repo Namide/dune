@@ -1,17 +1,17 @@
 package dune;
 
-import dune.compBasic.ComponentType;
-import dune.compBasic.Transform;
-import dune.entities.Entity;
-import dune.helpers.entity.EntityFactory;
-import dune.models.controller.ControllerPlatform;
-import dune.models.controller.ControllerPlatformPlayer;
-import dune.models.controller.ControllerGravity;
-import dune.models.controller.ControllerMobile;
-import dune.models.example.LevelGen;
+import dune.composition.ComponentType;
+import dune.composition.Transform;
+import dune.entity.Entity;
+import dune.model.controller.ControllerPlatform;
+import dune.model.controller.ControllerPlatformPlayer;
+import dune.model.controller.ControllerGravity;
+import dune.model.controller.ControllerMobile;
+import dune.model.example.LevelGen;
+import dune.model.factory.EntityFactory;
 import dune.system.graphic.components.Display2dSprite;
-import dune.system.physic.components.CompBody;
-import dune.system.physic.components.CompBodyType;
+import dune.system.physic.components.Body;
+import dune.system.physic.components.BodyType;
 import dune.system.physic.shapes.ShapeRect;
 import dune.system.physic.shapes.ShapeType;
 import dune.system.Settings;
@@ -177,13 +177,13 @@ class Game
 		
 		// collision
 		
-			var b4:CompBody = new CompBody();
+			var b4:Body = new Body();
 			var psr4:ShapeRect = new ShapeRect();
 			psr4.w = size;
 			psr4.h = size;
 			b4.shape = psr4;
-			b4.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
-			b4.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER; //| CompBodyType.SOLID_TYPE_WALL;
+			b4.typeOfCollision = BodyType.COLLISION_TYPE_ACTIVE;
+			b4.typeOfSolid = BodyType.SOLID_TYPE_MOVER; //| CompBodyType.SOLID_TYPE_WALL;
 			ball.addBody( b4 );
 		
 		// move

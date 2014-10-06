@@ -1,7 +1,7 @@
 package dune.system;
-import dune.entities.Entity;
-import dune.helpers.core.ArrayUtils;
-import dune.helpers.core.TimeUtils;
+import dune.entity.Entity;
+import dune.helper.core.ArrayUtils;
+import dune.helper.core.TimeUtils;
 import dune.system.graphic.SysGraphic;
 import dune.system.controller.SysController;
 import dune.system.physic.SysPhysic;

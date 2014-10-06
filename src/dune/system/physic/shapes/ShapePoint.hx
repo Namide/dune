@@ -1,5 +1,5 @@
 package dune.system.physic.shapes;
-import dune.compBasic.Transform;
+import dune.composition.Transform;
 
 /**
  * ...

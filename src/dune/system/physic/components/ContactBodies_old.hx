@@ -1,7 +1,7 @@
 package dune.system.physic.components;
-import dune.compBasic.Transform;
-import dune.helpers.core.ArrayUtils;
-import dune.helpers.core.BitUtils;
+import dune.composition.Transform;
+import dune.helper.core.ArrayUtils;
+import dune.helper.core.BitUtils;
 import dune.system.physic.components.ContactBodies.ContactBodiesData;
 import dune.system.physic.shapes.PhysShapePoint;
 import dune.system.physic.shapes.ShapeType;
@@ -11,14 +11,14 @@ import dune.system.physic.shapes.ShapeUtils;
 class ContactBodiesData
 {
 	public var dist(default, default):Float;
-	public var body(default, default):CompBody;
+	public var body(default, default):Body;
 	public var reac(default, default):Int;
 	
 	public var pos(default, default):Int;
 	public var limit(default, default):Float;
 	//public var priority(default, default):Bool;
 	
-	public function new( compBody:CompBody ) 
+	public function new( compBody:Body ) 
 	{
 		body = compBody;
 		limit = Math.NaN;
@@ -38,14 +38,14 @@ class ContactBodies
 	public inline static var BOTTOM:Int = 4;
 	public inline static var LEFT:Int = 8;
 	
-	public var parent:CompBody;
-	public var all(default, default):Array<CompBody>;
+	public var parent:Body;
+	public var all(default, default):Array<Body>;
 	
-	public var bottom(default, default):Array<CompBody>;
-	public var right(default, default):Array<CompBody>;
-	public var left(default, default):Array<CompBody>;
-	public var top(default, default):Array<CompBody>;
-	public var on(default, default):Array<CompBody>;
+	public var bottom(default, default):Array<Body>;
+	public var right(default, default):Array<Body>;
+	public var left(default, default):Array<Body>;
+	public var top(default, default):Array<Body>;
+	public var on(default, default):Array<Body>;
 	
 	var _vX:Float;
 	var _vY:Float;
@@ -54,7 +54,7 @@ class ContactBodies
 	
 	//var _toDeleteTemp:Dynamic;
 	
-	public function new( p:CompBody ) 
+	public function new( p:Body ) 
 	{
 		parent = p;
 		all = [];
@@ -85,9 +85,9 @@ class ContactBodies
 		return false;
 	}
 	
-	public inline function hasTypeInArray( solidType:Int, a:Array<CompBody> ):Bool
+	public inline function hasTypeInArray( solidType:Int, a:Array<Body> ):Bool
 	{
-		return Lambda.exists( a, function(cp:CompBody):Bool
+		return Lambda.exists( a, function(cp:Body):Bool
 		{
 			return cp.typeOfSolid & solidType == solidType;
 		});
@@ -106,18 +106,18 @@ class ContactBodies
 		});
 	}*/
 	
-	public function getByType( solidType:Int, direction:Int = -1 ):Array<CompBody>
+	public function getByType( solidType:Int, direction:Int = -1 ):Array<Body>
 	{
-		if 		( direction == -1 )		return all.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
-		else if ( direction == ON )		return on.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
-		else if ( direction == TOP )	return top.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
-		else if ( direction == RIGHT )	return right.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
-		else if ( direction == BOTTOM )	return bottom.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
-		else if ( direction == LEFT )	return left.filter( function( cb:CompBody ):Bool { return cb.typeOfSolid & solidType == solidType; });
-		return new Array<CompBody>();
+		if 		( direction == -1 )		return all.filter( function( cb:Body ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == ON )		return on.filter( function( cb:Body ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == TOP )	return top.filter( function( cb:Body ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == RIGHT )	return right.filter( function( cb:Body ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == BOTTOM )	return bottom.filter( function( cb:Body ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		else if ( direction == LEFT )	return left.filter( function( cb:Body ):Bool { return cb.typeOfSolid & solidType == solidType; });
+		return new Array<Body>();
 	}
 	
-	public inline function push( cb:CompBody ):Void { all.push( cb ); }
+	public inline function push( cb:Body ):Void { all.push( cb ); }
 	public inline function length():UInt { return all.length; }
 	
 	public function clear()
@@ -162,7 +162,7 @@ class ContactBodies
 		{
 			var dX:Float = cp.entity.transform.vX - _vX;
 			var dY:Float = cp.entity.transform.vY - _vY;
-			var overAutorized:Bool = !BitUtils.has( cp.typeOfSolid, CompBodyType.SOLID_TYPE_WALL );
+			var overAutorized:Bool = !BitUtils.has( cp.typeOfSolid, BodyType.SOLID_TYPE_WALL );
 			
 			if ( dataActivated )
 			{
@@ -557,8 +557,8 @@ class ContactBodies
 		var shape:PhysShapePoint = data.body.shape;
 		
 		if ( _firstContact == null &&
-			 ( BitUtils.has( data.body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) ||
-			 BitUtils.has( data.body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM  ) ) )
+			 ( BitUtils.has( data.body.typeOfSolid, BodyType.SOLID_TYPE_WALL ) ||
+			 BitUtils.has( data.body.typeOfSolid, BodyType.SOLID_TYPE_PLATFORM  ) ) )
 		{
 			if ( data.reac == BOTTOM ) 		{ data.limit = shape.aabbYMin; }
 			else if ( data.reac == TOP ) 	{ data.limit = shape.aabbYMax; }
@@ -610,10 +610,10 @@ class ContactBodies
 		}
 	}
 	
-	function calculateItem( body:CompBody ):Void
+	function calculateItem( body:Body ):Void
 	{
-		if ( BitUtils.has( parent.typeOfSolid, CompBodyType.SOLID_TYPE_EATER ) &&
-			 BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_ITEM ) )
+		if ( BitUtils.has( parent.typeOfSolid, BodyType.SOLID_TYPE_EATER ) &&
+			 BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_ITEM ) )
 		{
 			for ( fct in parent.onCollide )
 			{
@@ -672,17 +672,17 @@ class ContactBodies
 		return false;
 	}*/
 	
-	function calculateReaction( body:CompBody, reac:Int/*, link:SysLink*/ ):Void
+	function calculateReaction( body:Body, reac:Int/*, link:SysLink*/ ):Void
 	{
-		if ( BitUtils.has( parent.typeOfSolid, CompBodyType.SOLID_TYPE_MOVER ) )
+		if ( BitUtils.has( parent.typeOfSolid, BodyType.SOLID_TYPE_MOVER ) )
 		{
 			var shape:PhysShapePoint = body.shape;
-			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM ) )
+			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_PLATFORM ) )
 			{
 				parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
 				if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
 			}
-			else if ( BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) )
+			else if ( BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_WALL ) )
 			{
 				
 				if ( reac == 0 )
@@ -727,7 +727,7 @@ class ContactBodies
 		}
 	}
 	
-	private function save( body:CompBody, reac:UInt ):Void
+	private function save( body:Body, reac:UInt ):Void
 	{
 		//trace( "save:"+reac );
 		

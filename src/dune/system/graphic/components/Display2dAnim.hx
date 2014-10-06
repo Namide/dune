@@ -1,9 +1,9 @@
 package dune.system.graphic.components;
 
-import dune.compBasic.Component;
-import dune.compBasic.ComponentType;
-import dune.compBasic.IDisplay;
-import dune.helpers.core.ArrayUtils;
+import dune.composition.Component;
+import dune.composition.ComponentType;
+import dune.composition.IDisplay;
+import dune.helper.core.ArrayUtils;
 import h2d.Anim;
 import h2d.Sprite;
 

@@ -1,6 +1,6 @@
 package dune.system.controller ;
 
-import dune.compBasic.Controller;
+import dune.composition.Controller;
 
 /**
  * ...

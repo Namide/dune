@@ -1,6 +1,3 @@
-// https://developer.mozilla.org/fr/docs/Web/Guide/API/Gamepad
-// https://github.com/luser/gamepadtest/blob/master/gamepadtest.js
-
 /*
  * Gamepad API Test
  * Written in 2013 by Ted Mielczarek <ted@mielczarek.org>
@@ -9,163 +6,137 @@
  *
  * You should have received a copy of the CC0 Public Domain Dedication along with this software. If not, see <http://creativecommons.org/publicdomain/zero/1.0/>.
  */
-var haveEvents = 'GamepadEvent' in window;
-var controllers = {};
-var rAF = window.mozRequestAnimationFrame ||
-		window.webkitRequestAnimationFrame ||
-		window.requestAnimationFrame;
 
-if (haveEvents)
-{
-	window.addEventListener("gamepadconnected", connecthandler);
-	window.addEventListener("gamepaddisconnected", disconnecthandler);
-	//scangamepads();
-}
-else
-{
-	setInterval(scangamepads, 500);
-}
+// https://developer.mozilla.org/fr/docs/Web/Guide/API/Gamepad
+// https://github.com/luser/gamepadtest/blob/master/gamepadtest.js
 
-//setInterval(updateStatus, 500);
 
-function connecthandler(e)
+var duneGamepad = new DuneGamepad();
+function DuneGamepad()
 {
-	addgamepad(e.gamepad);
-}
-function addgamepad(gamepad) {
-	controllers[gamepad.index] = gamepad;
-	/*var d = document.createElement("div");
-	d.setAttribute("id", "controller" + gamepad.index);
-	var t = document.createElement("h1");
-	t.appendChild(document.createTextNode("gamepad: " + gamepad.id));
-	d.appendChild(t);
-	var b = document.createElement("div");
-	b.className = "buttons";
-	for (var i = 0; i < gamepad.buttons.length; i++) {
-		var e = document.createElement("span");
-		e.className = "button";
-//e.id = "b" + i;
-		e.innerHTML = i;
-		b.appendChild(e);
-	}
-	d.appendChild(b);
-	var a = document.createElement("div");
-	a.className = "axes";
-	for (i = 0; i < gamepad.axes.length; i++) {
-		e = document.createElement("progress");
-		e.className = "axis";
-//e.id = "a" + i;
-		e.setAttribute("max", "2");
-		e.setAttribute("value", "1");
-		e.innerHTML = i;
-		a.appendChild(e);
-	}
-	d.appendChild(a);
-	document.getElementById("start").style.display = "none";
-	document.body.appendChild(d);*/
-	rAF(updateStatus);
-}
-function disconnecthandler(e)
-{
-	removegamepad(e.gamepad);
-}
-function removegamepad(gamepad)
-{
-	var d = document.getElementById("controller" + gamepad.index);
-	document.body.removeChild(d);
-	delete controllers[gamepad.index];
-}
-
-function updateStatus()
-{
-	scangamepads();
+	this.haveEvents = 'GamepadEvent' in window;
+	this.controllers = {};
+	this.rAF =	window.mozRequestAnimationFrame ||
+				window.webkitRequestAnimationFrame ||
+				window.requestAnimationFrame;
 	
-	var c = document.getElementById("testZone");
-	c.innerHTML = "";
+	this.init = function()
+	{
+		if( window.dgp === undefined ) window.dgp = this;
+		var dgp = window.dgp;
+		
+		if (dgp.haveEvents)
+		{
+			//window.addEventListener("gamepadconnected", this.connecthandler);
+			window.addEventListener("gamepadconnected", dgp.connecthandler);
+			window.addEventListener("gamepaddisconnected", dgp.disconnecthandler);
+		}
+		else
+		{
+			setInterval( dgp.scangamepads, 500 );
+		}
+	};
 	
-	for (j in controllers)
+	this.connecthandler = function(e)
 	{
-		var controller = controllers[j];
-		//var d = document.getElementById("controller" + j);
-		//var buttons = d.getElementsByClassName("button");
+		var dgp = window.dgp;
+		dgp.addgamepad( e.gamepad );
+	};
+	
+	this.addgamepad = function(gamepad)
+	{
+		var dgp = window.dgp;
+		dgp.controllers[gamepad.index] = gamepad;
 		
-		
-		
-		for (var i = 0; i < controller.buttons.length; i++)
-		{
-			
-			var val = controller.buttons[i];
-			var pressed = val == 1.0;
-			if (typeof (val) == "object")
-			{
-				pressed = val.pressed;
-				val = val.value;
-			}
-		
-			if ( val > 0.1 )
-			{
-				var c = document.getElementById("testZone");
-				c.innerHTML += "<br>" + i + ":" + val;
-			}
-			
+		var rAF =	window.mozRequestAnimationFrame ||
+				window.webkitRequestAnimationFrame ||
+				window.requestAnimationFrame;
+		rAF( dgp.updateStatus );
+	};
+	
+	this.disconnecthandler = function(e)
+	{
+		var dgp = window.dgp;
+		dgp.removegamepad(e.gamepad);
+	};
+	
+	this.removegamepad = function(gamepad)
+	{
+		var dgp = window.dgp;
+		var d = document.getElementById("controller" + gamepad.index);
+		document.body.removeChild(d);
+		delete dgp.controllers[gamepad.index];
+	};
 
-			// alert(controller.buttons[i]);
-			/*var b = buttons[i];
-			var val = controller.buttons[i];
-			var pressed = val == 1.0;
-			if (typeof (val) == "object") {
-				pressed = val.pressed;
-				val = val.value;
-			}*/
-			/*var pct = Math.round(val * 100) + "%";
-			b.style.backgroundSize = pct + " " + pct;
-			if (pressed) {
-				b.className = "button pressed";
-			} else {
-				b.className = "button";
-			}*/
-		}
-		
-		//var axes = d.getElementsByClassName("axis");
-		for (var i = 0; i < controller.axes.length; i++) {
-			
-			//if ( controller.axes[i] + 1 ) alert( controller.axes[i] + 1 );
-			
-			/*var a = axes[i];
-			a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
-			a.setAttribute("value", controller.axes[i] + 1);*/
-			
-			var val = controller.axes[i];
-			if ( val < 0.2 && val > -0.2 ) val = 0;
-			
-			if ( val != 0 )
-			{
-				var c = document.getElementById("testZone");
-				c.innerHTML += "<br>" + i + ":" + val;
-			}
-		}
-		
-		
-	}
-	rAF(updateStatus);
-}
-function scangamepads()
-{
-	var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-	for (var i = 0; i < gamepads.length; i++)
+	this.updateStatus = function()
 	{
-		if (gamepads[i])
+		var dgp = window.dgp;
+		dgp.scangamepads();
+		var c = document.getElementById("testZone");
+		c.innerHTML = "";
+
+		for (j in dgp.controllers)
 		{
-			if (!(gamepads[i].index in controllers))
+			var controller = dgp.controllers[j];
+			
+			for (var i = 0; i < controller.buttons.length; i++)
 			{
-				addgamepad(gamepads[i]);
+
+				var val = controller.buttons[i];
+				var pressed = val == 1.0;
+				if (typeof (val) == "object")
+				{
+					pressed = val.pressed;
+					val = val.value;
+				}
+
+				if ( val > 0.1 )
+				{
+					var c = document.getElementById("testZone");
+					c.innerHTML += "<br>" + i + ":" + val;
+				}
 			}
-			else
+
+			for (var i = 0; i < controller.axes.length; i++)
 			{
-				controllers[gamepads[i].index] = gamepads[i];
+
+				var val = controller.axes[i];
+				if ( val < 0.2 && val > -0.2 ) val = 0;
+
+				if ( val !== 0 )
+				{
+					var c = document.getElementById("testZone");
+					c.innerHTML += "<br>" + i + ":" + val;
+				}
 			}
 		}
-	}
+		var rAF =	window.mozRequestAnimationFrame ||
+				window.webkitRequestAnimationFrame ||
+				window.requestAnimationFrame;
+		rAF(dgp.updateStatus);
+	};
+	
+	this.scangamepads = function()
+	{
+		var dgp = window.dgp;
+		var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
+		for (var i = 0; i < gamepads.length; i++)
+		{
+			if (gamepads[i])
+			{
+				if (!(gamepads[i].index in dgp.controllers))
+				{
+					dgp.addgamepad(gamepads[i]);
+				}
+				else
+				{
+					dgp.controllers[gamepads[i].index] = gamepads[i];
+				}
+			}
+		}
+	};
+	
+	this.init();
 }
 
 

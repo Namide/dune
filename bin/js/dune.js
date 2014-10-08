@@ -15,7 +15,21 @@ var rAF = window.mozRequestAnimationFrame ||
 		window.webkitRequestAnimationFrame ||
 		window.requestAnimationFrame;
 
-function connecthandler(e) {
+if (haveEvents)
+{
+	window.addEventListener("gamepadconnected", connecthandler);
+	window.addEventListener("gamepaddisconnected", disconnecthandler);
+	//scangamepads();
+}
+else
+{
+	setInterval(scangamepads, 500);
+}
+
+//setInterval(updateStatus, 500);
+
+function connecthandler(e)
+{
 	addgamepad(e.gamepad);
 }
 function addgamepad(gamepad) {
@@ -51,28 +65,58 @@ function addgamepad(gamepad) {
 	document.body.appendChild(d);*/
 	rAF(updateStatus);
 }
-function disconnecthandler(e) {
+function disconnecthandler(e)
+{
 	removegamepad(e.gamepad);
 }
-function removegamepad(gamepad) {
+function removegamepad(gamepad)
+{
 	var d = document.getElementById("controller" + gamepad.index);
 	document.body.removeChild(d);
 	delete controllers[gamepad.index];
 }
-function updateStatus() {
+
+function updateStatus()
+{
 	scangamepads();
-	for (j in controllers) {
+	
+	var c = document.getElementById("testZone");
+	c.innerHTML = "";
+	
+	for (j in controllers)
+	{
 		var controller = controllers[j];
 		//var d = document.getElementById("controller" + j);
 		//var buttons = d.getElementsByClassName("button");
-		for (var i = 0; i < controller.buttons.length; i++) {
-			var b = buttons[i];
+		
+		
+		
+		for (var i = 0; i < controller.buttons.length; i++)
+		{
+			
+			var val = controller.buttons[i];
+			var pressed = val == 1.0;
+			if (typeof (val) == "object")
+			{
+				pressed = val.pressed;
+				val = val.value;
+			}
+		
+			if ( val > 0.1 )
+			{
+				var c = document.getElementById("testZone");
+				c.innerHTML += "<br>" + i + ":" + val;
+			}
+			
+
+			// alert(controller.buttons[i]);
+			/*var b = buttons[i];
 			var val = controller.buttons[i];
 			var pressed = val == 1.0;
 			if (typeof (val) == "object") {
 				pressed = val.pressed;
 				val = val.value;
-			}
+			}*/
 			/*var pct = Math.round(val * 100) + "%";
 			b.style.backgroundSize = pct + " " + pct;
 			if (pressed) {
@@ -81,33 +125,50 @@ function updateStatus() {
 				b.className = "button";
 			}*/
 		}
-		/*var axes = d.getElementsByClassName("axis");
+		
+		//var axes = d.getElementsByClassName("axis");
 		for (var i = 0; i < controller.axes.length; i++) {
-			var a = axes[i];
+			
+			//if ( controller.axes[i] + 1 ) alert( controller.axes[i] + 1 );
+			
+			/*var a = axes[i];
 			a.innerHTML = i + ": " + controller.axes[i].toFixed(4);
-			a.setAttribute("value", controller.axes[i] + 1);
-		}*/
+			a.setAttribute("value", controller.axes[i] + 1);*/
+			
+			var val = controller.axes[i];
+			if ( val < 0.2 && val > -0.2 ) val = 0;
+			
+			if ( val != 0 )
+			{
+				var c = document.getElementById("testZone");
+				c.innerHTML += "<br>" + i + ":" + val;
+			}
+		}
+		
+		
 	}
 	rAF(updateStatus);
 }
-function scangamepads() {
+function scangamepads()
+{
 	var gamepads = navigator.getGamepads ? navigator.getGamepads() : (navigator.webkitGetGamepads ? navigator.webkitGetGamepads() : []);
-	for (var i = 0; i < gamepads.length; i++) {
-		if (gamepads[i]) {
-			if (!(gamepads[i].index in controllers)) {
+	for (var i = 0; i < gamepads.length; i++)
+	{
+		if (gamepads[i])
+		{
+			if (!(gamepads[i].index in controllers))
+			{
 				addgamepad(gamepads[i]);
-			} else {
+			}
+			else
+			{
 				controllers[gamepads[i].index] = gamepads[i];
 			}
 		}
 	}
 }
-if (haveEvents) {
-	window.addEventListener("gamepadconnected", connecthandler);
-	window.addEventListener("gamepaddisconnected", disconnecthandler);
-} else {
-	setInterval(scangamepads, 500);
-}
+
+
 
 // -----------------------------------------
 /*

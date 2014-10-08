@@ -179,8 +179,8 @@ class LevelGen
 		
 		var solidType:Dynamic =
 		{
-			wall:BodyType.SOLID_TYPE_PLATFORM,
-			platform:BodyType.SOLID_TYPE_WALL
+			wall:BodyType.SOLID_TYPE_WALL,
+			platform:BodyType.SOLID_TYPE_PLATFORM
 		}
 		
 		

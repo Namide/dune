@@ -5,7 +5,9 @@ import dune.helper.core.ArrayUtils;
 import dune.helper.core.TimeUtils;
 import dune.component.Controller;
 import dune.input.core.IInput;
+import dune.input.GamepadJsHandler;
 import dune.input.KeyboardHandler;
+import dune.input.MultiInput;
 import dune.system.physic.component.Body;
 import dune.system.physic.component.BodyType;
 import dune.system.physic.component.ContactBodies;
@@ -68,7 +70,7 @@ class ControllerPlatformPlayer extends Controller
 		setRun( 14, 0.06 );
 		setJump( 1.5, 3, 3, 6, 0.06, 0.2 );
 		
-		_input = new KeyboardHandler();
+		_input = new MultiInput( new KeyboardHandler(), new GamepadJsHandler() );
 	}
 	
 	/**

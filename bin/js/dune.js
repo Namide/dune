@@ -68,15 +68,39 @@ function DuneGamepad()
 		delete dgp.controllers[gamepad.index];
 	};
 
+	this.getJSON = function(id)
+	{
+		var dgp = window.dgp;
+		dgp.scangamepads();
+		
+		var controller = dgp.controllers[id];
+		
+		var obj = dgp.toObj( controller );
+		return JSON.stringify( obj || "" );
+	}
+	
+	this.toObj = function( data )
+	{
+		var dgp = window.dgp;
+		var obj = {};
+		for (var i in data)
+		{
+			obj[i] = ( (typeof data[i] == "object") && (data[i] !== null) ) ? dgp.toObj( data[i] ) : data[i];
+		}
+		return obj;
+	}
+
 	this.updateStatus = function()
 	{
 		var dgp = window.dgp;
 		dgp.scangamepads();
 		var c = document.getElementById("testZone");
 		c.innerHTML = "";
-
+		
 		for (j in dgp.controllers)
 		{
+			c.innerHTML += dgp.getJSON(j);
+			
 			var controller = dgp.controllers[j];
 			
 			for (var i = 0; i < controller.buttons.length; i++)

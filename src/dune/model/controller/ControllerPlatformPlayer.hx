@@ -67,8 +67,8 @@ class ControllerPlatformPlayer extends Controller
 		
 		/*setRun( 14, 0.06 );
 		setJump( 1.5, 3, 6, 0.06, 0.2 );*/
-		setRun( 14, 0.06 );
-		setJump( 1.5, 3, 3, 6, 0.06, 0.2 );
+		setRun( 12, 0.06 );
+		setJump( 1.5, 3, 3, 6, 0.06, 0.3 );
 		
 		_input = new MultiInput( new KeyboardHandler(), new GamepadJsHandler() );
 	}
@@ -190,7 +190,7 @@ class ControllerPlatformPlayer extends Controller
 						}*/
 					}
 				}
-				else if ( entity.transform.vX > -_jumpVXMax )
+				else if ( entity.transform.vX > -_jumpVXMax && TimeUtils.getMS() > _landmark )
 				{
 					entity.transform.vX = xAxis * _jumpVXMax;
 					/*entity.transform.vX -= _jumpAccX;
@@ -231,7 +231,7 @@ class ControllerPlatformPlayer extends Controller
 							}*/
 						}
 					}
-					else if ( entity.transform.vX < _jumpVXMax )
+					else if ( entity.transform.vX < _jumpVXMax && TimeUtils.getMS() > _landmark )
 					{
 						entity.transform.vX = xAxis * _jumpVXMax;
 						/*entity.transform.vX += _jumpAccX;

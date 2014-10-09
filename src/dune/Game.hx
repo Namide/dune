@@ -3,6 +3,7 @@ package dune;
 import dune.component.ComponentType;
 import dune.component.Transform;
 import dune.entity.Entity;
+import dune.helper.core.UrlUtils;
 import dune.model.controller.ControllerPlatform;
 import dune.model.controller.ControllerPlatformPlayer;
 import dune.model.controller.ControllerGravity;
@@ -16,7 +17,6 @@ import dune.system.physic.shapes.ShapeRect;
 import dune.system.physic.shapes.ShapeType;
 import dune.system.Settings;
 import dune.system.SysManager;
-import flash.Lib;
 import h2d.comp.Input;
 import hxd.Stage;
 import hxd.System;
@@ -41,14 +41,9 @@ class Game
 		systemManager.sysGraphic.onInit = run;
 	}
 	
-	function generate()
-	{
-		
-	}
-	
 	public function run()
 	{
-		var rootURL:String = flash.Lib.current.loaderInfo.url.split("/").slice(0,-1).join("/")+"/";
+		var rootURL:String = UrlUtils.getCurrentSwfDir() + "/";
 		var levelGen:LevelGen = new LevelGen( systemManager );
 		
 		levelGen.listLevels( rootURL + "level/level-list.json", function(a:Array<LevelInfos>):Void

@@ -42,17 +42,6 @@ class Main
 			trace("no hitbox");
 		#end*/
 		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		#if flash
 			var s = new net.hires.debug.Stats();
 			s.x = 800 - 69;

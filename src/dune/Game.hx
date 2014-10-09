@@ -16,6 +16,7 @@ import dune.system.physic.shapes.ShapeRect;
 import dune.system.physic.shapes.ShapeType;
 import dune.system.Settings;
 import dune.system.SysManager;
+import flash.Lib;
 import h2d.comp.Input;
 import hxd.Stage;
 import hxd.System;
@@ -37,16 +38,26 @@ class Game
 		//hxd.Res.loader = new hxd.res.Loader(hxd.res.EmbedFileSystem.create());
 		
 		systemManager = new SysManager();
-		
 		systemManager.sysGraphic.onInit = run;
+	}
+	
+	function generate()
+	{
+		
 	}
 	
 	public function run()
 	{
-		var level:LevelGen = new LevelGen( systemManager );
-		level.loadJson( "level/level-1.json" );
+		var rootURL:String = flash.Lib.current.loaderInfo.url.split("/").slice(0,-1).join("/")+"/";
+		var levelGen:LevelGen = new LevelGen( systemManager );
 		
-		systemManager.start();
+		levelGen.listLevels( rootURL + "level/level-list.json", function(a:Array<LevelInfos>):Void
+		{
+			levelGen.generateLevel( rootURL + "level/" + a[0].path );
+			systemManager.start();
+		} );
+		
+		
 		
 		//var tile = hxd.Res.mainChar128x128.toTile();
 		

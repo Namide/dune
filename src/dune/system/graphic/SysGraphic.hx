@@ -16,14 +16,14 @@ class SysGraphic
 	
 	public var camera2d(default, null):Camera2d;
 	
-	public function new() 
+	public function new( onInitCallback:Void->Void ) 
 	{
 		engine = new h3d.Engine();
-		engine.onReady = init;
+		engine.onReady = function():Void { init(onInitCallback); };
 		engine.init();
 	}
 	
-	function init()
+	function init( onInitCallback:Void->Void )
 	{
 		s3d = new h3d.scene.Scene();
 		s2d = new h2d.Scene();
@@ -34,15 +34,17 @@ class SysGraphic
 		engine.onResized = function() { onResize(); };
 		engine.backgroundColor = 0xFFFFFF;
 		
-		trace(engine.driverName(true));
+		//trace(engine.driverName(true));
 		
-		onInit();
+		onInitCallback();
+		
+		//onInit();
 	}
 	
-	public dynamic function onInit()
+	/*public dynamic function onInit()
 	{
 		
-	}
+	}*/
 
 	public dynamic function onResize()
 	{

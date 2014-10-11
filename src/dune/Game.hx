@@ -36,9 +36,9 @@ class Game
 		//hxd.Res.initEmbed();
 		//hxd.Res.loader = new hxd.res.Loader(hxd.res.EmbedFileSystem.create());
 		
-		systemManager = new SysManager();
+		systemManager = new SysManager( run );
 		
-		systemManager.sysGraphic.onInit = run;
+		//systemManager.sysGraphic.onInit = run;
 	}
 	
 	public function run()

@@ -25,18 +25,19 @@ class SysManager
 	
 	var _time:UInt;
 	
-	public function new() 
+	public function new( onInitCallback:Void->Void ) 
 	{
 		_entities = [];
 		_entitiesVelocity = [];
 		_entitiesMoved = [];
 		
 		sysController = new SysController();
-		sysGraphic = new SysGraphic();
+		sysGraphic = new SysGraphic( onInitCallback );
 		sysPhysic = new SysPhysic();
+		//sysGraphic.onInit = onInitCallback;
 		//sysLink = new SysLink();
 		
-		 //Lib.getTimer();
+		//Lib.getTimer();
 	}
 	
 	public function start():Void

@@ -3,6 +3,7 @@ package dune;
 import dune.component.ComponentType;
 import dune.component.Transform;
 import dune.entity.Entity;
+import dune.helper.core.UrlUtils;
 import dune.model.controller.ControllerPlatform;
 import dune.model.controller.ControllerPlatformPlayer;
 import dune.model.controller.ControllerGravity;
@@ -35,18 +36,24 @@ class Game
 	{
 		//hxd.Res.initEmbed();
 		//hxd.Res.loader = new hxd.res.Loader(hxd.res.EmbedFileSystem.create());
-		
 		systemManager = new SysManager( run );
 		
 		//systemManager.sysGraphic.onInit = run;
+
 	}
 	
 	public function run()
 	{
-		var level:LevelGen = new LevelGen( systemManager );
-		level.loadJson( "level/level-1.json" );
+		var rootURL:String = UrlUtils.getCurrentSwfDir() + "/";
+		var levelGen:LevelGen = new LevelGen( systemManager );
 		
-		systemManager.start();
+		levelGen.listLevels( rootURL + "level/level-list.json", function(a:Array<LevelInfos>):Void
+		{
+			levelGen.generateLevel( rootURL + "level/" + a[0].path );
+			systemManager.start();
+		} );
+		
+		
 		
 		//var tile = hxd.Res.mainChar128x128.toTile();
 		

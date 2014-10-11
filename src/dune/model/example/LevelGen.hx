@@ -12,6 +12,7 @@ import dune.system.Settings;
 import dune.system.SysManager;
 import flash.display.Loader;
 import flash.events.Event;
+import flash.events.IOErrorEvent;
 import flash.Lib;
 import flash.net.URLLoader;
 import flash.net.URLRequest;
@@ -70,37 +71,64 @@ class LevelData
 	}
 }
 
+class LevelInfos
+{
+	public var name:String;
+	public var num:Float;
+	public var path:String;
+	
+	public function new() {  }
+}
+
 /**
  * ...
  * @author Namide
  */
 class LevelGen
 {
-
-	public var onLoaded:LevelData -> Void;
-	
-	var sm:SysManager;
+	var _sm:SysManager;
 	
 	public function new( sm:SysManager ) 
 	{
-		this.sm = sm;
+		_sm = sm;
 	}
 	
-	public function loadJson( uri:String ):Void
+	public function listLevels( uri:String, callback:Array<LevelInfos> -> Void ):Void
 	{
-		//trace( uri );
-		var req:URLRequest = new URLRequest( uri );
+		var load:URLLoader = new URLLoader(new URLRequest(uri));
+		load.addEventListener( IOErrorEvent.IO_ERROR, function( e:IOErrorEvent ):Void { throw e.text; } );
+		load.addEventListener( Event.COMPLETE, function( e:Event ):Void
+		{
+			var loader:URLLoader = e.target;
+			var dat:Dynamic = Json.parse( Std.string(loader.data) );
+			
+			var list:Array<LevelInfos> = [];
+			for ( levelObj in cast( dat, Array<Dynamic> ) )
+			{
+				var levelInfos:LevelInfos = new LevelInfos();
+				levelInfos.name = levelObj.name;
+				levelInfos.num = levelObj.num;
+				levelInfos.path = levelObj.path;
+				list.push( levelInfos );
+			}
+			
+			callback( list );
+		});
+	}
+	
+	public function generateLevel( uriJson:String ):Void
+	{
+		var req:URLRequest = new URLRequest(uriJson);
 		var load:URLLoader = new URLLoader(req);
-		load.addEventListener(Event.COMPLETE, jsonLoaded);
-	}
-	
-	private function jsonLoaded( e:Event ):Void
-	{
-		var loader:URLLoader = e.target;
-		var dat:Dynamic = Json.parse( Std.string(loader.data) );
-		
-		var level:LevelData = new LevelData( dat );
-		gridAnalyse(level);
+		load.addEventListener( IOErrorEvent.IO_ERROR, function( e:IOErrorEvent ):Void { throw e.text; } );
+		load.addEventListener( Event.COMPLETE, function( e:Event ):Void
+		{
+			var loader:URLLoader = e.target;
+			var dat:Dynamic = Json.parse( Std.string(loader.data) );
+			
+			var level:LevelData = new LevelData( dat );
+			gridAnalyse(level);
+		});
 	}
 	
 	function gridAnalyse( levelDatas:LevelData ):Void
@@ -155,9 +183,9 @@ class LevelGen
 		var TS:Float = Settings.TILE_SIZE;
 		
 		if ( tile.type == "platform" )
-			EntityFactory.addSolid( sm, xTile * TS, yTile * TS, wTile * TS, hTile * TS, BodyType.SOLID_TYPE_PLATFORM );
+			EntityFactory.addSolid( _sm, xTile * TS, yTile * TS, wTile * TS, hTile * TS, BodyType.SOLID_TYPE_PLATFORM );
 		else if ( tile.type == "wall" )
-			EntityFactory.addSolid( sm, xTile * TS, yTile * TS, wTile * TS, hTile * TS, BodyType.SOLID_TYPE_WALL );
+			EntityFactory.addSolid( _sm, xTile * TS, yTile * TS, wTile * TS, hTile * TS, BodyType.SOLID_TYPE_WALL );
 		else if ( tile.type == "spawn" )
 			addPlayer( xTile * TS, yTile * TS );
 		else if ( tile.type == "mobile" )
@@ -179,8 +207,8 @@ class LevelGen
 		
 		var solidType:Dynamic =
 		{
-			wall:BodyType.SOLID_TYPE_PLATFORM,
-			platform:BodyType.SOLID_TYPE_WALL
+			wall:BodyType.SOLID_TYPE_WALL,
+			platform:BodyType.SOLID_TYPE_PLATFORM
 		}
 		
 		
@@ -189,7 +217,7 @@ class LevelGen
 				//var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
 				//var bmp2 = new h2d.Bitmap(tile, spr2);
 				//e2.display = new CompDisplay2dSprite( spr2 );
-				e2.display = EntityFactory.getSolidDisplay( sm, w, h );
+				e2.display = EntityFactory.getSolidDisplay( _sm, w, h );
 			
 			// move
 			
@@ -214,7 +242,7 @@ class LevelGen
 				b2.typeOfSolid = solidType[datas.type];
 				e2.addBody( b2 );
 				
-		sm.addEntity( e2 );
+		_sm.addEntity( e2 );
 	}
 	
 	function addPlayer( i:Float, j:Float ):Void
@@ -228,8 +256,8 @@ class LevelGen
 			
 			// graphic
 			
-				e3.display = DisplayFactory.movieClipToDisplay2dAnim( Lib.attach( "PlayerMC" ), sm, 1.5 * Settings.TILE_SIZE / 128 );
-				//e3.display = EntityFact.getSolidDisplay( sm, TS, TS );
+				e3.display = DisplayFactory.movieClipToDisplay2dAnim( Lib.attach( "PlayerMC" ), _sm, 1.5 * Settings.TILE_SIZE / 128 );
+				//e3.display = EntityFact.getSolidDisplay( _sm, TS, TS );
 			
 			// collision
 			
@@ -250,7 +278,7 @@ class LevelGen
 				var i3:ControllerPlatformPlayer = new ControllerPlatformPlayer();
 				e3.addController( i3 );
 			
-		sm.addEntity( e3 );
+		_sm.addEntity( e3 );
 	}
 	
 	function posToStr( i:Int, j:Int ):String

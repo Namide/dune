@@ -7,6 +7,8 @@ package dune.helper.core ;
 class TimeUtils
 {
 
+	var _t:UInt;
+	
 	public function new() 
 	{
 		

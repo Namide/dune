@@ -36,10 +36,10 @@ class SysPhysic
 		#end
 	}
 	
-	public function refresh( dt:UInt/*, link:SysLink*/ ):Void 
+	public function refresh( /*time:DTime,*/ dt:UInt/*, link:SysLink*/ ):Void 
 	{
 		//space.refreshGrid();
-		var tTemp:UInt = DTime.getRealMS();
+		//var tTemp:UInt = time.tMs;// DTime.getRealMS();
 		var list:Iterable<Body> = space.hitTest();
 		//trace( TimeUtils.getMS() - tTemp );
 		

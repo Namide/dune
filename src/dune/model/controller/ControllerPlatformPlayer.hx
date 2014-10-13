@@ -2,7 +2,7 @@ package dune.model.controller ;
 import dune.component.IDisplay;
 import dune.entity.Entity;
 import dune.helper.core.ArrayUtils;
-import dune.helper.core.DTime;
+//import dune.helper.core.DTime;
 import dune.component.Controller;
 import dune.input.core.IInput;
 import dune.input.GamepadJsHandler;
@@ -60,6 +60,8 @@ class ControllerPlatformPlayer extends Controller
 	var _display:IDisplay;
 	var _input:IInput;
 	
+	var _t:UInt;
+	
 	public function new() 
 	{
 		super();
@@ -116,6 +118,7 @@ class ControllerPlatformPlayer extends Controller
 	
 	public override function execute( dt:UInt ):Void
 	{
+		_t += dt;
 		var bottomWall:Bool = 	_contacts.hasTypeOfSolid( BodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) || 
 								_contacts.hasTypeOfSolid( BodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM );
 		
@@ -190,7 +193,7 @@ class ControllerPlatformPlayer extends Controller
 						}*/
 					}
 				}
-				else if ( entity.transform.vX > -_jumpVXMax && DTime.getRealMS() > _landmark )
+				else if ( entity.transform.vX > -_jumpVXMax && /*DTime.getRealMS()*/_t > _landmark )
 				{
 					entity.transform.vX = xAxis * _jumpVXMax;
 					/*entity.transform.vX -= _jumpAccX;
@@ -231,7 +234,7 @@ class ControllerPlatformPlayer extends Controller
 							}*/
 						}
 					}
-					else if ( entity.transform.vX < _jumpVXMax && DTime.getRealMS() > _landmark )
+					else if ( entity.transform.vX < _jumpVXMax && /*DTime.getRealMS()*/_t > _landmark )
 					{
 						entity.transform.vX = xAxis * _jumpVXMax;
 						/*entity.transform.vX += _jumpAccX;
@@ -271,13 +274,13 @@ class ControllerPlatformPlayer extends Controller
 			{
 				entity.transform.vY = - _jumpStartVY;
 				entity.transform.vX = _jumpVXMax;
-				_landmark = DTime.getRealMS() + _jumpTimeLock;
+				_landmark = /*DTime.getRealMS()*/_t + _jumpTimeLock;
 			}
 			else if ( rightWall && !_actionPressed )
 			{
 				entity.transform.vY = - _jumpStartVY;
 				entity.transform.vX = - _jumpVXMax;
-				_landmark = DTime.getRealMS() + _jumpTimeLock;
+				_landmark = /*DTime.getRealMS()*/_t + _jumpTimeLock;
 			}
 			else if ( 	(!topWall && !bottomWall && !leftWall && !rightWall) ||
 						(!topWall && !bottomWall && _actionPressed ) )

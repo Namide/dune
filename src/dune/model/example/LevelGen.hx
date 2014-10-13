@@ -87,13 +87,26 @@ class LevelInfos
 class LevelGen
 {
 	var _sm:SysManager;
+	var _levelData:LevelData;
 	
-	public function new( sm:SysManager ) 
+	public function new( sm:SysManager, uriJson:String, onJsonLoaded:LevelGen->Void ) 
 	{
 		_sm = sm;
+		
+		var req:URLRequest = new URLRequest(uriJson);
+		var load:URLLoader = new URLLoader(req);
+		load.addEventListener( IOErrorEvent.IO_ERROR, function( e:IOErrorEvent ):Void { throw e.text; } );
+		load.addEventListener( Event.COMPLETE, function( e:Event ):Void
+		{
+			var loader:URLLoader = e.target;
+			var dat:Dynamic = Json.parse( Std.string(loader.data) );
+			
+			_levelData = new LevelData( dat );
+			onJsonLoaded( this );
+		});
 	}
 	
-	public function listLevels( uri:String, callback:Array<LevelInfos> -> Void ):Void
+	public static function listLevels( uri:String, callback:Array<LevelInfos> -> Void ):Void
 	{
 		var load:URLLoader = new URLLoader(new URLRequest(uri));
 		load.addEventListener( IOErrorEvent.IO_ERROR, function( e:IOErrorEvent ):Void { throw e.text; } );
@@ -116,19 +129,10 @@ class LevelGen
 		});
 	}
 	
-	public function generateLevel( uriJson:String ):Void
+	public inline function generateLevel():Void
 	{
-		var req:URLRequest = new URLRequest(uriJson);
-		var load:URLLoader = new URLLoader(req);
-		load.addEventListener( IOErrorEvent.IO_ERROR, function( e:IOErrorEvent ):Void { throw e.text; } );
-		load.addEventListener( Event.COMPLETE, function( e:Event ):Void
-		{
-			var loader:URLLoader = e.target;
-			var dat:Dynamic = Json.parse( Std.string(loader.data) );
-			
-			var level:LevelData = new LevelData( dat );
-			gridAnalyse(level);
-		});
+		if ( _levelData == null ) throw "Level JSON is'nt loaded";
+		gridAnalyse(_levelData);
 	}
 	
 	function gridAnalyse( levelDatas:LevelData ):Void

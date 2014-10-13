@@ -18,6 +18,7 @@ import dune.system.physic.shapes.ShapeType;
 import dune.system.Settings;
 import dune.system.SysManager;
 import h2d.comp.Input;
+import haxe.Timer;
 import hxd.Stage;
 import hxd.System;
 
@@ -45,19 +46,21 @@ class Game
 	public function run()
 	{
 		var rootURL:String = UrlUtils.getCurrentSwfDir() + "/";
-		var levelGen:LevelGen = new LevelGen( systemManager );
 		
-		levelGen.listLevels( rootURL + "level/level-list.json", function(a:Array<LevelInfos>):Void
+		LevelGen.listLevels( rootURL + "level/level-list.json", function(a:Array<LevelInfos>):Void
 		{
-			levelGen.generateLevel( rootURL + "level/" + a[0].path );
-			systemManager.start();
+			var levelGen:LevelGen = new LevelGen( systemManager,  rootURL + "level/" + a[0].path, function( levelGen:LevelGen ):Void
+			{
+				levelGen.generateLevel();
+				systemManager.draw();
+				haxe.Timer.delay( systemManager.start, 500 );
+				
+				//systemManager.start();
+				//systemManager.draw();
+			} );
 		} );
 		
-		
-		
 		//var tile = hxd.Res.mainChar128x128.toTile();
-		
-		
 		
 		//systemManager.refresh();
 		//hxd.System.setLoop( refresh );

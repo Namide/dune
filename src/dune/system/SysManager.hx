@@ -48,6 +48,19 @@ class SysManager
 		hxd.System.setLoop( refresh );
 	}
 	
+	public inline function draw()
+	{
+		//trace( _entities.length );
+		//sysGraphic.refresh( _entities );
+		if ( time == null )
+		{
+			start();
+			time.pause = true;
+		}
+		time.frameRest += 2;
+		refresh();
+	}
+	
 	public function addEntity( entity:Entity ):Void
 	{
 		_entities.push( entity );
@@ -76,16 +89,20 @@ class SysManager
 		_entitiesMoved.remove(entity);
 	}
 	
+	
+	
 	function refresh():Void 
 	{
 		time.update();
+		
 		//var realTime:UInt = time.tMs;
 		//var rest:UInt = realTime - _time;
 		
 		if ( time.frameRest < 1/*rest < Settings.FRAME_DELAY*/ )
 		{
-			//_time = realTime - rest;
 			return;
+			//_time = realTime - rest;
+			
 		}
 		
 		while ( time.frameRest >= 1 /*rest >= Settings.FRAME_DELAY*/ )
@@ -95,6 +112,7 @@ class SysManager
 			//if ( rest < Settings.FRAME_DELAY + Settings.FRAME_DELAY )
 			if ( time.frameRest < 2 )
 			{
+				//trace(_entitiesMoved.length);
 				sysGraphic.refresh( _entitiesMoved );
 				_entitiesMoved = [];
 			}

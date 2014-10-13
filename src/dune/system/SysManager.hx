@@ -1,7 +1,7 @@
 package dune.system;
 import dune.entity.Entity;
 import dune.helper.core.ArrayUtils;
-import dune.helper.core.TimeUtils;
+import dune.helper.core.DTime;
 import dune.system.graphic.SysGraphic;
 import dune.system.controller.SysController;
 import dune.system.physic.SysPhysic;
@@ -23,7 +23,7 @@ class SysManager
 	public var sysGraphic(default, default):SysGraphic;
 	//public var sysLink(default, default):SysLink;
 	
-	var _time:UInt;
+	public var time:DTime;
 	
 	public function new( onInitCallback:Void->Void ) 
 	{
@@ -38,11 +38,13 @@ class SysManager
 		//sysLink = new SysLink();
 		
 		//Lib.getTimer();
+		
 	}
 	
 	public function start():Void
 	{
-		_time = TimeUtils.getMS();
+		time = new DTime();
+		//_time = DTime.getRealMS();
 		hxd.System.setLoop( refresh );
 	}
 	
@@ -76,20 +78,22 @@ class SysManager
 	
 	function refresh():Void 
 	{
-		var realTime:UInt = TimeUtils.getMS();
-		var rest:UInt = realTime - _time;
+		time.update();
+		//var realTime:UInt = time.tMs;
+		//var rest:UInt = realTime - _time;
 		
-		if ( rest < Settings.FRAME_DELAY )
+		if ( time.frameRest < 1/*rest < Settings.FRAME_DELAY*/ )
 		{
-			_time = realTime - rest;
+			//_time = realTime - rest;
 			return;
 		}
 		
-		while ( rest >= Settings.FRAME_DELAY )
+		while ( time.frameRest >= 1 /*rest >= Settings.FRAME_DELAY*/ )
 		{
 			sysPhysic.refresh( Settings.FRAME_DELAY );
 			
-			if ( rest < Settings.FRAME_DELAY + Settings.FRAME_DELAY )
+			//if ( rest < Settings.FRAME_DELAY + Settings.FRAME_DELAY )
+			if ( time.frameRest < 2 )
 			{
 				sysGraphic.refresh( _entitiesMoved );
 				_entitiesMoved = [];
@@ -106,9 +110,10 @@ class SysManager
 			
 			sysPhysic.space.testSleeping();
 			
-			rest -= Settings.FRAME_DELAY;
+			time.frameRest -= 1;
+			//rest -= Settings.FRAME_DELAY;
 		}
 		
-		_time = realTime - rest;
+		//_time = realTime - rest;
 	}
 }

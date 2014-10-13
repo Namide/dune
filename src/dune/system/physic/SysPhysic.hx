@@ -1,6 +1,6 @@
 package dune.system.physic;
 
-import dune.helper.core.TimeUtils;
+import dune.helper.core.DTime;
 import dune.system.core.ISpace;
 import dune.system.core.SpaceGrid;
 import dune.system.physic.component.Body;
@@ -39,7 +39,7 @@ class SysPhysic
 	public function refresh( dt:UInt/*, link:SysLink*/ ):Void 
 	{
 		//space.refreshGrid();
-		var tTemp:UInt = TimeUtils.getMS();
+		var tTemp:UInt = DTime.getRealMS();
 		var list:Iterable<Body> = space.hitTest();
 		//trace( TimeUtils.getMS() - tTemp );
 		

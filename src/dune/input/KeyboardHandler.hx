@@ -1,6 +1,6 @@
 package dune.input ;
 
-import dune.helper.core.TimeUtils;
+import dune.helper.core.DTime;
 import dune.input.core.IInput;
 import hxd.Event;
 
@@ -80,7 +80,7 @@ class KeyboardHandler implements IInput
 		var i = Lambda.indexOf( _listKeyPressed, key );
 		if ( i > -1 )
 		{
-			var t:Float = ( TimeUtils.getMS() - _listKeyPressedTime[i] ) / _accTime;
+			var t:Float = ( DTime.getRealMS() - _listKeyPressedTime[i] ) / _accTime;
 			return ( t > 1 ) ? 1 : ( t < 0 ) ? 0 : t; 
 		}
 		return 0;
@@ -120,7 +120,7 @@ class KeyboardHandler implements IInput
 	function keyDown( e:KeyboardEvent ):Void
 	{
 		_listKeyPressed.push( e.keyCode );
-		_listKeyPressedTime.push( TimeUtils.getMS() );
+		_listKeyPressedTime.push( DTime.getRealMS() );
 	}
 	
 	function keyUp( e:KeyboardEvent ):Void

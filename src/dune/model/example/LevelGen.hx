@@ -24,12 +24,14 @@ class TileData
 	public var id:UInt;
 	public var type:String;
 	public var datas:Dynamic;
+	public var dir:String;
 	
 	public function new( dat:Dynamic ) 
 	{
 		id = dat.id;
 		type = dat.type;
 		datas = dat.datas;
+		dir = (dat.dir != null) ? dat.dir : "h";
 	}
 }
 
@@ -162,8 +164,9 @@ class LevelGen
 		
 		var iMax:Int = iMin;
 		var jMax:Int = jMin;
+		var dir:String = levelDatas.getTile(i, j).dir;
 		
-		if ( levelDatas.getTile( i+1, j ) == tile && !Lambda.has( c, posToStr(i,j) ) )
+		if ( dir == "h" && levelDatas.getTile( i+1, j ) == tile && !Lambda.has( c, posToStr(i,j) ) )
 		{
 			while ( levelDatas.getTile( i, j ) == tile && !Lambda.has( c, posToStr(i,j) ) )
 			{
@@ -172,7 +175,8 @@ class LevelGen
 				i++;
 			}
 		}
-		else if ( levelDatas.getTile( i, j+1 ) == tile && !Lambda.has( c, posToStr(i,j) ) )
+		
+		if ( dir == "v" && levelDatas.getTile( i, j+1 ) == tile && !Lambda.has( c, posToStr(i,j) ) )
 		{
 			while ( levelDatas.getTile( i, j ) == tile && !Lambda.has( c, posToStr(i,j) ) )
 			{

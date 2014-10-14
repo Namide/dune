@@ -74,7 +74,7 @@ class LevelData
 class LevelInfos
 {
 	public var name:String;
-	public var num:Float;
+	public var author:Float;
 	public var path:String;
 	
 	public function new() {  }
@@ -89,10 +89,13 @@ class LevelGen
 	var _sm:SysManager;
 	var _levelData:LevelData;
 	
-	public function new( sm:SysManager, uriJson:String, onJsonLoaded:LevelGen->Void ) 
+	public function new( sm:SysManager ) 
 	{
 		_sm = sm;
-		
+	}
+	
+	public function load( uriJson:String, onJsonLoaded:LevelGen->Void ):Void
+	{
 		var req:URLRequest = new URLRequest(uriJson);
 		var load:URLLoader = new URLLoader(req);
 		load.addEventListener( IOErrorEvent.IO_ERROR, function( e:IOErrorEvent ):Void { throw e.text; } );
@@ -106,7 +109,7 @@ class LevelGen
 		});
 	}
 	
-	public static function listLevels( uri:String, callback:Array<LevelInfos> -> Void ):Void
+	public static function listLevels( uri:String, callback:Array<String> -> Void ):Void
 	{
 		var load:URLLoader = new URLLoader(new URLRequest(uri));
 		load.addEventListener( IOErrorEvent.IO_ERROR, function( e:IOErrorEvent ):Void { throw e.text; } );
@@ -115,14 +118,14 @@ class LevelGen
 			var loader:URLLoader = e.target;
 			var dat:Dynamic = Json.parse( Std.string(loader.data) );
 			
-			var list:Array<LevelInfos> = [];
+			var list:Array<String> = [];
 			for ( levelObj in cast( dat, Array<Dynamic> ) )
 			{
 				var levelInfos:LevelInfos = new LevelInfos();
-				levelInfos.name = levelObj.name;
+				/*levelInfos.name = levelObj.name;
 				levelInfos.num = levelObj.num;
-				levelInfos.path = levelObj.path;
-				list.push( levelInfos );
+				levelInfos.path = levelObj.path;*/
+				list.push( levelObj.path/*levelInfos*/ );
 			}
 			
 			callback( list );

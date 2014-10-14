@@ -47,9 +47,10 @@ class Game
 	{
 		var rootURL:String = UrlUtils.getCurrentSwfDir() + "/";
 		
-		LevelGen.listLevels( rootURL + "level/level-list.json", function(a:Array<LevelInfos>):Void
+		LevelGen.listLevels( rootURL + "level/level-list.json", function(a:Array<String>):Void
 		{
-			var levelGen:LevelGen = new LevelGen( systemManager,  rootURL + "level/" + a[0].path, function( levelGen:LevelGen ):Void
+			var levelGen:LevelGen = new LevelGen( systemManager );
+			levelGen.load( rootURL + "level/" + a[0], function( levelGen:LevelGen ):Void
 			{
 				levelGen.generateLevel();
 				systemManager.draw();

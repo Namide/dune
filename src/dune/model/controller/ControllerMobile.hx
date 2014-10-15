@@ -70,25 +70,26 @@ class ControllerMobile extends Controller
 	{
 		time += dt;
 		var x:Float = 0, y:Float = 0;
-		var allTimeMove:Float = moveTimeX + movePauseX;
+		var allTimeMoveX:Float = moveTimeX + movePauseX;
+		var allTimeMoveY:Float = moveTimeY + movePauseY;
 		
 		if ( moveDistX != 0 )
 		{
 			switch ( moveTypeX )
 			{
 				case ControllerMobile.TYPE_LINEAR :
-					x = ( time % allTimeMove ) / moveTimeX;
+					x = ( time % allTimeMoveX ) / moveTimeX;
 					x = ( x > 1 ) ? x = 1 : x;
 					x = calculateLoop( x, moveLoopX );
 					
 				case ControllerMobile.TYPE_SIN :
-					if ( time % allTimeMove >= moveTimeX ) { x = 1; }
-					else { x = Math.sin( ( time % allTimeMove ) * ControllerMobile.PI2 / moveTimeX ) * 0.5 + 0.5; }
+					if ( time % allTimeMoveX >= moveTimeX ) { x = 1; }
+					else { x = Math.sin( ( time % allTimeMoveX ) * ControllerMobile.PI2 / moveTimeX ) * 0.5 + 0.5; }
 					x = calculateLoop( x, !moveLoopX );
 					
 				case ControllerMobile.TYPE_COS :
-					if ( time % allTimeMove > moveTimeX ) { x = 1; }
-					else { x = Math.cos( time * ControllerMobile.PI2 / allTimeMove ) * 0.5 + 0.5; }
+					if ( time % allTimeMoveX > moveTimeX ) { x = 1; }
+					else { x = Math.cos( time * ControllerMobile.PI2 / allTimeMoveX ) * 0.5 + 0.5; }
 					x = calculateLoop( x, !moveLoopX );
 			}
 		}
@@ -98,18 +99,18 @@ class ControllerMobile extends Controller
 			switch ( moveTypeY )
 			{
 				case ControllerMobile.TYPE_LINEAR :
-					y = ( time % allTimeMove ) / moveTimeY;
+					y = ( time % allTimeMoveY ) / moveTimeY;
 					y = ( y > 1 ) ? y = 1 : y;
 					y = calculateLoop( y, moveLoopY );
 					
 				case ControllerMobile.TYPE_SIN :
-					if ( time % allTimeMove >= moveTimeY ) { y = 1; }
-					else { y = Math.sin( ( time % allTimeMove ) * ControllerMobile.PI2 / moveTimeY ) * 0.5 + 0.5; }
+					if ( time % allTimeMoveY >= moveTimeY ) { y = 1; }
+					else { y = Math.sin( ( time % allTimeMoveY ) * ControllerMobile.PI2 / moveTimeY ) * 0.5 + 0.5; }
 					y = calculateLoop( y, !moveLoopY );
 					
 				case ControllerMobile.TYPE_COS :
-					if ( time % allTimeMove > moveTimeY ) { y = 1; }
-					else { y = Math.cos( time * ControllerMobile.PI2 / allTimeMove ) * 0.5 + 0.5; }
+					if ( time % allTimeMoveY > moveTimeY ) { y = 1; }
+					else { y = Math.cos( time * ControllerMobile.PI2 / allTimeMoveY ) * 0.5 + 0.5; }
 					y = calculateLoop( y, !moveLoopY );
 			}
 		}

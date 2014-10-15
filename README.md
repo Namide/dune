@@ -2,7 +2,7 @@ dune
 ===
 
 Microframework for Haxe 2D games
-
+[demo](http://games.namide.com/dune/)
 
 Dependencies
 ---

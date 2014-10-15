@@ -64,6 +64,8 @@ class ControllerPlatformPlayer extends Controller
 	
 	var _t:UInt;
 	
+	
+	
 	public function new() 
 	{
 		super();
@@ -75,6 +77,7 @@ class ControllerPlatformPlayer extends Controller
 		setJump( 1.5, 3, 3, 6, 0.06, 0.3 );
 		
 		_input = new MultiInput( new KeyboardHandler(), new GamepadJsHandler() );
+		//_input = new KeyboardHandler(); 
 	}
 	
 	/**

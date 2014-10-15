@@ -40,7 +40,6 @@ class KeyboardHandler implements IInput
 	
 	var _listKeyPressed:Array<UInt>;
 	var _listKeyPressedTime:Array<UInt>;
-	
 	var _accTime:UInt = 80;
 	
 	//var _listKeyCodeHandler:Array<UInt>;

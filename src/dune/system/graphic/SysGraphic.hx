@@ -2,6 +2,7 @@ package dune.system.graphic;
 
 import dune.component.ComponentType;
 import dune.entity.Entity;
+import dune.helper.core.BitUtils;
 import h2d.Sprite;
 
 /**
@@ -56,11 +57,11 @@ class SysGraphic
 		if ( entity.display == null ) return;
 		
 		entity.display.setPos( entity.transform.x, entity.transform.y );
-		if ( entity.display.type | ComponentType.DISPLAY_2D == ComponentType.DISPLAY_2D   )
+		if ( BitUtils.has( entity.display.type, ComponentType.DISPLAY_2D ) )
 		{
 			camera2d.display.addChild( entity.display.getObject() );
 		}
-		else if ( entity.display.type | ComponentType.DISPLAY_3D == ComponentType.DISPLAY_3D )
+		else if ( BitUtils.has( entity.display.type, ComponentType.DISPLAY_3D ) )
 		{
 			s3d.addChild( entity.display.getObject() );
 		}

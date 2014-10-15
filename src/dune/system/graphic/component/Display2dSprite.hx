@@ -24,10 +24,10 @@ class Display2dSprite implements IDisplay
 	public inline function isToRight():Bool { return _toRight; }
 	public inline function setToRight(val:Bool):Void
 	{
-		if ( val != _toRight )
+		/*if ( val != _toRight )
 		{
 			_graphic.scaleX = (val) ? 1 : -1;
-		}
+		}*/
 		_toRight = val;
 	}
 	

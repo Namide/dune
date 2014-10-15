@@ -51,7 +51,7 @@ class Display2dAnim implements IDisplay//, ComponentAnim
 	
 	public function new( graphic:Anim, width:Float ) 
 	{
-		type = ComponentType.DISPLAY_2D;// | ComponentType.ANIMATION;
+		type = ComponentType.DISPLAY_2D| ComponentType.DISPLAY_ANIMATED;
 		_toRight = true;
 		_graphic = graphic;
 		_width = width;

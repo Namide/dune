@@ -8,7 +8,7 @@ import h2d.Sprite;
  */
 class Camera2d
 {
-	public var display:Sprite;
+	public var display(default, null):Sprite;
 	
 	public var x(get, set):Float;
 	inline function get_x():Float
@@ -18,6 +18,16 @@ class Camera2d
 	inline function set_x(val:Float):Float
 	{
 		return display.x = val;
+	}
+	
+	public var y(get, set):Float;
+	inline function get_y():Float
+	{
+		return display.y;
+	}
+	inline function set_y(val:Float):Float
+	{
+		return display.y = val;
 	}
 	
 	public inline function zoom( val:Float ):Void
@@ -50,9 +60,9 @@ class Camera2d
 		display = new Sprite(parent);
 	}
 	
-	public function setPos( x:Float, y:Float ):Void
+	public inline function setPos( x:Float, y:Float ):Void
 	{
-		display.setPos( -x, -y );
+		display.setPos( x, y );
 	}
 	
 }

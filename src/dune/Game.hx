@@ -8,7 +8,6 @@ import dune.model.controller.ControllerPlatform;
 import dune.model.controller.ControllerPlatformPlayer;
 import dune.model.controller.ControllerGravity;
 import dune.model.controller.ControllerMobile;
-import dune.model.example.LevelGen;
 import dune.model.factory.EntityFactory;
 import dune.system.graphic.component.Display2dSprite;
 import dune.system.physic.component.Body;
@@ -45,7 +44,7 @@ class Game
 	
 	public function run()
 	{
-		var rootURL:String = UrlUtils.getCurrentSwfDir() + "/";
+		/*var rootURL:String = UrlUtils.getCurrentSwfDir() + "/";
 		
 		LevelGen.listLevels( rootURL + "level/level-list.json", function(a:Array<String>):Void
 		{
@@ -59,7 +58,7 @@ class Game
 				//systemManager.start();
 				//systemManager.draw();
 			} );
-		} );
+		} );*/
 		
 		//var tile = hxd.Res.mainChar128x128.toTile();
 		
@@ -70,20 +69,22 @@ class Game
 		// MOBILE LINEAR
 		
 		
-		/*var TS:Float = Settings.TILE_SIZE;
+		var TS:Float = Settings.TILE_SIZE;
+		var size:Array<Float>;
 		
 		
 		// MOBILE COS
 		var e2 = new Entity();
-		e2.transform.x = 12*TS;
-		e2.transform.y = 9*TS;
+		e2.transform.x = 12 * TS;
+		e2.transform.y = 9 * TS;
+		size = [3 * TS, TS];
 		
 			// graphic
 			
 				//var spr2 = new h2d.Sprite( systemManager.sysGraphic.s2d );
 				//var bmp2 = new h2d.Bitmap(tile, spr2);
 				//e2.display = new CompDisplay2dSprite( spr2 );
-				e2.display = EntityFact.getSolidDisplay( systemManager, 3*TS, TS );
+				e2.display = EntityFactory.getSolidDisplay( systemManager, size[0], size[1] );
 			
 			// move
 			
@@ -94,13 +95,13 @@ class Game
 				
 			// collision
 			
-				var b2:CompBody = new CompBody();
-				var psr2:PhysShapeRect = new PhysShapeRect();
-				psr2.w = 3*TS;
-				psr2.h = TS;
+				var b2:Body = new Body();
+				var psr2:ShapeRect = new ShapeRect();
+				psr2.w = size[0];
+				psr2.h = size[1];
 				b2.shape = psr2;
-				b2.typeOfCollision = CompBodyType.COLLISION_TYPE_PASSIVE;
-				b2.typeOfSolid = CompBodyType.SOLID_TYPE_WALL;
+				b2.typeOfCollision = BodyType.COLLISION_TYPE_PASSIVE;
+				b2.typeOfSolid = BodyType.SOLID_TYPE_WALL;
 				e2.addBody( b2 );
 				
 		systemManager.addEntity( e2 );
@@ -110,13 +111,14 @@ class Game
 		var e3 = new Entity();
 		e3.transform.x = 2*TS;
 		e3.transform.y = 2*TS;
-			
+		size = [TS, TS];
+		
 			// graphic
 			
 				//var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
 				//var bmp3 = new h2d.Bitmap(tile, spr3);
 				//e3.display = new CompDisplay2dSprite( spr3 );
-				e3.display = EntityFact.getSolidDisplay( systemManager, TS, TS );
+				e3.display = EntityFactory.getSolidDisplay( systemManager, size[0], size[1] );
 				
 			// gravity
 			
@@ -125,13 +127,13 @@ class Game
 				
 			// collision
 			
-				var b3:CompBody = new CompBody();
-				b3.typeOfCollision = CompBodyType.COLLISION_TYPE_ACTIVE;
-				b3.typeOfSolid = CompBodyType.SOLID_TYPE_MOVER;
+				var b3:Body = new Body();
+				b3.typeOfCollision = BodyType.COLLISION_TYPE_ACTIVE;
+				b3.typeOfSolid = BodyType.SOLID_TYPE_MOVER;
 				b3.insomniac = true;
-				var psr3:PhysShapeRect = new PhysShapeRect();
-				psr3.w = TS;
-				psr3.h = TS;
+				var psr3:ShapeRect = new ShapeRect();
+				psr3.w = size[0];
+				psr3.h = size[1];
 				b3.shape = psr3;
 				e3.addBody( b3 );
 			
@@ -144,31 +146,32 @@ class Game
 		systemManager.addEntity( e3 );
 		
 		// GROUND
-		EntityFact.addSolid( systemManager, 0, 12*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 4*TS, 12*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 8*TS, 12*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 12*TS, 12*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 16*TS, 12*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 20*TS, 12*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 24*TS, 12*TS, 4*TS, 1*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 0, 12*TS, 4*TS, 1*TS, BodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 4*TS, 12*TS, 4*TS, 1*TS, BodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 8*TS, 12*TS, 4*TS, 1*TS, BodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 12*TS, 12*TS, 4*TS, 1*TS, BodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 16*TS, 12*TS, 4*TS, 1*TS, BodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 20*TS, 12*TS, 4*TS, 1*TS, BodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 24*TS, 12*TS, 4*TS, 1*TS, BodyType.SOLID_TYPE_PLATFORM );
 		
 		// PLATFORMS
-		EntityFact.addSolid( systemManager, 8*TS, 11*TS, TS, TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 11*TS, 10*TS, TS, 2*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 13*TS, 9*TS, TS, 3*TS, CompBodyType.SOLID_TYPE_PLATFORM );
-		EntityFact.addSolid( systemManager, 15*TS, 8*TS, TS, 4*TS, CompBodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 8*TS, 11*TS, TS, TS, BodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 11*TS, 10*TS, TS, 2*TS, BodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 13*TS, 9*TS, TS, 3*TS, BodyType.SOLID_TYPE_PLATFORM );
+		EntityFactory.addSolid( systemManager, 15*TS, 8*TS, TS, 4*TS, BodyType.SOLID_TYPE_PLATFORM );
 		
 		// WALL LEFT
-		EntityFact.addSolid( systemManager, 0, 7 * TS, TS, 5 * TS, CompBodyType.SOLID_TYPE_WALL );
-		EntityFact.addSolid( systemManager, 27*TS, 7 * TS, TS, 5 * TS, CompBodyType.SOLID_TYPE_WALL );
+		EntityFactory.addSolid( systemManager, 0, 7 * TS, TS, 5 * TS, BodyType.SOLID_TYPE_WALL );
+		EntityFactory.addSolid( systemManager, 27*TS, 7 * TS, TS, 5 * TS, BodyType.SOLID_TYPE_WALL );
 		
 		//addBounceBall();
 		
 		//systemManager.sysPhysic.space.setSize( -1024, -1024, 1024, 1024, 64, 64 );
-		systemManager.refresh(0);
-		hxd.System.setLoop( refresh );
+		systemManager.start();
+		//hxd.System.setLoop( refresh );
 		
-		addBounceBall();*/
+		
+		addBounceBall();
 	}
 	
 	private function addBounceBall():Void
@@ -194,7 +197,7 @@ class Game
 			psr4.h = size;
 			b4.shape = psr4;
 			b4.typeOfCollision = BodyType.COLLISION_TYPE_ACTIVE;
-			b4.typeOfSolid = BodyType.SOLID_TYPE_MOVER; //| CompBodyType.SOLID_TYPE_WALL;
+			b4.typeOfSolid = BodyType.SOLID_TYPE_MOVER; //| BodyType.SOLID_TYPE_WALL;
 			ball.addBody( b4 );
 		
 		// move

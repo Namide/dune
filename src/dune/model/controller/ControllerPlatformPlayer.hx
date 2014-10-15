@@ -1,7 +1,9 @@
 package dune.model.controller ;
+import dune.component.ComponentType;
 import dune.component.IDisplay;
 import dune.entity.Entity;
 import dune.helper.core.ArrayUtils;
+import dune.helper.core.BitUtils;
 //import dune.helper.core.DTime;
 import dune.component.Controller;
 import dune.input.core.IInput;
@@ -304,19 +306,23 @@ class ControllerPlatformPlayer extends Controller
 		if ( entity.transform.vX < platformVX )			_display.setToRight( false );
 		else if ( entity.transform.vX > platformVX ) 	_display.setToRight( true );
 		
-		if ( bottomWall )
+		if ( BitUtils.has( _display.type, ComponentType.DISPLAY_ANIMATED ) )
 		{
-			if ( entity.transform.vX == platformVX ) 	_display.play( "stand" );
-			else										_display.play( "run" );
+			if ( bottomWall )
+			{
+				if ( entity.transform.vX == platformVX ) 	_display.play( "stand" );
+				else										_display.play( "run" );
+			}
+			else if ( leftWall || rightWall )
+			{
+				_display.play( "wall" );
+			}
+			else
+			{
+				_display.play( "jump" );
+			}
 		}
-		else if ( leftWall || rightWall )
-		{
-			_display.play( "wall" );
-		}
-		else
-		{
-			_display.play( "jump" );
-		}
+		
 	}
 	
 	

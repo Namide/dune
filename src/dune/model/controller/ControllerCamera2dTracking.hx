@@ -59,7 +59,7 @@ class ControllerCamera2dTracking extends Controller
 		
 		if ( _sysGraphic.engine.width > Std.int(Settings.LIMIT_RIGHT - Settings.LIMIT_LEFT) )
 		{
-			newX = ( (_sysGraphic.engine.width - (Settings.LIMIT_RIGHT - Settings.LIMIT_LEFT) ) >> 1);
+			newX = ( (_sysGraphic.engine.width - Std.int(Settings.LIMIT_RIGHT - Settings.LIMIT_LEFT) ) >> 1);
 		}
 		else
 		{
@@ -70,7 +70,7 @@ class ControllerCamera2dTracking extends Controller
 		
 		if ( _sysGraphic.engine.height > Std.int(Settings.LIMIT_DOWN - Settings.LIMIT_TOP) )
 		{
-			newY = ( (_sysGraphic.engine.height - (Settings.LIMIT_DOWN - Settings.LIMIT_TOP) ) >> 1);
+			newY = ( (_sysGraphic.engine.height - Std.int(Settings.LIMIT_DOWN - Settings.LIMIT_TOP) ) >> 1);
 		}
 		else
 		{

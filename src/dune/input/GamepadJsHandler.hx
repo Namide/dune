@@ -1,7 +1,7 @@
 package dune.input;
 
 import dune.helper.core.DTime;
-import dune.input.core.IInput;
+import dune.component.IInput;
 import flash.events.Event;
 import flash.Lib;
 import haxe.Json;
@@ -161,13 +161,13 @@ class GamepadJsHandler implements IInput
 		{
 			if( data.axes != null && data.axes[1] != null )
 			{
-				var val:Float = data.axes[1];
+				var val:Float = -data.axes[1];
 				if ( val < _axisMin && val > -_axisMin ) val = 0;
 				if ( val != 0 ) return val;
 			}
 			
-			var o:Float = getFloat( _TOP );
-			if ( o <= 0 ) o = -getFloat( _BOTTOM );
+			var o:Float = -getFloat( _TOP );
+			if ( o <= 0 ) o = getFloat( _BOTTOM );
 			return o;
 		}
 		return 0;

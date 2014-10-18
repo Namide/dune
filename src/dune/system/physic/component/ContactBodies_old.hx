@@ -615,7 +615,7 @@ class ContactBodies
 		if ( BitUtils.has( parent.typeOfSolid, BodyType.SOLID_TYPE_EATER ) &&
 			 BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_ITEM ) )
 		{
-			for ( fct in parent.onCollide )
+			for ( fct in parent.onCollideItem )
 			{
 				fct( body );
 			}

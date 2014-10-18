@@ -1,7 +1,7 @@
 package dune.input ;
 
 import dune.helper.core.DTime;
-import dune.input.core.IInput;
+import dune.component.IInput;
 import hxd.Event;
 
 import flash.display.Stage;
@@ -69,8 +69,8 @@ class KeyboardHandler implements IInput
 	}
 	public inline function getAxisY():Float
 	{
-		var o:Float = getFloat( keyTop );
-		if ( o <= 0 ) o = -getFloat( keyBottom );
+		var o:Float = -getFloat( keyTop );
+		if ( o >= 0 ) o = getFloat( keyBottom );
 		return o;
 	}
 	

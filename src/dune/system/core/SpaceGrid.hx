@@ -213,7 +213,7 @@ class SpaceGrid implements ISpace
 			{
 				_active.remove( node );
 				_activeSleeping.push( node );
-				trace("sleep! active:" + _active.length + "/" + (_active.length+_activeSleeping.length) );
+				//trace("sleep! active:" + _active.length + "/" + (_active.length+_activeSleeping.length) );
 			}
 			else
 			{
@@ -233,7 +233,7 @@ class SpaceGrid implements ISpace
 				
 				node.lastX = t.x;
 				node.lastY = t.y;
-				trace("walk!");
+				//trace("walk!");
 			}
 		}
 	}
@@ -256,7 +256,7 @@ class SpaceGrid implements ISpace
 			{
 				_activeSleeping.remove( node );
 				_active.push( node );
-				trace("walk!");
+				//trace("walk!");
 			}
 		}
 		

@@ -20,6 +20,11 @@ class Settings
 	public static inline var X_MAX:UInt = 50 * TILE_SIZE;
 	public static inline var Y_MAX:UInt = 50 * TILE_SIZE;
 	
+	public static var LIMIT_LEFT:UInt = 0;
+	public static var LIMIT_RIGHT:UInt = 12 * TILE_SIZE;
+	public static var LIMIT_TOP:UInt = 0;
+	public static var LIMIT_DOWN:UInt = 50 * TILE_SIZE;
+	
 	public function new() 
 	{
 		throw "Static class!";

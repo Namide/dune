@@ -34,7 +34,6 @@ class Body implements Component
 	public var contacts(default, null):ContactBodies;
 	
 	public var typeOfCollision(default, default):UInt;
-	
 	public var typeOfSolid(default, default):UInt;
 	
 	public var insomniac(default, default):Bool = false;
@@ -52,14 +51,16 @@ class Body implements Component
 	/**
 	 * Like a signal, add to this array the functions called at a collision
 	 */
-	public var onCollide(default, default):Array < Body -> Void >;
+	public var onCollideItem(default, default):Array < Body -> Void >;
+	public var onCollideWall(default, default):Array < Void -> Void >;
 	
 	
 	
 	public function new() 
 	{
 		contacts = new ContactBodies( this );
-		onCollide = [];
+		onCollideItem = [];
+		onCollideWall = [];
 		clear();
 	}
 	
@@ -69,7 +70,8 @@ class Body implements Component
 		typeOfSolid = 0;
 		
 		contacts.clear();
-		ArrayUtils.clear( onCollide );
+		ArrayUtils.clear( onCollideItem );
+		ArrayUtils.clear( onCollideWall );
 		entity = null;
 		shape = null;
 	}
@@ -87,7 +89,7 @@ class Body implements Component
 				scene.graphics.endFill();
 				
 				scene.graphics.moveTo( shape.aabbXMax + 5, shape.aabbYMin - 5 );
-				scene.graphics.lineTo( shape.aabbXMin + 5, shape.aabbYMax + 5 );
+				scene.graphics.lineTo( shape.aabbXMin - 5, shape.aabbYMax + 5 );
 				scene.graphics.endFill();
 			}
 			else if ( shape.type == ShapeType.RECT )

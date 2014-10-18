@@ -1,6 +1,6 @@
-package dune.input;
+package dune.component ;
 
-import dune.input.core.IInput;
+import dune.component.IInput;
 
 /**
  * ...

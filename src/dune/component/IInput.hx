@@ -1,4 +1,4 @@
-package dune.input.core ;
+package dune.component ;
 
 /**
  * @author Namide

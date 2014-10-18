@@ -37,6 +37,27 @@ class Transform implements Component
 	 */
 	public var vY(default, default):Float;
 	
+	/**
+	 * center X-axis
+	 */
+	public var centerX(default, default):Float;
+	
+	/**
+	 * center Y-axis
+	 */
+	public var centerY(default, default):Float;
+	
+	/**
+	 * Direction in X-axis (-1, 0 or 1).
+	 */
+	public var dirX(default, default):Int = 1;
+	
+	/**
+	 * Direction in Y-axis (-1, 0 or 1).
+	 */
+	public var dirY(default, default):Int = 0;
+	
+	
 	public function setXY( x:Float, y:Float ):Void
 	{
 		if ( x != this.x && y != this.y )
@@ -85,6 +106,8 @@ class Transform implements Component
 	public function new( parent:Entity ) 
 	{
 		entity = parent;
+		centerX = 0;
+		centerY = 0;
 		//type = ComponentType.TRANSFORM;
 		clear();
 	}

@@ -8,9 +8,10 @@ class EntityPool
 {
 	private var _pool:Array<Entity>;
 	
-	public function new( length:UInt = 30 ) 
+	public function new( initialize:Void->Entity, length:UInt = 30 ) 
 	{
 		_pool = [];
+		initEntity = initialize;
 		
 		var i:UInt;
 		var e:Entity;
@@ -40,8 +41,7 @@ class EntityPool
 		}
         else
 		{
-            var item:Entity = initEntity();
-			_pool.push( item );
+            _pool.push( initEntity() );
             return get();
 		}
 	}

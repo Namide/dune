@@ -6,10 +6,10 @@ import dune.helper.core.ArrayUtils;
 import dune.helper.core.BitUtils;
 //import dune.helper.core.DTime;
 import dune.component.Controller;
-import dune.input.core.IInput;
-import dune.input.GamepadJsHandler;
-import dune.input.KeyboardHandler;
-import dune.input.MultiInput;
+//import dune.component.IInput;
+//import dune.input.GamepadJsHandler;
+//import dune.input.KeyboardHandler;
+//import dune.component.MultiInput;
 import dune.system.physic.component.Body;
 import dune.system.physic.component.BodyType;
 import dune.system.physic.component.ContactBodies;
@@ -60,11 +60,12 @@ class ControllerPlatformPlayer extends Controller
 	var _contacts:ContactBodies;
 	
 	var _display:IDisplay;
-	var _input:IInput;
+	//var _input:IInput;
 	
 	var _t:UInt;
 	
-	
+	//public var dirX:Int = 0;
+	//public var dirY:Int = 0;
 	
 	public function new() 
 	{
@@ -76,7 +77,7 @@ class ControllerPlatformPlayer extends Controller
 		setRun( 12, 0.06 );
 		setJump( 1.5, 3, 3, 6, 0.06, 0.3 );
 		
-		_input = new MultiInput( new KeyboardHandler(), new GamepadJsHandler() );
+		//_input = new MultiInput( new KeyboardHandler(), new GamepadJsHandler() );
 		//_input = new KeyboardHandler(); 
 	}
 	
@@ -131,7 +132,8 @@ class ControllerPlatformPlayer extends Controller
 		var rightWall:Bool = 	_contacts.hasTypeOfSolid( BodyType.SOLID_TYPE_WALL, ContactBodies.RIGHT );
 		var topWall:Bool = 		_contacts.hasTypeOfSolid( BodyType.SOLID_TYPE_WALL, ContactBodies.TOP );
 		
-		var xAxis:Float = _input.getAxisX();
+		var input = entity.input;
+		var xAxis:Float = input.getAxisX();
 		
 		entity.transform.vY += Settings.GRAVITY;
 		
@@ -151,6 +153,7 @@ class ControllerPlatformPlayer extends Controller
 			}
 			entity.transform.vY = platformVY;
 		}
+		
 		if ( leftWall )
 		{
 			for ( body in _contacts.getByType( BodyType.SOLID_TYPE_WALL , ContactBodies.LEFT ) )
@@ -161,6 +164,7 @@ class ControllerPlatformPlayer extends Controller
 				}
 			}
 		}
+		
 		if ( rightWall )
 		{
 			for ( body in _contacts.getByType( BodyType.SOLID_TYPE_WALL , ContactBodies.RIGHT ) )
@@ -171,6 +175,7 @@ class ControllerPlatformPlayer extends Controller
 				}
 			}
 		}
+		
 		if ( topWall )
 		{
 			for ( body in _contacts.getByType( BodyType.SOLID_TYPE_WALL , ContactBodies.TOP ) )
@@ -266,7 +271,8 @@ class ControllerPlatformPlayer extends Controller
 			}
 		}
 		
-		var b1:Float = _input.getB1();
+		var b1:Float = input.getB1();
+		
 		if ( b1 > 0 )//kh.getKeyPressed( keyAction ) )
 		{
 			if ( bottomWall && !_actionPressed )
@@ -301,6 +307,20 @@ class ControllerPlatformPlayer extends Controller
 		else if ( _actionPressed )
 		{
 			_actionPressed = false;
+		}
+		
+		
+		// 		DIRECTION
+		
+		var lastDirX:Int = entity.transform.dirX;
+		var lastDirY:Int = entity.transform.dirY;
+		
+		entity.transform.dirX = (input.getAxisX() > 0) ? 1 : (input.getAxisX() < 0) ? -1 : 0;
+		entity.transform.dirY = (input.getAxisY() > 0) ? 1 : (input.getAxisY() < 0) ? -1 : 0;
+		
+		if ( entity.transform.dirX == 0 && entity.transform.dirY == 0 )
+		{
+			entity.transform.dirX = (_display.isToRight()) ? 1 : -1;
 		}
 		
 		

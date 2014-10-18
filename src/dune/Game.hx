@@ -1,6 +1,7 @@
 package dune;
 
 import dune.component.ComponentType;
+import dune.component.MultiInput;
 import dune.component.Transform;
 import dune.entity.Entity;
 import dune.helper.core.UrlUtils;
@@ -137,7 +138,11 @@ class Game
 				b3.shape = psr3;
 				e3.addBody( b3 );
 			
-			// Keyboard
+			// Inputs
+			
+				e3.input = new dune.component.MultiInput( new dune.input.KeyboardHandler(), new dune.input.GamepadJsHandler() );
+			
+			// Platform controller
 			
 				var i3:ControllerPlatformPlayer = new ControllerPlatformPlayer();
 				//i3.groundVX = 5;

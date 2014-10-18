@@ -18,7 +18,7 @@ class ShapePoint
 	public var anchorX(default, default):Float;
 	public var anchorY(default, default):Float;
 	
-	private function new()
+	public function new()
 	{
 		type = ShapeType.POINT;
 		anchorX = 0;

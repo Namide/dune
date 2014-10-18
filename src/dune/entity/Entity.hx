@@ -1,6 +1,7 @@
 package dune.entity ;
 
 import dune.component.IDisplay;
+import dune.component.IInput;
 import dune.component.Transform;
 import dune.helper.core.ArrayUtils;
 import dune.component.Controller;
@@ -15,6 +16,8 @@ class Entity
 	public var type(default, default):UInt;
 	
 	public var transform(default, null):Transform;
+	
+	public var input(default, default):IInput;
 	
 	public var controllers(default, null):Array<Controller>;
 	public var bodies(default, null):Array<Body>;

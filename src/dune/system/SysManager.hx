@@ -63,6 +63,8 @@ class SysManager
 	
 	public function addEntity( entity:Entity ):Void
 	{
+		removeEntity( entity );
+		
 		_entities.push( entity );
 		if ( entity.transform.vActive ) { _entitiesVelocity.push( entity ); }
 		
@@ -78,6 +80,8 @@ class SysManager
 	
 	public function removeEntity( entity:Entity ):Void
 	{
+		if ( !Lambda.has( _entities, entity ) ) return;
+		
 		_entities.remove( entity );
 		if ( _entitiesVelocity.indexOf( entity ) > -1 ) { _entitiesVelocity.remove( entity ); }
 		

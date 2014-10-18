@@ -25,8 +25,6 @@ class Controller implements Component
 	
 	public var type(default, null):UInt;
 	
-	
-	
 	private function new() 
 	{
 		clear();

@@ -290,32 +290,18 @@ class ContactBodies
 			var dY:Float = cp.entity.transform.vY - _vY;
 			var overAutorized:Bool = !BitUtils.has( cp.typeOfSolid, BodyType.SOLID_TYPE_WALL );
 			
-			/*if ( dataActivated )
-			{*/
-				var data:ContactBodiesData = new ContactBodiesData( cp );
-				data.pos = getPosA( parent.shape, cp.shape, dX, dY, overAutorized );
-				//data.reac = getReactPosA( parent.shape, cp.shape, dX, dY, data, overAutorized );
-				
-				if ( _rectLimits.addLimit( data.pos, cp.shape, cp.typeOfSolid ) ) 
-				{
-					allDatas.push( data );
-				}
-				else
-				{
-					rest.push( data );
-				}
-				
-				//trace( "{" + data.body.entity.transform.x + "," + data.body.entity.transform.y + "} pos:" + data.pos + " reac:" + data.reac + " dist:" + data.dist );
-			/*}
+			var data:ContactBodiesData = new ContactBodiesData( cp );
+			data.pos = getPosA( parent.shape, cp.shape, dX, dY, overAutorized );
+			//data.reac = getReactPosA( parent.shape, cp.shape, dX, dY, data, overAutorized );
+			
+			if ( _rectLimits.addLimit( data.pos, cp.shape, cp.typeOfSolid ) ) 
+			{
+				allDatas.push( data );
+			}
 			else
 			{
-				var reac:Int = getReactPosA( parent.shape, cp.shape, dX, dY, overAutorized );
-				calculateItem( cp );
-				calculateReaction( cp, reac );
-				save( cp, reac );
-				return;
-			}*/
-			
+				rest.push( data );
+			}
 		}
 		
 		//trace( "multi body:" + rest.length );
@@ -371,10 +357,20 @@ class ContactBodies
 			{
 				parent.entity.transform.y = _rectLimits.botLimit - ShapeUtils.getPosToBottom( parent.shape );
 			}
+			
+			for ( fct in parent.onCollideWall )
+			{
+				fct();
+			}
 		}
 		else if( _rectLimits.hasLimit(TOP) )
 		{
 			parent.entity.transform.y = _rectLimits.topLimit - ShapeUtils.getPosToTop( parent.shape );
+			
+			for ( fct in parent.onCollideWall )
+			{
+				fct();
+			}
 		}
 		
 		if ( _rectLimits.hasLimit(LEFT) )
@@ -390,10 +386,20 @@ class ContactBodies
 			{
 				parent.entity.transform.x = _rectLimits.lefLimit - ShapeUtils.getPosToLeft( parent.shape );
 			}
+			
+			for ( fct in parent.onCollideWall )
+			{
+				fct();
+			}
 		}
 		else if ( _rectLimits.hasLimit(RIGHT) )
 		{
 			parent.entity.transform.x = _rectLimits.rigLimit - ShapeUtils.getPosToRight( parent.shape );
+			
+			for ( fct in parent.onCollideWall )
+			{
+				fct();
+			}
 		}
 	}
 	
@@ -517,167 +523,17 @@ class ContactBodies
 		return 0;
 	}
 	
-	/**
-	 * Move the body if it has contact with other bodies (wall, platform...).
-	 * You must calculatePositions() before call this function.
-	 * 
-	 * @param	dataList
-	 */
-	/*function calculateChainReaction( dataList:Array<ContactBodiesData> ):Void
-	{
-		var first:Bool = true;
-		_vX = parent.entity.transform.vX;
-		_vY = parent.entity.transform.vY;
-		
-		ArrayUtils.clear( all );
-		for ( data in dataList )
-		{
-			if ( PhysShapeUtils.hitTest( parent.shape, data.body.shape ) )
-			{
-				if ( !first && data.dist >= 0 )
-				{
-					re
-					trace('exclude :', data.reac );
-					continue;
-				}
-				
-				calculateItem( data.body );
-				calculateReaction( data.body, data.reac );
-				save( data.body, data.reac );
-				first = false;
-					
-				all.push( data.body );
-			}
-		}
-		
-		//var dX:Float = body.entity.transform.vX - parent.entity.transform.vX;
-		//var dY:Float = body.entity.transform.vY - parent.entity.transform.vY;
-		//reac = getPosA( parent.shape, body.shape, dX, dY, false );
-	}*/
-	
-	/**
-	 * Change reac if first contact has same limits (like a wall with few tiles)
-	 * @param	data
-	 */
-	/*function calculateFirstContact( data:ContactBodiesData ):Void
-	{
-		var shape:ShapePoint = data.body.shape;
-		
-		if ( _firstContact == null &&
-			 ( BitUtils.has( data.body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) ||
-			 BitUtils.has( data.body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM  ) ) )
-		{
-			if ( data.reac == BOTTOM ) 		{ data.limit = shape.aabbYMin; }
-			else if ( data.reac == TOP ) 	{ data.limit = shape.aabbYMax; }
-			else if ( data.reac == RIGHT ) 	{ data.limit = shape.aabbXMin; }
-			else if ( data.reac == LEFT ) 	{ data.limit = shape.aabbXMax; }
-			
-			//trace( "---" );
-			//trace( ">>>", data.reac, data.limit, data.limit );
-			if ( !Math.isNaN(data.limit) ) _firstContact = data;
-		}
-		else
-		{
-			//trace( "  ", data.pos, data.reac, _firstContact.reac == BOTTOM );
-			
-			if ( BitUtils.has( data.pos, _firstContact.reac ) )
-			{
-				if ( _firstContact.reac == BOTTOM )
-				{
-					if ( _firstContact.limit == shape.aabbYMin ) 
-					{
-						data.reac = _firstContact.reac; //data.limit = _firstContact.limit;
-					}
-				}
-				else if ( _firstContact.reac == TOP )
-				{
-					if ( _firstContact.limit == shape.aabbYMax )
-					{
-						data.reac = _firstContact.reac; //data.limit = _firstContact.limit;
-					}
-				}
-				else if ( _firstContact.reac == RIGHT )
-				{
-					if ( _firstContact.limit == shape.aabbXMin )
-					{
-						data.reac = _firstContact.reac; //data.limit = _firstContact.limit;
-					}
-				}
-				else if ( _firstContact.reac == LEFT )
-				{
-					if ( _firstContact.limit == shape.aabbXMax )
-					{
-						data.reac = _firstContact.reac; //data.limit = _firstContact.limit;
-					}
-				}
-			}
-			
-			//trace( "->", data.reac, data.limit );
-			
-		}
-	}*/
-	
 	function calculateItem( body:Body ):Void
 	{
 		if ( BitUtils.has( parent.typeOfSolid, BodyType.SOLID_TYPE_EATER ) &&
 			 BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_ITEM ) )
 		{
-			for ( fct in parent.onCollide )
+			for ( fct in parent.onCollideItem )
 			{
 				fct( body );
 			}
 		}
 	}
-	
-	/*function calculateReactionByFirstContact( data:ContactBodiesData ):Bool
-	{
-		if ( Math.isNaN( data.limit ) ) return false;
-		
-		
-		if ( BitUtils.has( parent.typeOfSolid, CompBodyType.SOLID_TYPE_MOVER ) )
-		{
-			var body:CompBody = data.body;
-			var shape:ShapePoint = body.shape;
-			var reac:UInt = data.reac;
-			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_PLATFORM ) )
-			{
-				parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
-				if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
-			}
-			else if ( BitUtils.has( body.typeOfSolid, CompBodyType.SOLID_TYPE_WALL ) )
-			{
-				if ( reac == BOTTOM )
-				{
-					//if ( BitUtils.has(reac, TOP) ) { isCrush = true; return; }
-					parent.entity.transform.y = shape.aabbYMin - PhysShapeUtils.getPosToBottom( parent.shape );
-					if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
-					//moveInDirection |= BOTTOM;
-				}
-				else if ( reac == TOP )
-				{
-					//if ( BitUtils.has(reac, BOTTOM) ) { isCrush = true; return; }
-					parent.entity.transform.y = shape.aabbYMax - PhysShapeUtils.getPosToTop( parent.shape );
-					if ( _vY < body.entity.transform.vY ) _vY = body.entity.transform.vY;
-					//moveInDirection |= TOP;
-				}
-				else if ( reac == RIGHT )
-				{
-					//if ( BitUtils.has(reac, LEFT) ) { isCrush = true; return; }
-					parent.entity.transform.x = shape.aabbXMin - PhysShapeUtils.getPosToRight( parent.shape );
-					if ( _vX > body.entity.transform.vX ) _vX = body.entity.transform.vX;
-					//moveInDirection |= RIGHT;
-				}
-				else if ( reac == LEFT )
-				{
-					//if ( BitUtils.has(reac, RIGHT) ) { isCrush = true; return; }
-					parent.entity.transform.x = shape.aabbXMax - PhysShapeUtils.getPosToLeft( parent.shape );
-					//moveInDirection |= LEFT;
-					if ( _vX < body.entity.transform.vX ) _vX = body.entity.transform.vX;
-				}
-			}
-		}
-		return false;
-	}*/
 	
 	function calculateReaction( body:Body, reac:Int/*, link:SysLink*/ ):Void
 	{
@@ -687,7 +543,15 @@ class ContactBodies
 			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_PLATFORM ) )
 			{
 				parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
-				if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
+				if ( _vY > body.entity.transform.vY )
+				{
+					_vY = body.entity.transform.vY;
+					
+					/*for ( fct in parent.onCollideWall )
+					{
+						fct( body );
+					}*/
+				}
 			}
 			else if ( BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_WALL ) )
 			{
@@ -705,21 +569,42 @@ class ContactBodies
 				{
 					//if ( BitUtils.has(reac, TOP) ) { isCrush = true; return; }
 					parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
-					if ( _vY > body.entity.transform.vY ) _vY = body.entity.transform.vY;
+					if ( _vY > body.entity.transform.vY )
+					{
+						_vY = body.entity.transform.vY;
+						/*for ( fct in parent.onCollideWall )
+						{
+							fct( body );
+						}*/
+					}
 					//moveInDirection |= BOTTOM;
 				}
 				else if ( reac == TOP )
 				{
 					//if ( BitUtils.has(reac, BOTTOM) ) { isCrush = true; return; }
 					parent.entity.transform.y = shape.aabbYMax - ShapeUtils.getPosToTop( parent.shape );
-					if ( _vY < body.entity.transform.vY ) _vY = body.entity.transform.vY;
+					if ( _vY < body.entity.transform.vY )
+					{
+						_vY = body.entity.transform.vY;
+						/*for ( fct in parent.onCollideWall )
+						{
+							fct( body );
+						}*/
+					}
 					//moveInDirection |= TOP;
 				}
 				else if ( reac == RIGHT )
 				{
 					//if ( BitUtils.has(reac, LEFT) ) { isCrush = true; return; }
 					parent.entity.transform.x = shape.aabbXMin - ShapeUtils.getPosToRight( parent.shape );
-					if ( _vX > body.entity.transform.vX ) _vX = body.entity.transform.vX;
+					if ( _vX > body.entity.transform.vX )
+					{
+						_vX = body.entity.transform.vX;
+						/*for ( fct in parent.onCollideWall )
+						{
+							fct( body );
+						}*/
+					}
 					//moveInDirection |= RIGHT;
 				}
 				else if ( reac == LEFT )
@@ -727,7 +612,14 @@ class ContactBodies
 					//if ( BitUtils.has(reac, RIGHT) ) { isCrush = true; return; }
 					parent.entity.transform.x = shape.aabbXMax - ShapeUtils.getPosToLeft( parent.shape );
 					//moveInDirection |= LEFT;
-					if ( _vX < body.entity.transform.vX ) _vX = body.entity.transform.vX;
+					if ( _vX < body.entity.transform.vX )
+					{
+						_vX = body.entity.transform.vX;
+						/*for ( fct in parent.onCollideWall )
+						{
+							fct( body );
+						}*/
+					}
 				}
 			}
 			

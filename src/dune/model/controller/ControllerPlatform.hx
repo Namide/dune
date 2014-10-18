@@ -50,6 +50,7 @@ class ControllerPlatform extends Controller
 		var vY:Float = 0;
 		//var bounceX:Bool = false;
 		//var bounceY:Bool = false;
+		
 		if ( bottomWall )
 		{
 			for ( body in _contacts.getByType( BodyType.SOLID_TYPE_WALL , ContactBodies.BOTTOM ) )

@@ -64,6 +64,8 @@ class ControllerPlatformPlayer extends Controller
 	
 	var _t:UInt;
 	
+	public var wallBrake:Float = 0.1;
+	
 	//public var dirX:Int = 0;
 	//public var dirY:Int = 0;
 	
@@ -135,7 +137,15 @@ class ControllerPlatformPlayer extends Controller
 		var input = entity.input;
 		var xAxis:Float = input.getAxisX();
 		
-		entity.transform.vY += Settings.GRAVITY;
+		
+		if ( !leftWall && !rightWall || entity.transform.vY < 0 )
+		{
+			entity.transform.vY += Settings.GRAVITY;
+		}
+		else 
+		{
+			entity.transform.vY += wallBrake * Settings.GRAVITY;
+		}
 		
 		var platformVX:Float = 0;
 		if ( bottomWall )
@@ -196,37 +206,12 @@ class ControllerPlatformPlayer extends Controller
 					if ( entity.transform.vX > platformVX-_groundVX )
 					{
 						entity.transform.vX = platformVX + xAxis * _groundVX;
-						/*entity.transform.vX -= _groundAccX;
-						if ( entity.transform.vX < platformVX - _groundVX )
-						{
-							entity.transform.vX = platformVX-_groundVX;
-						}*/
 					}
 				}
 				else if ( entity.transform.vX > -_jumpVXMax && /*DTime.getRealMS()*/_t > _landmark )
 				{
 					entity.transform.vX = xAxis * _jumpVXMax;
-					/*entity.transform.vX -= _jumpAccX;
-					if ( entity.transform.vX < -_jumpVXMax )
-					{
-						entity.transform.vX = -_jumpVXMax;
-					}*/
 				}
-				/*else
-				{
-					entity.transform.vX = xAxis * _jumpVXMax;
-				}*/
-				/*else if ( TimeUtils.getMS() > _landmark )
-				{
-					if ( entity.transform.vX > -_jumpVXMax )
-					{
-						entity.transform.vX -= _jumpAccX;
-						if ( entity.transform.vX < -_jumpVXMax )
-						{
-							entity.transform.vX = -_jumpVXMax;
-						}
-					}
-				}*/
 			}
 			else
 			{
@@ -257,7 +242,6 @@ class ControllerPlatformPlayer extends Controller
 				}
 			}
 		}
-		
 		else
 		{
 			if ( bottomWall  )
@@ -293,8 +277,8 @@ class ControllerPlatformPlayer extends Controller
 				entity.transform.vX = - _jumpVXMax;
 				_landmark = /*DTime.getRealMS()*/_t + _jumpTimeLock;
 			}
-			else if ( 	(!topWall && !bottomWall && !leftWall && !rightWall) ||
-						(!topWall && !bottomWall && _actionPressed ) )
+			else if ( 	(!topWall && !bottomWall && !leftWall && !rightWall) /*||
+						(!topWall && !bottomWall && _actionPressed )*/ )
 			{
 				entity.transform.vY -= _jumpVY;
 			}

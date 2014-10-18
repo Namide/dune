@@ -71,11 +71,11 @@ class SysGraphic
 	{
 		if ( entity.display == null ) return;
 		
-		if ( entity.display.type | ComponentType.DISPLAY_2D == ComponentType.DISPLAY_2D   )
+		if ( BitUtils.has( entity.display.type, ComponentType.DISPLAY_2D ) )
 		{
 			camera2d.display.removeChild( entity.display.getObject() );
 		}
-		else if ( entity.display.type | ComponentType.DISPLAY_3D == ComponentType.DISPLAY_3D )
+		else if ( BitUtils.has( entity.display.type, ComponentType.DISPLAY_3D ) )
 		{
 			s3d.removeChild( entity.display.getObject() );
 		}

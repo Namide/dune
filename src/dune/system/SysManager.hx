@@ -25,6 +25,10 @@ class SysManager
 	
 	public var time:DTime;
 	
+	#if (debugHitbox && (flash || openfl ))
+		var _sceneHitBox:flash.display.Sprite;
+	#end
+	
 	public function new( onInitCallback:Void->Void ) 
 	{
 		_entities = [];
@@ -38,6 +42,11 @@ class SysManager
 		//sysLink = new SysLink();
 		
 		//Lib.getTimer();
+		
+		#if (debugHitbox && (flash || openfl ))
+			_sceneHitBox = new flash.display.Sprite();
+			flash.Lib.current.stage.addChild( _sceneHitBox );
+		#end
 		
 	}
 	
@@ -119,6 +128,19 @@ class SysManager
 				//trace(_entitiesMoved.length);
 				sysGraphic.refresh( _entitiesMoved );
 				_entitiesMoved = [];
+				
+				
+				#if (debugHitbox && (flash || openfl ))
+					_sceneHitBox.graphics.clear();
+					_sceneHitBox.x = sysGraphic.camera2d.x;
+					_sceneHitBox.y = sysGraphic.camera2d.y;
+					
+					sysPhysic.space.draw( _sceneHitBox );
+					for ( compBody in sysPhysic.space.all )
+					{
+						compBody.draw( _sceneHitBox );
+					}
+				#end
 			}
 			
 			sysController.refresh( Settings.FRAME_DELAY, true );

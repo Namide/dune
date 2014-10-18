@@ -13,6 +13,7 @@ import dune.system.physic.component.Body;
  */
 class Entity
 {
+	public var name(default, null):String;
 	public var type(default, default):UInt;
 	
 	public var transform(default, null):Transform;
@@ -29,8 +30,9 @@ class Entity
 		return display = cd;
 	}
 	
-	public function new() 
+	public function new( name:String = "" ) 
 	{
+		this.name = name;
 		clear();
 	}
 	

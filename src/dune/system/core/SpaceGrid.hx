@@ -8,10 +8,6 @@ import dune.system.physic.component.Body;
 import dune.system.physic.component.BodyType;
 import dune.system.physic.shapes.ShapeUtils;
 
-#if (debugHitbox && (flash || openfl))
-	import flash.display.Sprite;
-#end
-
 class Grid
 {
 	public var minTileX(default, null):Int;
@@ -107,6 +103,17 @@ class Node
 		maxTileY = -1;
 		
 		refresh( pitchExpX, pitchExpY, grid );
+	}
+	
+	public function removeFromGrid( grid:Grid )
+	{
+		for ( i in minTileX...maxTileX )
+		{
+			for ( j in minTileY...maxTileY )
+			{
+				grid.remove( i, j, this );
+			}
+		}
 	}
 	
 	public function refresh( pitchExpX:Int, pitchExpY:Int, grid:Grid ):Void
@@ -318,15 +325,16 @@ class SpaceGrid implements ISpace
 	 */
 	public function removeBody( body:Body ):Void
 	{
-		
 		if ( body.typeOfCollision == BodyType.COLLISION_TYPE_PASSIVE )
 		{
 			var node:Node = Lambda.find( _passive, function( n:Node ):Bool { return n.body == body; } );
+			node.removeFromGrid( _grid );
 			_passive.remove( node );
 		}
 		else
 		{
 			var node:Node = Lambda.find( _active, function( n:Node ):Bool { return n.body == body; } );
+			node.removeFromGrid( _grid );
 			_active.remove( node );
 		}
 		all.remove( body );
@@ -334,7 +342,7 @@ class SpaceGrid implements ISpace
 	
 	#if (debugHitbox && (flash || openfl ))
 	
-		public function draw(scene:Sprite):Void
+		public function draw(scene:flash.display.Sprite):Void
 		{
 			scene.graphics.lineStyle( 1, 0xCCCCCC, 0.5 );
 			
@@ -349,8 +357,6 @@ class SpaceGrid implements ISpace
 												_pitchX );
 				}
 			}
-			
-			
 		}
 		
 	#end

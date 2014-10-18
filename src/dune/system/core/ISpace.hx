@@ -1,5 +1,6 @@
 package dune.system.core;
 
+import dune.system.graphic.SysGraphic;
 import dune.system.physic.component.Body;
 import flash.display.Sprite;
 

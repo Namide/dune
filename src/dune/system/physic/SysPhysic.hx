@@ -6,10 +6,6 @@ import dune.system.core.SpaceGrid;
 import dune.system.physic.component.Body;
 //import dune.system.core.SysSpaceGrid;
 
-#if (debugHitbox && (flash || openfl))
-	import flash.display.Sprite;
-	import flash.Lib;
-#end
 
 /**
  * ...
@@ -22,18 +18,9 @@ class SysPhysic
 	 */
 	public var space(default, null):ISpace;
 	
-	#if (debugHitbox && (flash || openfl ))
-		var _sceneHitBox:Sprite;
-	#end
-	
 	public function new() 
 	{
 		space = new dune.system.core.SpaceGrid();
-		
-		#if (debugHitbox && (flash || openfl ))
-			_sceneHitBox = new Sprite();
-			Lib.current.stage.addChild( _sceneHitBox );
-		#end
 	}
 	
 	public function refresh( /*time:DTime,*/ dt:UInt/*, link:SysLink*/ ):Void 
@@ -48,18 +35,7 @@ class SysPhysic
 			b.contacts.moveAndDispatch();
 		}
 		
-		#if (debugHitbox && (flash || openfl ))
 		
-			_sceneHitBox.graphics.clear();
-			
-			space.draw( _sceneHitBox );
-			
-			for ( compBody in space.all )
-			{
-				compBody.draw( _sceneHitBox );
-			}
-			
-		#end
 		
 	}
 }

@@ -13,7 +13,14 @@ import h2d.Tile;
 import h2d.TileGroup;
 import hxd.BitmapData;
 
-
+class GpuDatasSaved
+{
+	public var animDatas:Array<AnimData>;
+	public var mcName:String;
+	public var width:Float;
+	
+	public function new() { }
+}
 
 /**
  * ...
@@ -21,7 +28,8 @@ import hxd.BitmapData;
  */
 class DisplayFactory
 {
-
+	static var _resDatas:Array<GpuDatasSaved> = [];
+	
 	public function new() 
 	{
 		throw "Static class!";
@@ -178,6 +186,40 @@ class DisplayFactory
 		}
 		
 		return list;
+	}
+	
+	
+	public static function assetMcToDisplay2dAnim( mcName:String, sm:SysManager, textScale:Float, quality:Float = Settings.TEXT_QUALITY ):Display2dAnim
+	{
+		var anim:Anim = new Anim( null, Lib.current.stage.frameRate , sm.sysGraphic.s2d );
+		anim.setScale( 1 / quality );
+		
+		var r:GpuDatasSaved = Lambda.find( _resDatas, function( r:GpuDatasSaved ):Bool { return r.mcName == mcName; } );
+		if ( r == null )
+		{
+			r = new GpuDatasSaved();
+			r.mcName = mcName;
+			var mc:MovieClip = Lib.attach( mcName );
+			r.width = mc.width;
+			r.animDatas = movieClipToTiles( mc, textScale, quality );
+		}
+		
+		var a:Array<AnimData> = r.animDatas;
+		
+		var d:Display2dAnim = new Display2dAnim( anim, r.width * textScale );
+		
+		//if ( Lib.attach( "FlyMC" ) )
+		//var a:Array<AnimData> = movieClipToTiles( mc, textScale, quality );
+		
+		//var first:String = mc.currentLabel;
+		for ( ad in a )
+		{
+			d.pushAnimData( ad );
+		}
+		
+		d.play( a[0].label );
+		
+		return d;
 	}
 	
 	public static function movieClipToDisplay2dAnim( mc:MovieClip, sm:SysManager, textScale:Float, quality:Float = Settings.TEXT_QUALITY ):Display2dAnim

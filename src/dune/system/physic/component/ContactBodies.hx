@@ -360,7 +360,7 @@ class ContactBodies
 			
 			for ( fct in parent.onCollideWall )
 			{
-				fct();
+				fct( parent );
 			}
 		}
 		else if( _rectLimits.hasLimit(TOP) )
@@ -369,7 +369,7 @@ class ContactBodies
 			
 			for ( fct in parent.onCollideWall )
 			{
-				fct();
+				fct( parent );
 			}
 		}
 		
@@ -389,7 +389,7 @@ class ContactBodies
 			
 			for ( fct in parent.onCollideWall )
 			{
-				fct();
+				fct( parent );
 			}
 		}
 		else if ( _rectLimits.hasLimit(RIGHT) )
@@ -398,7 +398,7 @@ class ContactBodies
 			
 			for ( fct in parent.onCollideWall )
 			{
-				fct();
+				fct( parent );
 			}
 		}
 	}
@@ -530,7 +530,7 @@ class ContactBodies
 		{
 			for ( fct in parent.onCollideItem )
 			{
-				fct( body );
+				fct( parent, body );
 			}
 		}
 	}

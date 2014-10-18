@@ -51,8 +51,8 @@ class Body implements Component
 	/**
 	 * Like a signal, add to this array the functions called at a collision
 	 */
-	public var onCollideItem(default, default):Array < Body -> Void >;
-	public var onCollideWall(default, default):Array < Void -> Void >;
+	public var onCollideItem(default, default):Array < Body -> Body -> Void >;
+	public var onCollideWall(default, default):Array < Body -> Void >;
 	
 	
 	

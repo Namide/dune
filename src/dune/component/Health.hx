@@ -1,4 +1,5 @@
 package dune.component;
+import dune.helper.core.DTime;
 
 /**
  * ...
@@ -10,6 +11,16 @@ class Health implements IComponent
 	
 	public var health:Float;
 	public var lifes:Int;
+	
+	var _heartedTime:UInt = 0;
+	public inline function isHearted():Bool
+	{
+		return _heartedTime > DTime.getRealMS();
+	}
+	public inline function heart()
+	{
+		_heartedTime = DTime.getRealMS() + 500;
+	}
 
 	public function new( health:Float = 1, lifes:Int = 1 ) 
 	{

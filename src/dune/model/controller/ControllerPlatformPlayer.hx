@@ -126,6 +126,9 @@ class ControllerPlatformPlayer extends Controller
 	
 	public override function execute( dt:UInt ):Void
 	{
+		
+		
+		
 		_t += dt;
 		var bottomWall:Bool = 	_contacts.hasTypeOfSolid( BodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) || 
 								_contacts.hasTypeOfSolid( BodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM );
@@ -145,6 +148,15 @@ class ControllerPlatformPlayer extends Controller
 		else 
 		{
 			entity.transform.vY += wallBrake * Settings.GRAVITY;
+		}
+		
+		if (entity.health != null && entity.health.isHearted())
+		{
+			if ( BitUtils.has( _display.type, ComponentType.DISPLAY_ANIMATED ) )
+			{
+				_display.play( "hurt" );
+			}
+			return;
 		}
 		
 		var platformVX:Float = 0;

@@ -30,7 +30,7 @@ class EntityFactory
 		return new Display2dSprite( g );
 	}
 	
-	public static function addSolid( sm:SysManager, x:Float, y:Float, w:Float, h:Float, solidType:UInt = BodyType.SOLID_TYPE_WALL, display:Display2dSprite = null ):Entity
+	public static function addSolidEmpty( sm:SysManager, x:Float, y:Float, w:Float, h:Float, solidType:UInt = BodyType.SOLID_TYPE_WALL ):Entity
 	{
 		var e = new Entity();
 		
@@ -38,8 +38,7 @@ class EntityFactory
 		
 			e.transform.x = x;
 			e.transform.y = y;
-			e.display = (display == null) ? getSolidDisplay( sm, w, h ) : display;
-		
+			
 		// collision
 		
 			var b4:Body = new Body();
@@ -51,6 +50,14 @@ class EntityFactory
 			b4.typeOfSolid = solidType;
 			e.addBody( b4 );
 		
+		sm.addEntity( e );
+		return e;
+	}
+	
+	public static function addSolid( sm:SysManager, x:Float, y:Float, w:Float, h:Float, solidType:UInt = BodyType.SOLID_TYPE_WALL, display:Display2dSprite = null ):Entity
+	{
+		var e = addSolidEmpty( sm, x, y, w, h, solidType );
+		e.display = (display == null) ? getSolidDisplay( sm, w, h ) : display;
 		sm.addEntity( e );
 		return e;
 	}

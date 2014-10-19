@@ -31,6 +31,7 @@ class SysManager
 	
 	public function new( onInitCallback:Void->Void ) 
 	{
+		trace("init sm");
 		_entities = [];
 		_entitiesVelocity = [];
 		_entitiesMoved = [];
@@ -105,6 +106,30 @@ class SysManager
 	public function getEntitiesByName( name:String ):List<Entity>
 	{
 		return Lambda.filter( _entities, function(e:Entity):Bool { return e.name == name; } );
+	}
+	
+	public function dispose():Void
+	{
+		hxd.System.setLoop( function() { } );
+		
+		for ( e in _entities )
+		{
+			removeEntity( e );
+		}
+		
+		sysController = null;
+		sysPhysic = null;
+		sysGraphic = null;
+		
+		_entities = null;
+		_entitiesVelocity = null;
+		_entitiesMoved = null;
+		
+		time = null;
+		
+		#if (debugHitbox && (flash || openfl ))
+			if( _sceneHitBox != null && _sceneHitBox.parent != null ) _sceneHitBox.parent.removeChild( _sceneHitBox );
+		#end
 	}
 	
 	function refresh():Void 

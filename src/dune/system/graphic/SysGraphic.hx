@@ -93,6 +93,11 @@ class SysGraphic
 		//engine.begin(); ... render objects ... engine.end()
 	}
 	
+	/*public function dispose():Void
+	{
+		engine.dispose();
+	}*/
+	
 	/*public function begin():Void
 	{
 		engine.begin();

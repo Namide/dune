@@ -51,6 +51,13 @@ class DisplayFactory
 {
 	static var _resAnims:Array<AnimRes> = [];
 	static var _resTiles:Array<SpriteRes> = [];
+	//static var _res
+	
+	public static function clear():Void
+	{
+		_resAnims = [];
+		_resTiles = [];
+	}
 	
 	public function new() 
 	{
@@ -80,7 +87,7 @@ class DisplayFactory
 				list.push( animData );
 			}
 			
-			var bd = new flash.display.BitmapData( Math.floor(mc.width), Math.floor(mc.height), true, 0x00FFFFFF );
+			var bd = new flash.display.BitmapData( Math.floor(mc.width * textScale), Math.floor(mc.height * textScale), true, 0x00FFFFFF );
 			bd.draw( mc, m );
 			var hbd = hxd.BitmapData.fromNative( bd ); 
 			var t:Tile = Tile.fromBitmap( hbd );
@@ -95,7 +102,7 @@ class DisplayFactory
 		return list;
 	}
 	
-	public static function assetMcToSprite( mcName:String, sm:SysManager, textScale:Float, quality:Float = Settings.TEXT_QUALITY, center:Point = null ):SpriteDatas
+	public static function assetMcToSprite( mcName:String, sm:SysManager, textScale:Float, quality:Float = Settings.TEXT_QUALITY ):SpriteDatas
 	{
 		var r:SpriteRes = Lambda.find( _resTiles, function( r:SpriteRes ):Bool { return r.mcName == mcName; } );
 		if ( r == null )
@@ -124,6 +131,27 @@ class DisplayFactory
 		return d;
 	}
 	
+	public static function assetMcToAnim( mcName:String, sm:SysManager, textScale:Float, labelNum:Int = 0 , quality:Float = Settings.TEXT_QUALITY ):Anim
+	{
+		var anim:Anim = new Anim( null, Lib.current.stage.frameRate , sm.sysGraphic.s2d );
+		anim.setScale( 1 / quality );
+		
+		var r:AnimRes = Lambda.find( _resAnims, function( r:AnimRes ):Bool { return r.mcName == mcName; } );
+		if ( r == null )
+		{
+			//trace("recup");
+			r = new AnimRes();
+			r.mcName = mcName;
+			var mc:MovieClip = Lib.attach( mcName );
+			r.width = mc.width;
+			r.animDatas = movieClipToTiles( mc, textScale, quality );
+			_resAnims.push( r );
+		}
+		
+		anim.play( r.animDatas[labelNum].frames );
+		return anim;
+	}
+	
 	public static function assetMcToDisplay2dAnim( mcName:String, sm:SysManager, textScale:Float, quality:Float = Settings.TEXT_QUALITY ):Display2dAnim
 	{
 		var anim:Anim = new Anim( null, Lib.current.stage.frameRate , sm.sysGraphic.s2d );
@@ -137,16 +165,13 @@ class DisplayFactory
 			var mc:MovieClip = Lib.attach( mcName );
 			r.width = mc.width;
 			r.animDatas = movieClipToTiles( mc, textScale, quality );
+			_resAnims.push( r );
 		}
 		
 		var a:Array<AnimData> = r.animDatas;
 		
 		var d:Display2dAnim = new Display2dAnim( anim, r.width * textScale );
 		
-		//if ( Lib.attach( "FlyMC" ) )
-		//var a:Array<AnimData> = movieClipToTiles( mc, textScale, quality );
-		
-		//var first:String = mc.currentLabel;
 		for ( ad in a )
 		{
 			d.pushAnimData( ad );

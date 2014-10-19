@@ -31,7 +31,7 @@ class SysManager
 	
 	public function new( onInitCallback:Void->Void ) 
 	{
-		trace("init sm");
+		//trace("init sm");
 		_entities = [];
 		_entitiesVelocity = [];
 		_entitiesMoved = [];

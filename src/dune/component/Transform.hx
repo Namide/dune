@@ -5,7 +5,7 @@ import dune.entity.Entity;
  * ...
  * @author Namide
  */
-class Transform implements Component
+class Transform implements IComponent
 {
 
 	/*public inline static var TYPE_STATIC:UInt = 1;

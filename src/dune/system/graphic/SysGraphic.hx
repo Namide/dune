@@ -33,7 +33,7 @@ class SysGraphic
 		camera2d = new Camera2d( s2d );
 		
 		engine.onResized = function() { onResize(); };
-		//engine.backgroundColor = 0xFFFFFF;
+		//engine.backgroundColor = 0xCCCCCC;
 		
 		//trace(engine.driverName(true));
 		

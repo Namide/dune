@@ -1,13 +1,13 @@
 package dune.component ;
 
-import dune.component.Component;
+import dune.component.IComponent;
 import dune.entity.Entity;
 
 /**
  * ...
  * @author Namide
  */
-class Controller implements Component
+class Controller implements IComponent
 {
 	/**
 	 * Entity attached to the body

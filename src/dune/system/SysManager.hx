@@ -102,7 +102,10 @@ class SysManager
 		_entitiesMoved.remove(entity);
 	}
 	
-	
+	public function getEntitiesByName( name:String ):List<Entity>
+	{
+		return Lambda.filter( _entities, function(e:Entity):Bool { return e.name == name; } );
+	}
 	
 	function refresh():Void 
 	{

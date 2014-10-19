@@ -19,6 +19,8 @@ class ComponentType
 	public inline static var DISPLAY_3D:UInt = 128 | 32;		// 128 | DISPLAY
 	public inline static var DISPLAY_ANIMATED:UInt = 256 | 32;	// 256 | DISPLAY
 	
+	public inline static var HEALTH:UInt = 512;
+	
 	public function new() 
 	{
 		throw "This class can't be instancied";

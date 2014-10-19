@@ -1,5 +1,5 @@
 package dune.system.physic.component;
-import dune.component.Component;
+import dune.component.IComponent;
 import dune.entity.Entity;
 import dune.helper.core.ArrayUtils;
 import dune.system.physic.shapes.ShapeCircle;
@@ -14,7 +14,7 @@ import dune.system.physic.shapes.ShapeType;
  * ...
  * @author Namide
  */
-class Body implements Component
+class Body implements IComponent
 {
 	public var type(default, null):UInt;
 	

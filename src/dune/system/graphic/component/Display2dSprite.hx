@@ -1,6 +1,6 @@
 package dune.system.graphic.component ;
 
-import dune.component.Component;
+import dune.component.IComponent;
 import dune.component.ComponentType;
 import dune.component.IDisplay;
 import h2d.Sprite;

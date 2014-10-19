@@ -1,5 +1,6 @@
 package dune.entity ;
 
+import dune.component.Health;
 import dune.component.IDisplay;
 import dune.component.IInput;
 import dune.component.Transform;
@@ -13,12 +14,14 @@ import dune.system.physic.component.Body;
  */
 class Entity
 {
-	public var name(default, null):String;
+	public var name(default, default):String;
 	public var type(default, default):UInt;
 	
 	public var transform(default, null):Transform;
 	
 	public var input(default, default):IInput;
+	
+	public var health(default, default):Health;
 	
 	public var controllers(default, null):Array<Controller>;
 	public var bodies(default, null):Array<Body>;

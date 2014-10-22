@@ -25,10 +25,14 @@ Roadmap
 	* 90% collisions
 	* 0% faster object physic
 * display 2D
-	* 80% caracters from MovieClip (SWC or SWF)
-->		* 0% detect bouding box not rescale
+	* 80% characters from MovieClip (SWC or SWF)
+->		* 0% detect bounding box not rescale
 		* 0% generate tile sheet from MovieClip
+->	* 0% level from MovieClip
+		* hitbox by labels (.wall, .plaform...)
+		* layers by labels
 	* 50% background
+->	* 0% layers
 	* 0% shaders
 ->	* 0% limit proportions and zoom of the screen output
 * display 3D

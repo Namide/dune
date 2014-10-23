@@ -24,11 +24,11 @@ class Camera2d
 	public var x(get, set):Float;
 	inline function get_x():Float
 	{
-		return display.x;
+		return -display.x;
 	}
 	inline function set_x(val:Float):Float
 	{
-		display.x = val;
+		display.x = -val;
 		refresh();
 		return val;
 	}
@@ -36,11 +36,11 @@ class Camera2d
 	public var y(get, set):Float;
 	inline function get_y():Float
 	{
-		return display.y;
+		return -display.y;
 	}
 	inline function set_y(val:Float):Float
 	{
-		display.y = val;
+		display.y = -val;
 		refresh();
 		return val;
 	}
@@ -114,7 +114,7 @@ class Camera2d
 	
 	public inline function setPos( x:Float, y:Float ):Void
 	{
-		display.setPos( x, y );
+		display.setPos( -x, -y );
 		refresh();
 	}
 	

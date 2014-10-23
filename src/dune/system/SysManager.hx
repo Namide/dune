@@ -14,6 +14,8 @@ import dune.system.physic.SysPhysic;
 class SysManager
 {
 	
+	public var settings:Settings;
+	
 	public var _entities:Array<Entity>;
 	public var _entitiesVelocity:Array<Entity>;
 	public var _entitiesMoved:Array<Entity>;
@@ -31,6 +33,8 @@ class SysManager
 	
 	public function new( onInitCallback:Void->Void ) 
 	{
+		settings = new Settings();
+		
 		//trace("init sm");
 		_entities = [];
 		_entitiesVelocity = [];
@@ -38,7 +42,7 @@ class SysManager
 		
 		sysController = new SysController();
 		sysGraphic = new SysGraphic( onInitCallback );
-		sysPhysic = new SysPhysic();
+		sysPhysic = new SysPhysic( this );
 		//sysGraphic.onInit = onInitCallback;
 		//sysLink = new SysLink();
 		
@@ -55,6 +59,7 @@ class SysManager
 	{
 		time = new DTime();
 		//_time = DTime.getRealMS();
+		sysPhysic.space.init();
 		hxd.System.setLoop( refresh );
 	}
 	
@@ -134,7 +139,9 @@ class SysManager
 	
 	function refresh():Void 
 	{
-		time.update();
+		var fd = settings.frameDelay;
+		
+		time.update( fd );
 		
 		//var realTime:UInt = time.tMs;
 		//var rest:UInt = realTime - _time;
@@ -146,9 +153,11 @@ class SysManager
 			
 		}
 		
+		//trace( time.frameRest );
+		
 		while ( time.frameRest >= 1 /*rest >= Settings.FRAME_DELAY*/ )
 		{
-			sysPhysic.refresh( Settings.FRAME_DELAY );
+			sysPhysic.refresh( fd );
 			
 			//if ( rest < Settings.FRAME_DELAY + Settings.FRAME_DELAY )
 			if ( time.frameRest < 2 )
@@ -171,8 +180,8 @@ class SysManager
 				#end
 			}
 			
-			sysController.refresh( Settings.FRAME_DELAY, true );
-			sysController.refresh( Settings.FRAME_DELAY, false );
+			sysController.refresh( fd, true );
+			sysController.refresh( fd, false );
 			
 			for ( e in _entitiesVelocity )
 			{

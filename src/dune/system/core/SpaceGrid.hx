@@ -7,6 +7,7 @@ import dune.system.core.SpaceGrid.Node;
 import dune.system.physic.component.Body;
 import dune.system.physic.component.BodyType;
 import dune.system.physic.shapes.ShapeUtils;
+import dune.system.SysManager;
 
 class Grid
 {
@@ -75,6 +76,11 @@ class Grid
 		}
 		c.remove( n );
 		return c;
+	}
+	
+	public inline function dispose():Void
+	{
+		_grid = null;
 	}
 }
 
@@ -172,28 +178,41 @@ class SpaceGrid implements ISpace
 	var _pitchXExp:Int;
 	var _pitchYExp:Int;
 	
-	public function new() 
+	var _sm:SysManager;
+	
+	public function new( sm:SysManager ) 
 	{
+		_sm = sm;
 		_active = [];
 		_activeSleeping = [];
 		_passive = [];
 		all = new List<Body>();
+		
+		var set = _sm.settings;
 		init();
 	}
 	
-	public function init( 	minX:Int = Settings.X_MIN,
-							minY:Int = Settings.Y_MIN,
-							maxX:Int = Settings.X_MAX,
-							maxY:Int = Settings.Y_MAX,
-							pitchX:Int = Settings.TILE_SIZE,
-							pitchY:Int = Settings.TILE_SIZE ):Void
+	public function init( 	minX:Int = null,
+							minY:Int = null,
+							maxX:Int = null,
+							maxY:Int = null,
+							pitchX:Int = null,
+							pitchY:Int = null ):Void
 	{
+		if ( minX == null ) minX = Math.ceil(_sm.settings.limitXMin);
+		if ( minY == null ) minY = Math.ceil(_sm.settings.limitYMin);
+		if ( maxX == null ) maxX = Math.floor(_sm.settings.limitXMax);
+		if ( maxY == null ) maxY = Math.floor(_sm.settings.limitYMax);
+		if ( pitchX == null ) pitchX = _sm.settings.tileSize;
+		if ( pitchY == null ) pitchY = _sm.settings.tileSize;
+		
 		_pitchX = FloatUtils.getNextPow( pitchX );
 		_pitchY = FloatUtils.getNextPow( pitchY );
 		
 		_pitchXExp = FloatUtils.getExposantInt( _pitchX );
 		_pitchYExp = FloatUtils.getExposantInt( _pitchY );
 		
+		if ( _grid != null ) _grid.dispose();
 		_grid = new Grid( 	minX >> _pitchXExp,
 							minY >> _pitchYExp,
 							maxX >> _pitchXExp,
@@ -308,6 +327,19 @@ class SpaceGrid implements ISpace
 		
 		if ( body.typeOfCollision == BodyType.COLLISION_TYPE_PASSIVE )
 		{
+			if ( _sm.settings.autoLimit )
+			{
+				var set = _sm.settings;
+				var sh = body.shape;
+				sh.updateAABB( body.entity.transform );
+				
+				if ( sh.aabbXMin < set.limitXMin )		set.limitXMin = sh.aabbXMin;
+				if ( sh.aabbYMin < set.limitYMin )		set.limitYMin = sh.aabbYMin;
+				if ( sh.aabbXMax > set.limitXMax )	set.limitXMax = sh.aabbXMax;
+				if ( sh.aabbYMax > set.limitYMax )		set.limitYMax = sh.aabbYMax;
+			}
+			
+			
 			_passive.push( node );
 		}
 		else

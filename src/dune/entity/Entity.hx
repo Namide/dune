@@ -59,9 +59,9 @@ class Entity
 		bodies.push( body );
 	}
 	
-	public function addController( input:Controller ):Void
+	public function addController( cont:Controller ):Void
 	{
-		input.entity = this;
-		controllers.push( input );
+		cont.entity = this;
+		controllers.push( cont );
 	}
 }

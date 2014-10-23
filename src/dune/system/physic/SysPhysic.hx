@@ -4,6 +4,7 @@ import dune.helper.core.DTime;
 import dune.system.core.ISpace;
 import dune.system.core.SpaceGrid;
 import dune.system.physic.component.Body;
+import dune.system.SysManager;
 //import dune.system.core.SysSpaceGrid;
 
 
@@ -18,9 +19,9 @@ class SysPhysic
 	 */
 	public var space(default, null):ISpace;
 	
-	public function new() 
+	public function new( sm:SysManager ) 
 	{
-		space = new dune.system.core.SpaceGrid();
+		space = new dune.system.core.SpaceGrid( sm );
 	}
 	
 	public function refresh( /*time:DTime,*/ dt:UInt/*, link:SysLink*/ ):Void 

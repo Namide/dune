@@ -43,3 +43,5 @@ Roadmap
 	* array <-> list
 * fix
 	* collision on platform after a jump
+	* delete statics method for display factory (to prevent cache GPU bitmap bugs)
+	* diffuse systemManager on all class

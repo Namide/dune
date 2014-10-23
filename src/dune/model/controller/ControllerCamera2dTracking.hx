@@ -4,6 +4,7 @@ import dune.component.Controller;
 import dune.system.graphic.Camera2d;
 import dune.system.graphic.SysGraphic;
 import dune.system.Settings;
+import dune.system.SysManager;
 import h2d.Anim;
 
 /**
@@ -13,14 +14,14 @@ import h2d.Anim;
 class ControllerCamera2dTracking extends Controller
 {
 
-	var _cam:Camera2d;
+	//var _cam:Camera2d;
 	var _anchorX:Float;
 	var _anchorY:Float;
 	//var _miSizeX:Float;
 	//var _miSizeY:Float;
 	//var _centerX:Void->Float;
 	//var _centerY:Void->Float;
-	var _sysGraphic:SysGraphic;
+	var _sm:SysManager;
 	
 	public var velocity(default, default):Float = 0.2;
 	
@@ -42,44 +43,58 @@ class ControllerCamera2dTracking extends Controller
 		_miSizeY = h * 0.5;
 	}*/
 	
-	public function new( sysGraphic:SysGraphic ) 
+	public function new( sm:SysManager ) 
 	{
 		super();
 		setAnchor( 0, 0 );
-		_cam = sysGraphic.camera2d;
-		_sysGraphic = sysGraphic;
+		//_cam = sm.sysGraphic.camera2d;
+		_sm = sm;
 	}
 	
 	public override function execute( dt:UInt ):Void
 	{
-		var lastX:Float = _cam.x;
-		var lastY:Float = _cam.y;
+		var cam = _sm.sysGraphic.camera2d;
+		var eng = _sm.sysGraphic.engine;
+		var set = _sm.settings;
+		
+		var lastX:Float = cam.x;
+		var lastY:Float = cam.y;
 		var newX:Float, newY:Float;
 		
-		
-		if ( _sysGraphic.engine.width > Std.int(Settings.LIMIT_RIGHT - Settings.LIMIT_LEFT) )
+		if ( eng.width > Std.int(set.limitXMax - set.limitXMin) )
 		{
-			newX = ( (_sysGraphic.engine.width - Std.int(Settings.LIMIT_RIGHT - Settings.LIMIT_LEFT) ) >> 1);
+			newX = set.limitXMin - ( ( ( eng.width - Std.int(set.limitXMax - set.limitXMin) ) >> 1 ) + _anchorX );
 		}
 		else
 		{
-			newX = (_sysGraphic.engine.width >> 1) - (entity.transform.x + _anchorX);
-			if ( newX > Settings.LIMIT_LEFT ) newX = Settings.LIMIT_LEFT;
-			if ( newX < _sysGraphic.engine.width - Std.int(Settings.LIMIT_RIGHT)) newX = _sysGraphic.engine.width - Std.int(Settings.LIMIT_RIGHT);
+			newX = -( ( (eng.width >> 1) - (entity.transform.x + _anchorX) ) );
+			
+			//trace( newX );
+			if ( newX < set.limitXMin ) newX = set.limitXMin;
+			if ( newX > Std.int(set.limitXMax) - eng.width ) newX = Std.int(set.limitXMax) - eng.width;
+			
+			//if ( newX > set.LIMIT_LEFT ) newX = set.LIMIT_LEFT;
+			//if ( newX < eng.width - Std.int(set.LIMIT_RIGHT)) newX = eng.width - Std.int(set.LIMIT_RIGHT);
 		}
 		
-		if ( _sysGraphic.engine.height > Std.int(Settings.LIMIT_DOWN - Settings.LIMIT_TOP) )
+		if ( eng.height > Std.int(set.limitYMax - set.limitYMin) )
 		{
-			newY = ( (_sysGraphic.engine.height - Std.int(Settings.LIMIT_DOWN - Settings.LIMIT_TOP) ) >> 1);
+			newY = set.limitYMin - ( ( ( eng.height - Std.int(set.limitYMax - set.limitYMin) ) >> 1 ) + _anchorY );
 		}
 		else
 		{
-			newY = (_sysGraphic.engine.height >> 1) - (entity.transform.y + _anchorY);
-			if ( newY > Settings.LIMIT_TOP ) newY = Settings.LIMIT_TOP;
-			if ( newY < _sysGraphic.engine.height - Std.int(Settings.LIMIT_DOWN)) newY = _sysGraphic.engine.height - Std.int(Settings.LIMIT_DOWN);
+			newY = -( (eng.height >> 1) - (entity.transform.y + _anchorY) );
+			
+			if ( newY < set.limitYMin ) newY = set.limitYMin;
+			if ( newY > Std.int(set.limitYMax) - eng.height ) newY = Std.int(set.limitYMax) - eng.height;
+			
+			//if ( newY > set.LIMIT_TOP ) newY = set.LIMIT_TOP;
+			//if ( newY < eng.height - Std.int(set.LIMIT_DOWN)) newY = eng.height - Std.int(set.LIMIT_DOWN);
 		}
 		
-		_cam.setPos( lastX + (newX-lastX) * velocity, lastY + (newY-lastY) * velocity );
+		//trace( newX, set.LIMIT_LEFT, set.LIMIT_RIGHT, eng.width );
+		
+		cam.setPos( lastX + (newX-lastX) * velocity, lastY + (newY-lastY) * velocity );
 		//trace( cast(entity.display.getObject(), Anim).parent );
 	}
 	

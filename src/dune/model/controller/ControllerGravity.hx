@@ -15,14 +15,14 @@ class ControllerGravity extends Controller
 	 * For a similar to "time dependant", you must do like the following:
 	 * X = 10 / SysManager.FRAME_DELAY;
 	 */
-	public static var X(default, default):Float = 0;
+	//public var x(default, default):Float = 0;
 	
 	/**
 	 * Gravity of the entity in Y axis.
 	 * For a similar to "time dependant", you must do like the following:
 	 * X = 10 / SysManager.FRAME_DELAY;
 	 */
-	public static var Y(default, default):Float = Settings.GRAVITY;
+	//public var Y(default, default):Float = Settings.GRAVITY;
 	
 	/**
 	 * Position on the X-axis
@@ -30,7 +30,6 @@ class ControllerGravity extends Controller
 	public var x(default, set):Float = 1;
 	inline function set_x(val:Float):Float 
 	{
-		xFinal = ControllerGravity.X * val;
 		return x = val;
 	}
 	
@@ -40,15 +39,17 @@ class ControllerGravity extends Controller
 	public var y(default, set):Float = 1;
 	inline function set_y(val:Float):Float 
 	{
-		yFinal = ControllerGravity.Y * val;
 		return y = val;
 	}
 	
-	private var xFinal:Float;
-	private var yFinal:Float;
+	//private var xFinal:Float;
+	//private var yFinal:Float;
 	
-	public function new() 
+	public function new( x:Float, y:Float ) 
 	{
+		this.x = x;
+		this.y = y;
+		
 		super();
 		beforePhysic = true;
 	}
@@ -61,8 +62,8 @@ class ControllerGravity extends Controller
 	
 	public override function execute( dt:UInt ):Void
 	{
-		if ( X != 0 && x != 0 ) { entity.transform.vX += xFinal; }
-		if ( Y != 0 && y != 0 ) { entity.transform.vY += yFinal; }
+		if ( x != 0 ) { entity.transform.vX += x; }
+		if ( y != 0 ) { entity.transform.vY += y; }
 	}
 	
 	public override function clear() 
@@ -70,8 +71,8 @@ class ControllerGravity extends Controller
 		super.clear();
 		x = 1;
 		y = 1;
-		xFinal = ControllerGravity.X * x;
-		yFinal = ControllerGravity.Y * y;
+		//xFinal = x;
+		//yFinal = y;
 	}
 	
 	

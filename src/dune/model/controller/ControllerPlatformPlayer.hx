@@ -4,6 +4,7 @@ import dune.component.IDisplay;
 import dune.entity.Entity;
 import dune.helper.core.ArrayUtils;
 import dune.helper.core.BitUtils;
+import dune.system.SysManager;
 //import dune.helper.core.DTime;
 import dune.component.Controller;
 //import dune.component.IInput;
@@ -43,6 +44,7 @@ class ControllerPlatformPlayer extends Controller
 		public var keyAction(default, default):UInt = 8;
 	#end
 	
+	var _sm:SysManager;
 	
 	var _groundTimeAccX:UInt;  	// milliseconds
 	var _groundVX:Float;		// tiles / sec
@@ -69,9 +71,11 @@ class ControllerPlatformPlayer extends Controller
 	//public var dirX:Int = 0;
 	//public var dirY:Int = 0;
 	
-	public function new() 
+	public function new( sm:SysManager ) 
 	{
 		super();
+		
+		_sm = sm;
 		beforePhysic = false;
 		
 		/*setRun( 14, 0.06 );
@@ -91,7 +95,7 @@ class ControllerPlatformPlayer extends Controller
 	public function setRun( vel:Float, accTime:Float ):Void
 	{
 		//_groundAccX = ControllerPlatformPlayer.getAccX( vel, Math.round(accTime * 1000) );
-		_groundVX = ControllerPlatformPlayer.getVX( vel );
+		_groundVX = ControllerPlatformPlayer.getVX( vel, _sm.settings );
 	}
 	
 	/**
@@ -102,10 +106,13 @@ class ControllerPlatformPlayer extends Controller
 	 */
 	public function setJump( hMin:Float, hMax:Float, lMin:Float, lMax:Float, accTime:Float, timeLock:Float ):Void
 	{
-		_jumpStartVY = ControllerPlatformPlayer.getJumpStartVY( hMin );
-		_jumpVY = ControllerPlatformPlayer.getJumpVY( hMax, _jumpStartVY );
-		_jumpVXMin = ControllerPlatformPlayer.getJumpVX( lMin, _jumpStartVY, _jumpVY );
-		_jumpVXMax = ControllerPlatformPlayer.getJumpVX( lMax, _jumpStartVY, _jumpVY );
+		var g:Float = _sm.settings.gravity;
+		var ts:UInt = _sm.settings.tileSize;
+		
+		_jumpStartVY = ControllerPlatformPlayer.getJumpStartVY( hMin, g, ts );
+		_jumpVY = ControllerPlatformPlayer.getJumpVY( hMax, _jumpStartVY, g, ts );
+		_jumpVXMin = ControllerPlatformPlayer.getJumpVX( lMin, _jumpStartVY, _jumpVY, g, ts );
+		_jumpVXMax = ControllerPlatformPlayer.getJumpVX( lMax, _jumpStartVY, _jumpVY, g, ts );
 		//_jumpAccX = ControllerPlatformPlayer.getAccX( _jumpVXMax, Math.round(accTime * 1000) );
 		_jumpTimeLock = Math.round(timeLock * 1000);
 	}
@@ -126,9 +133,6 @@ class ControllerPlatformPlayer extends Controller
 	
 	public override function execute( dt:UInt ):Void
 	{
-		
-		
-		
 		_t += dt;
 		var bottomWall:Bool = 	_contacts.hasTypeOfSolid( BodyType.SOLID_TYPE_WALL, ContactBodies.BOTTOM ) || 
 								_contacts.hasTypeOfSolid( BodyType.SOLID_TYPE_PLATFORM, ContactBodies.BOTTOM );
@@ -140,14 +144,14 @@ class ControllerPlatformPlayer extends Controller
 		var input = entity.input;
 		var xAxis:Float = input.getAxisX();
 		
-		
+		var g = _sm.settings.gravity;
 		if ( !leftWall && !rightWall || entity.transform.vY < 0 )
 		{
-			entity.transform.vY += Settings.GRAVITY;
+			entity.transform.vY += g;
 		}
 		else 
 		{
-			entity.transform.vY += wallBrake * Settings.GRAVITY;
+			entity.transform.vY += wallBrake * g;
 		}
 		
 		if (entity.health != null && entity.health.isHearted())
@@ -346,14 +350,14 @@ class ControllerPlatformPlayer extends Controller
 	
 	
 	
-	public inline function getMaxTilesXJump( maxTilesXJump:Float, gravity:Float = Settings.GRAVITY ):Float
+	public inline function getMaxTilesXJump( maxTilesXJump:Float, gravity:Float ):Float
 	{
-		return ControllerPlatformPlayer.maxTilesXJump( maxTilesXJump, _jumpStartVY, _jumpVXMax, _jumpVY, gravity );
+		return ControllerPlatformPlayer.maxTilesXJump( maxTilesXJump, _jumpStartVY, _jumpVXMax, _jumpVY, gravity, _sm.settings.tileSize );
 	}
 	
-	public inline function getMaxTilesYJump( maxTilesYJump:Float, gravity:Float = Settings.GRAVITY ):Float
+	public inline function getMaxTilesYJump( maxTilesYJump:Float, gravity:Float ):Float
 	{
-		return ControllerPlatformPlayer.maxTilesYJump( maxTilesYJump, _jumpStartVY, _jumpVXMax, _jumpVY, gravity );
+		return ControllerPlatformPlayer.maxTilesYJump( maxTilesYJump, _jumpStartVY, _jumpVXMax, _jumpVY, gravity, _sm.settings.tileSize );
 	}
 	
 	
@@ -365,10 +369,10 @@ class ControllerPlatformPlayer extends Controller
 	
 	// STATICS CALCULATIONS
 	
-	public inline static function getVX( tilesBySec:Float ):Float
+	public inline static function getVX( tilesBySec:Float, set:Settings ):Float
 	{
-		var f:Float = 1000 / Settings.FRAME_DELAY;
-		var p:Float = tilesBySec * Settings.TILE_SIZE;
+		var f:Float = 1000 / set.frameDelay;
+		var p:Float = tilesBySec * set.tileSize;
 		return p / f;
 	}
 	
@@ -384,25 +388,25 @@ class ControllerPlatformPlayer extends Controller
 	 * @param	gravity			In pixels added by frames
 	 * @return
 	 */
-	public inline static function getJumpStartVY( jumpTiles:Float, gravity:Float = Settings.GRAVITY ):Float
+	public inline static function getJumpStartVY( jumpTiles:Float, gravity:Float, tileSize:UInt ):Float
 	{
-		return Math.sqrt( 2 * gravity * jumpTiles * Settings.TILE_SIZE );
+		return Math.sqrt( 2 * gravity * jumpTiles * tileSize );
 	}
 	
-	public inline static function getJumpVY( maxTilesJump:Float, jumpStartVY:Float, gravity:Float = Settings.GRAVITY ):Float
+	public inline static function getJumpVY( maxTilesJump:Float, jumpStartVY:Float, gravity:Float, tileSize:UInt ):Float
 	{
-		return - (jumpStartVY * jumpStartVY / (2 * maxTilesJump * Settings.TILE_SIZE) - gravity );
+		return - (jumpStartVY * jumpStartVY / (2 * maxTilesJump * tileSize) - gravity );
 	}
 	
-	public inline static function getJumpVX( maxTilesJump:Float, jumpStartVY:Float, jumpVY:Float = 0, gravity:Float = Settings.GRAVITY ):Float
+	public inline static function getJumpVX( maxTilesJump:Float, jumpStartVY:Float, jumpVY:Float = 0, gravity:Float, tileSize:UInt ):Float
 	{
 		//var frames:Float = 2 * jumpStartVY / ( gravity - jumpVY );
-		return maxTilesJump * Settings.TILE_SIZE * ( gravity - jumpVY ) / ( 2 * jumpStartVY );
+		return maxTilesJump * tileSize * ( gravity - jumpVY ) / ( 2 * jumpStartVY );
 	}
 	
-	static function maxTilesYJump( maxTilesXJump:Float, jumpStartVY:Float, jumpVX:Float, jumpVY:Float, gravity:Float = Settings.GRAVITY ):Float
+	static function maxTilesYJump( maxTilesXJump:Float, jumpStartVY:Float, jumpVX:Float, jumpVY:Float, gravity:Float, tileSize:UInt ):Float
 	{
-		maxTilesXJump *= Settings.TILE_SIZE;
+		maxTilesXJump *= tileSize;
 		var vY:Float = jumpStartVY;
 		var vX:Float = jumpVX;
 		var h:Float = 0;
@@ -411,15 +415,15 @@ class ControllerPlatformPlayer extends Controller
 		{
 			h += vY;
 			w += jumpVX;
-			if ( w > maxTilesXJump ) return h / Settings.TILE_SIZE;
+			if ( w > maxTilesXJump ) return h / tileSize;
 			vY += jumpVY - gravity;
 		}
 		return -1;
 	}
 	
-	static function maxTilesXJump( maxTilesYJump:Float, jumpStartVY:Float, jumpVX:Float, jumpVY:Float, gravity:Float = Settings.GRAVITY ):Float
+	static function maxTilesXJump( maxTilesYJump:Float, jumpStartVY:Float, jumpVX:Float, jumpVY:Float, gravity:Float, tileSize:UInt ):Float
 	{
-		maxTilesYJump *= Settings.TILE_SIZE;
+		maxTilesYJump *= tileSize;
 		var vY:Float = jumpStartVY;
 		var vX:Float = jumpVX;
 		var h:Float = 0;
@@ -428,7 +432,7 @@ class ControllerPlatformPlayer extends Controller
 		{
 			h += vY;
 			w += jumpVX;
-			if ( h > maxTilesYJump ) return w / Settings.TILE_SIZE;
+			if ( h > maxTilesYJump ) return w / tileSize;
 			vY += jumpVY - gravity;
 		}
 		return -1;

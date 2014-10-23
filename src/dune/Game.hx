@@ -5,6 +5,7 @@ import dune.component.MultiInput;
 import dune.component.Transform;
 import dune.entity.Entity;
 import dune.helper.core.UrlUtils;
+import dune.model.controller.ControllerCamera2dTracking;
 import dune.model.controller.ControllerPlatform;
 import dune.model.controller.ControllerPlatformPlayer;
 import dune.model.controller.ControllerGravity;
@@ -70,7 +71,7 @@ class Game
 		// MOBILE LINEAR
 		
 		
-		var TS:Float = Settings.TILE_SIZE;
+		var TS:Float = systemManager.settings.tileSize;//Settings.TILE_SIZE;
 		var size:Array<Float>;
 		
 		
@@ -111,7 +112,7 @@ class Game
 		// PLAYER
 		var e3 = new Entity();
 		e3.transform.x = 2*TS;
-		e3.transform.y = 2*TS;
+		e3.transform.y = 7*TS;
 		size = [TS, TS];
 		
 			// graphic
@@ -123,7 +124,7 @@ class Game
 				
 			// gravity
 			
-				var g3:ControllerGravity = new ControllerGravity();
+				var g3:ControllerGravity = new ControllerGravity( 0, systemManager.settings.gravity );
 				//e3.addController( new ControllerGravity() );
 				
 			// collision
@@ -144,9 +145,15 @@ class Game
 			
 			// Platform controller
 			
-				var i3:ControllerPlatformPlayer = new ControllerPlatformPlayer();
+				var i3:ControllerPlatformPlayer = new ControllerPlatformPlayer( systemManager );
 				//i3.groundVX = 5;
 				e3.addController( i3 );
+			
+			// Camera traking
+			
+				var ct = new ControllerCamera2dTracking( systemManager );
+				e3.addController( ct );
+			
 			
 		systemManager.addEntity( e3 );
 		
@@ -176,12 +183,12 @@ class Game
 		//hxd.System.setLoop( refresh );
 		
 		
-		addBounceBall();
+		//addBounceBall();
 	}
 	
 	private function addBounceBall():Void
 	{
-		var TS:Float = Settings.TILE_SIZE;
+		var TS:Float = systemManager.settings.tileSize;//Settings.TILE_SIZE;
 		
 		var size:Float = ( Math.random() + 0.5 ) * TS;
 		
@@ -207,7 +214,7 @@ class Game
 		
 		// move
 	
-			var i4:ControllerPlatform = new ControllerPlatform();
+			var i4:ControllerPlatform = new ControllerPlatform( systemManager );
 			ball.addController( i4 );
 			
 		systemManager.addEntity( ball );

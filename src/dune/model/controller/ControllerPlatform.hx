@@ -19,9 +19,12 @@ class ControllerPlatform extends Controller
 	
 	var _contacts:ContactBodies;
 	
-	public function new() 
+	var _sm:SysManager;
+	
+	public function new( sm:SysManager ) 
 	{
 		super();
+		_sm = sm;
 		beforePhysic = false;
 	}
 	
@@ -105,7 +108,7 @@ class ControllerPlatform extends Controller
 		
 		
 		//vX += entity.transform.vX;
-		entity.transform.vY += Settings.GRAVITY;
+		entity.transform.vY += _sm.settings.gravity;
 		
 		var grip:Bool = false;
 		if ( bottomWall && entity.transform.vY > 0 )

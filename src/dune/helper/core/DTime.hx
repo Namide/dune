@@ -28,7 +28,7 @@ class DTime
 		frameRest = 0;
 	}
 	
-	public function update():Void
+	public function update( frameDelay:Int ):Void
 	{
 		if ( pause )
 		{
@@ -40,7 +40,7 @@ class DTime
 		dtMs = getRealMS() - _realT;
 		if ( dtMs <= 0 ) return;
 		
-		frameRest += (dtMs / Settings.FRAME_DELAY);
+		frameRest += ( dtMs / frameDelay );
 		
 		tMs += ( distord == 1 ) ? dtMs : Math.round( dtMs * distord );
 		_realT = getRealMS();

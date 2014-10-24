@@ -4,6 +4,7 @@ import dune.component.IComponent;
 import dune.component.ComponentType;
 import dune.component.IDisplay;
 import dune.helper.core.ArrayUtils;
+import dune.helper.core.DRect;
 import h2d.Anim;
 import h2d.Sprite;
 
@@ -32,6 +33,7 @@ class Display2dAnim implements IDisplay//, ComponentAnim
 	var _listAnimDatas:Array<AnimData>;
 	
 	var _currentAnim:String;
+	var _bounds:DRect;
 	
 	var _toRight:Bool;
 	public inline function isToRight():Bool { return _toRight; }
@@ -41,20 +43,20 @@ class Display2dAnim implements IDisplay//, ComponentAnim
 		{
 			var q:Float = _graphic.scaleY;
 			_graphic.scaleX = (val) ? q : -q;
-			_graphic.x += (val) ? _width * q : -_width * q;
+			_graphic.x += (val) ? _bounds.w * q : -_bounds.w * q;
 		}
 		_toRight = val;
 	}
 	
-	var _width:Float;
+	//var _width:Float;
 	public var type(default, null):UInt;
 	
-	public function new( graphic:Anim, width:Float ) 
+	public function new( graphic:Anim, bounds:DRect/*width:Float*/ ) 
 	{
 		type = ComponentType.DISPLAY_2D| ComponentType.DISPLAY_ANIMATED;
 		_toRight = true;
 		_graphic = graphic;
-		_width = width;
+		_bounds = bounds;
 		_listAnimDatas = [];
 	}
 	
@@ -79,15 +81,15 @@ class Display2dAnim implements IDisplay//, ComponentAnim
 	
 	public inline function setPos( x:Float, y:Float ):Void
 	{
-		_graphic.setPos( (_toRight) ? x : (x+_width), y );
+		_graphic.setPos( _bounds.x + ( (_toRight) ? x : (x+_bounds.w) ), _bounds.y + y );
 	}
 	public inline function setX( val:Float ):Void
 	{
-		_graphic.x = (_toRight) ? val : (val+_width);
+		_graphic.x = _bounds.x + ( (_toRight) ? val : (val+_bounds.w) );
 	}
 	public inline function setY( val:Float ):Void
 	{
-		_graphic.y = val;
+		_graphic.y = _bounds.y + val;
 	}
 
 	public function clear():Void 

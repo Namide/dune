@@ -12,7 +12,7 @@ class Settings
 	public var textQuality:Float =  1;
 	//public static inline var FRAME_ANIM:UInt = 100;
 	
-	public var tileSize:UInt = 60;
+	public var tileSize:UInt = 64;
 	//public inline static var TILE_SIZE:UInt = 32;
 	/*
 	public inline var X_MIN:UInt = - TILE_SIZE;

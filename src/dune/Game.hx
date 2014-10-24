@@ -10,6 +10,7 @@ import dune.model.controller.ControllerPlatform;
 import dune.model.controller.ControllerPlatformPlayer;
 import dune.model.controller.ControllerGravity;
 import dune.model.controller.ControllerMobile;
+import dune.model.factory.DisplayFactory;
 import dune.model.factory.EntityFactory;
 import dune.system.graphic.component.Display2dSprite;
 import dune.system.physic.component.Body;
@@ -120,7 +121,7 @@ class Game
 				//var spr3 = new h2d.Sprite( systemManager.sysGraphic.s2d );
 				//var bmp3 = new h2d.Bitmap(tile, spr3);
 				//e3.display = new CompDisplay2dSprite( spr3 );
-				e3.display = EntityFactory.getSolidDisplay( systemManager, size[0], size[1] );
+				e3.display = DisplayFactory.assetMcToDisplay2dAnim( "PlayerMC", systemManager, 1 );//EntityFactory.getSolidDisplay( systemManager, size[0], size[1] );
 				
 			// gravity
 			

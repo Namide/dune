@@ -33,7 +33,8 @@ class Display2dAnim implements IDisplay//, ComponentAnim
 	var _listAnimDatas:Array<AnimData>;
 	
 	var _currentAnim:String;
-	var _bounds:DRect;
+	//var _bounds:DRect;
+	public var width(default, default):Int;
 	
 	var _toRight:Bool;
 	public inline function isToRight():Bool { return _toRight; }
@@ -43,7 +44,7 @@ class Display2dAnim implements IDisplay//, ComponentAnim
 		{
 			var q:Float = _graphic.scaleY;
 			_graphic.scaleX = (val) ? q : -q;
-			_graphic.x += (val) ? _bounds.w * q : -_bounds.w * q;
+			_graphic.x += (val) ? width * q : -width * q;
 		}
 		_toRight = val;
 	}
@@ -51,12 +52,12 @@ class Display2dAnim implements IDisplay//, ComponentAnim
 	//var _width:Float;
 	public var type(default, null):UInt;
 	
-	public function new( graphic:Anim, bounds:DRect/*width:Float*/ ) 
+	public function new( graphic:Anim/*, bounds:DRect*//*width:Float*/ ) 
 	{
 		type = ComponentType.DISPLAY_2D| ComponentType.DISPLAY_ANIMATED;
 		_toRight = true;
 		_graphic = graphic;
-		_bounds = bounds;
+		//_bounds = bounds;
 		_listAnimDatas = [];
 	}
 	
@@ -81,15 +82,15 @@ class Display2dAnim implements IDisplay//, ComponentAnim
 	
 	public inline function setPos( x:Float, y:Float ):Void
 	{
-		_graphic.setPos( _bounds.x + ( (_toRight) ? x : (x+_bounds.w) ), _bounds.y + y );
+		_graphic.setPos( (_toRight) ? x : (x+width), y );
 	}
 	public inline function setX( val:Float ):Void
 	{
-		_graphic.x = _bounds.x + ( (_toRight) ? val : (val+_bounds.w) );
+		_graphic.x = (_toRight) ? val : (val+width);
 	}
 	public inline function setY( val:Float ):Void
 	{
-		_graphic.y = _bounds.y + val;
+		_graphic.y = val;
 	}
 
 	public function clear():Void 

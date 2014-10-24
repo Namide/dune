@@ -9,7 +9,7 @@ class Settings
 	public var frameDelay:UInt = 20; 	// =20; - 50 FPS => 1000 / 50
 	public var gravity:Float = 2; 		// 40 / FRAME_DELAY
 	
-	public var textQuality:Float =  1;
+	public var textQuality:Float =  2;
 	//public static inline var FRAME_ANIM:UInt = 100;
 	
 	public var tileSize:UInt = 64;

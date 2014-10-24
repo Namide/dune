@@ -122,6 +122,7 @@ class Game
 				//var bmp3 = new h2d.Bitmap(tile, spr3);
 				//e3.display = new CompDisplay2dSprite( spr3 );
 				e3.display = DisplayFactory.assetMcToDisplay2dAnim( "PlayerMC", systemManager, 1 );//EntityFactory.getSolidDisplay( systemManager, size[0], size[1] );
+				e3.display.width = Math.round(size[0]);
 				
 			// gravity
 			

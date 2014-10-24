@@ -14,6 +14,7 @@ class Display2dSprite implements IDisplay
 	var _graphic:Sprite;
 	
 	public var type(default, null):UInt;
+	public var width(default, default):Int;
 	
 	public inline function getObject():Sprite
 	{

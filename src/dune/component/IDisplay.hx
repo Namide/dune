@@ -6,6 +6,7 @@ package dune.component ;
 interface IDisplay
 {
 	public var type(default, null):UInt;
+	public var width(default, default):Int;
 	public function clear():Void;
 	
 	public function getObject():Dynamic;

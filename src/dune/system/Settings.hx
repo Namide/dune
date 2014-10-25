@@ -9,10 +9,8 @@ class Settings
 	public var frameDelay:UInt = 20; 	// =20; - 50 FPS => 1000 / 50
 	public var gravity:Float = 2; 		// 40 / FRAME_DELAY
 	
-	public var textQuality:Float =  2;
-	//public static inline var FRAME_ANIM:UInt = 100;
 	
-	public var tileSize:UInt = 64;
+	public var tileSize:UInt = 64; // > 64 to optimize space grid
 	//public inline static var TILE_SIZE:UInt = 32;
 	/*
 	public inline var X_MIN:UInt = - TILE_SIZE;
@@ -27,8 +25,16 @@ class Settings
 	
 	public var autoLimit:Bool = true;
 	
+	public var width:Int = 640;
+	public var height:Int = 360;
+	public var renderProp:Float;
+	
+	public var textQuality:Float =  1;
+	//public static inline var FRAME_ANIM:UInt = 100;
+	
 	public function new() 
 	{
+		renderProp = width/height;
 		
 		//throw "Static class!";
 	}

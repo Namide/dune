@@ -41,7 +41,7 @@ class SysManager
 		_entitiesMoved = [];
 		
 		sysController = new SysController();
-		sysGraphic = new SysGraphic( onInitCallback );
+		sysGraphic = new SysGraphic( this, onInitCallback );
 		sysPhysic = new SysPhysic( this );
 		//sysGraphic.onInit = onInitCallback;
 		//sysLink = new SysLink();
@@ -124,6 +124,8 @@ class SysManager
 		
 		sysController = null;
 		sysPhysic = null;
+		
+		sysGraphic.dispose();
 		sysGraphic = null;
 		
 		_entities = null;
@@ -169,8 +171,8 @@ class SysManager
 				
 				#if (debugHitbox && (flash || openfl ))
 					_sceneHitBox.graphics.clear();
-					_sceneHitBox.x = sysGraphic.camera2d.x;
-					_sceneHitBox.y = sysGraphic.camera2d.y;
+					_sceneHitBox.x = -sysGraphic.camera2d.x;
+					_sceneHitBox.y = -sysGraphic.camera2d.y;
 					
 					sysPhysic.space.draw( _sceneHitBox );
 					for ( compBody in sysPhysic.space.all )

@@ -212,6 +212,11 @@ class SpaceGrid implements ISpace
 		_pitchXExp = FloatUtils.getExposantInt( _pitchX );
 		_pitchYExp = FloatUtils.getExposantInt( _pitchY );
 		
+		minX = Math.floor(minX / _pitchX) * _pitchX;
+		minY = Math.floor(minY / _pitchY) * _pitchY;
+		maxX = Math.ceil(maxX / _pitchX) * _pitchX;
+		maxY = Math.ceil(maxY / _pitchY) * _pitchY;
+		
 		if ( _grid != null ) _grid.dispose();
 		_grid = new Grid( 	minX >> _pitchXExp,
 							minY >> _pitchYExp,

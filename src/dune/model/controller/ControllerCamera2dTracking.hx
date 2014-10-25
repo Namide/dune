@@ -54,27 +54,24 @@ class ControllerCamera2dTracking extends Controller
 	public override function execute( dt:UInt ):Void
 	{
 		var cam = _sm.sysGraphic.camera2d;
-		var eng = _sm.sysGraphic.engine;
-		var set = _sm.settings;
+		//var eng = _sm.sysGraphic.engine;
+		//var set = _sm.settings;
 		
 		var lastX:Float = cam.x;
 		var lastY:Float = cam.y;
 		var newX:Float, newY:Float;
 		
-		if ( eng.width > Std.int(set.limitXMax - set.limitXMin) )
+		
+		
+		/*if ( eng.width > Std.int(set.limitXMax - set.limitXMin) )
 		{
 			newX = set.limitXMin - ( ( ( eng.width - Std.int(set.limitXMax - set.limitXMin) ) >> 1 ) + _anchorX );
 		}
 		else
 		{
 			newX = -( ( (eng.width >> 1) - (entity.transform.x + _anchorX) ) );
-			
-			//trace( newX );
 			if ( newX < set.limitXMin ) newX = set.limitXMin;
 			if ( newX > Std.int(set.limitXMax) - eng.width ) newX = Std.int(set.limitXMax) - eng.width;
-			
-			//if ( newX > set.LIMIT_LEFT ) newX = set.LIMIT_LEFT;
-			//if ( newX < eng.width - Std.int(set.LIMIT_RIGHT)) newX = eng.width - Std.int(set.LIMIT_RIGHT);
 		}
 		
 		if ( eng.height > Std.int(set.limitYMax - set.limitYMin) )
@@ -84,18 +81,14 @@ class ControllerCamera2dTracking extends Controller
 		else
 		{
 			newY = -( (eng.height >> 1) - (entity.transform.y + _anchorY) );
-			
 			if ( newY < set.limitYMin ) newY = set.limitYMin;
 			if ( newY > Std.int(set.limitYMax) - eng.height ) newY = Std.int(set.limitYMax) - eng.height;
-			
-			//if ( newY > set.LIMIT_TOP ) newY = set.LIMIT_TOP;
-			//if ( newY < eng.height - Std.int(set.LIMIT_DOWN)) newY = eng.height - Std.int(set.LIMIT_DOWN);
 		}
 		
-		//trace( newX, set.LIMIT_LEFT, set.LIMIT_RIGHT, eng.width );
-		
 		cam.setPos( lastX + (newX-lastX) * velocity, lastY + (newY-lastY) * velocity );
-		//trace( cast(entity.display.getObject(), Anim).parent );
+		*/
+		
+		cam.setPos( lastX + (entity.transform.x - (_anchorX + lastX) ) * velocity, lastY + (entity.transform.y - (_anchorY + lastY) ) * velocity );
 	}
 	
 }

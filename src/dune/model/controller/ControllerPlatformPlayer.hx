@@ -66,7 +66,7 @@ class ControllerPlatformPlayer extends Controller
 	
 	var _t:UInt;
 	
-	public var wallBrake:Float = 0.1;
+	public var wallBrake:Float = 1;
 	
 	//public var dirX:Int = 0;
 	//public var dirY:Int = 0;

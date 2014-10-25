@@ -154,6 +154,7 @@ class Game
 			// Camera traking
 			
 				var ct = new ControllerCamera2dTracking( systemManager );
+				ct.setAnchor( 0, 0 );//size[0] * 0.5, size[1] * 0.5 );
 				e3.addController( ct );
 			
 			

@@ -205,7 +205,7 @@ class DisplayFactory
 	static function mcToCache( mc:MovieClip, textScale:Float, quality:Float ):AnimCache
 	{
 		var list:Array<AnimData> = [];
-		
+		//quality = 1;
 		var m:Matrix = new Matrix();
 		//m.createBox( textScale * quality, textScale * quality, 0, 0, 0 );
 		
@@ -240,13 +240,16 @@ class DisplayFactory
 			
 			bbs[i] = bb;
 			
-			var bd = new flash.display.BitmapData( Math.floor(bb.w * textScale), Math.floor(bb.h * textScale), true, 0x00FFFFFF );
+			var bd = new flash.display.BitmapData( Math.floor(bb.w * textScale * quality), Math.floor(bb.h * textScale * quality), true, 0x00FFFFFF );
 			m.createBox( textScale * quality, textScale * quality, 0, -Math.ceil(bb.x * quality), -Math.ceil(bb.y * quality) );
 			
 			bd.draw( mc, m );
 			var hbd = hxd.BitmapData.fromNative( bd );
 			var t:Tile = Tile.fromBitmap( hbd );
+			
+			//t.getTexture().resize( 60, 60 );
 			//t.setPos( -Math.ceil(bb.x), -Math.ceil(bb.y) );
+			//t.setSize( bb.w, bb.h );
 			
 			ts[i] = t;
 			

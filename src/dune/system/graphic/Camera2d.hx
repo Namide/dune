@@ -1,6 +1,7 @@
 package dune.system.graphic;
 
 import dune.system.graphic.Camera2d.Layer;
+import dune.system.SysManager;
 import h2d.Sprite;
 
 class Layer
@@ -21,59 +22,58 @@ class Camera2d
 {
 	public var display(default, null):Sprite;
 	
-	public var x(get, set):Float;
-	inline function get_x():Float
-	{
-		return -display.x;
-	}
+	public var x(default, set):Float = 0;
 	inline function set_x(val:Float):Float
 	{
-		display.x = -val;
+		if ( x == val ) return val;
+		x = val;
 		refresh();
 		return val;
 	}
 	
-	public var y(get, set):Float;
-	inline function get_y():Float
-	{
-		return -display.y;
-	}
+	public var y(default, set):Float = 0;
 	inline function set_y(val:Float):Float
 	{
-		display.y = -val;
+		if ( y == val ) return val;
+		y = val;
 		refresh();
 		return val;
 	}
 	
 	public inline function zoom( val:Float ):Void
 	{
-		display.scale(val);
-		refresh();
+		zoomY = val;
+		zoomY = val;
+		//display.scale(val);
 	}
 	
-	public var zoomX(get, set):Float;
-	inline function get_zoomX():Float
-	{
-		return display.scaleX;
-	}
+	public var zoomX(default, set):Float = 1;
 	inline function set_zoomX(val:Float):Float
 	{
-		display.scaleX = val;
+		if ( val == zoomX ) return val;
+		zoomX = val;
 		refresh();
 		return val;
 	}
 	
-	public var zoomY(get, set):Float;
-	inline function get_zoomY():Float
-	{
-		return display.scaleY;
-	}
+	public var zoomY(default, set):Float = 1;
 	inline function set_zoomY(val:Float):Float
 	{
-		display.scaleY = val;
+		if ( val == zoomY ) return val;
+		zoomY = val;
 		refresh();
-		return val;
+		return zoomY;
 	}
+	
+	var _stageZoom:Float = 1;
+	public function stageZoom( zoom:Float ):Void
+	{
+		if ( zoom == _stageZoom ) return;
+		_stageZoom = zoom;
+		refresh();
+	}
+	
+	public var wallLimited(default, default):Bool = true;
 	
 	var _layers:Array<Layer> = [];
 	public function addLayer( layerDisplay:Sprite, z:Float ):Void
@@ -97,24 +97,82 @@ class Camera2d
 		refresh();
 	}
 	
-	public function new(?parent:Sprite) 
+	var _sm:SysManager;
+	
+	public function new( sm:SysManager, ?parent:Sprite) 
 	{
+		_sm = sm;
 		display = new Sprite(parent);
 	}
 	
 	function refresh():Void
 	{
+		var zX = _stageZoom * zoomX;
+		var zY = _stageZoom * zoomY;
+		
+		if ( zX != display.scaleX && zY != display.scaleY )
+		{
+			display.scaleX = zX;
+			display.scaleY = zY;
+		}
+		
+		
+		var pX:Float = x;
+		var pY:Float = y;
+		
+		var eng = _sm.sysGraphic.engine;
+		var set = _sm.settings;
+		
+		if ( wallLimited && eng.width > Std.int(set.limitXMax - set.limitXMin) )
+		{
+			pX = set.limitXMin - ( ( ( eng.width - Std.int(set.limitXMax - set.limitXMin) ) >> 1 ) );
+		}
+		else
+		{
+			pX = pX - (eng.width >> 1);
+			if ( pX < set.limitXMin ) pX = set.limitXMin;
+			if ( pX > Std.int(set.limitXMax) - eng.width ) pX = Std.int(set.limitXMax) - eng.width;
+		}
+		
+		if ( wallLimited && eng.height > Std.int(set.limitYMax - set.limitYMin) )
+		{
+			pY = set.limitYMin - ( ( ( eng.height - Std.int(set.limitYMax - set.limitYMin) ) >> 1 ) );
+		}
+		else
+		{
+			pY = pY - (eng.height >> 1);
+			if ( pY < set.limitYMin ) pY = set.limitYMin;
+			if ( pY > Std.int(set.limitYMax) - eng.height ) pY = Std.int(set.limitYMax) - eng.height;
+		}
+		
+		pX += eng.width >> 1;
+		pY += eng.height >> 1;
+		
+		pX = -pX * zX;
+		pY = -pY * zY;
+		
+		pX += eng.width >> 1;
+		pY += eng.height >> 1;
+		
+		display.x = pX;
+		display.y = pY;
+		
+		//pX -= ;
+		//pX -= ;
+		
 		for ( layer in _layers )
 		{
-			layer.sprite.setPos( 	display.x * layer.z + layer.x,
-									display.y * layer.z + layer.y );
+			layer.sprite.setPos( 	-pX * layer.z + layer.x,
+									-pY * layer.z + layer.y );
 			//layer.sprite.scale( 0.5 * (display.scaleX + display.scaleY) * layer.z );
 		}
 	}
 	
 	public inline function setPos( x:Float, y:Float ):Void
 	{
-		display.setPos( -x, -y );
+		this.x = x;
+		this.y = y;
+		//display.setPos( -x, -y );
 		refresh();
 	}
 	

@@ -3,6 +3,9 @@ package dune.system.graphic;
 import dune.component.ComponentType;
 import dune.entity.Entity;
 import dune.helper.core.BitUtils;
+import dune.system.SysManager;
+import flash.events.Event;
+import flash.Lib;
 import h2d.Sprite;
 
 /**
@@ -16,12 +19,46 @@ class SysGraphic
 	public var s2d : h2d.Scene;
 	
 	public var camera2d(default, null):Camera2d;
+	var _sm:SysManager;
 	
-	public function new( onInitCallback:Void->Void ) 
+	public function new( sm:SysManager, onInitCallback:Void->Void ) 
 	{
+		_sm = sm;
+		
 		engine = new h3d.Engine();
 		engine.onReady = function():Void { init(onInitCallback); };
+		
+		
+		
 		engine.init();
+	}
+	
+	public dynamic function resize( e:Dynamic = null ):Void
+	{
+		var iw:Int = flash.Lib.current.stage.stageWidth;
+		var ih:Int = flash.Lib.current.stage.stageHeight;
+		
+		var w:Int = 0;
+		var h:Int = 0;
+		
+		var ip:Float = iw / ih;
+		var p:Float = _sm.settings.renderProp;
+		if ( p > ip )
+		{
+			w = iw;
+			h = Math.floor(w/p);
+		}
+		else
+		{
+			h = ih;
+			w = Math.floor(h*p);
+		}
+		//engine.setRenderZone( (iw - w) >> 1, (ih - h) >> 1, w, h );
+		engine.resize( w, h );
+		var s3d = flash.Lib.current.stage.stage3Ds[0];
+		s3d.x = (iw - w) >> 1;
+		s3d.y = (ih - h) >> 1;
+		camera2d.stageZoom( w / _sm.settings.width );
 	}
 	
 	function init( onInitCallback:Void->Void )
@@ -30,9 +67,14 @@ class SysGraphic
 		s2d = new h2d.Scene();
 		s3d.addPass(s2d);
 		
-		camera2d = new Camera2d( s2d );
+		camera2d = new Camera2d( _sm, s2d );
 		
-		engine.onResized = function() { onResize(); };
+		//engine.onResized = resize;
+		flash.Lib.current.stage.addEventListener( flash.events.Event.RESIZE, resize );
+		engine.autoResize = false;
+		resize();
+		
+		//engine.onResized = function() { onResize(); };
 		//engine.backgroundColor = 0xCCCCCC;
 		
 		//trace(engine.driverName(true));
@@ -47,10 +89,10 @@ class SysGraphic
 		
 	}*/
 
-	public dynamic function onResize()
+	/*public dynamic function onResize()
 	{
 		
-	}
+	}*/
 	
 	public function add( entity:Entity ):Void
 	{
@@ -93,10 +135,11 @@ class SysGraphic
 		//engine.begin(); ... render objects ... engine.end()
 	}
 	
-	/*public function dispose():Void
+	public function dispose():Void
 	{
-		engine.dispose();
-	}*/
+		flash.Lib.current.stage.removeEventListener( flash.events.Event.RESIZE, resize );
+		//engine.dispose();
+	}
 	
 	/*public function begin():Void
 	{

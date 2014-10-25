@@ -25,7 +25,7 @@ class SysGraphic
 	{
 		_sm = sm;
 		
-		engine = new h3d.Engine();
+		engine = new h3d.Engine( true, 8 );
 		engine.onReady = function():Void { init(onInitCallback); };
 		
 		
@@ -75,7 +75,7 @@ class SysGraphic
 		resize();
 		
 		//engine.onResized = function() { onResize(); };
-		//engine.backgroundColor = 0xCCCCCC;
+		engine.backgroundColor = 0xCCCCCC;
 		
 		//trace(engine.driverName(true));
 		

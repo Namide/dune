@@ -123,30 +123,30 @@ class Camera2d
 		var eng = _sm.sysGraphic.engine;
 		var set = _sm.settings;
 		
-		if ( wallLimited && eng.width > Std.int(set.limitXMax - set.limitXMin) )
+		if ( wallLimited && set.width > Std.int(set.limitXMax - set.limitXMin) )
 		{
-			pX = set.limitXMin - ( ( ( eng.width - Std.int(set.limitXMax - set.limitXMin) ) >> 1 ) );
+			pX = set.limitXMin - ( ( ( set.width - Std.int(set.limitXMax - set.limitXMin) ) >> 1 ) );
 		}
 		else
 		{
-			pX = pX - (eng.width >> 1);
+			pX = pX - (set.width >> 1);
 			if ( pX < set.limitXMin ) pX = set.limitXMin;
-			if ( pX > Std.int(set.limitXMax) - eng.width ) pX = Std.int(set.limitXMax) - eng.width;
+			if ( pX > Std.int(set.limitXMax) - set.width ) pX = Std.int(set.limitXMax) - set.width;
 		}
 		
-		if ( wallLimited && eng.height > Std.int(set.limitYMax - set.limitYMin) )
+		if ( wallLimited && set.height > Std.int(set.limitYMax - set.limitYMin) )
 		{
-			pY = set.limitYMin - ( ( ( eng.height - Std.int(set.limitYMax - set.limitYMin) ) >> 1 ) );
+			pY = set.limitYMin - ( ( ( set.height - Std.int(set.limitYMax - set.limitYMin) ) >> 1 ) );
 		}
 		else
 		{
-			pY = pY - (eng.height >> 1);
+			pY = pY - (set.height >> 1);
 			if ( pY < set.limitYMin ) pY = set.limitYMin;
-			if ( pY > Std.int(set.limitYMax) - eng.height ) pY = Std.int(set.limitYMax) - eng.height;
+			if ( pY > Std.int(set.limitYMax) - set.height ) pY = Std.int(set.limitYMax) - set.height;
 		}
 		
-		pX += eng.width >> 1;
-		pY += eng.height >> 1;
+		pX += set.width >> 1;
+		pY += set.height >> 1;
 		
 		pX = -pX * zX;
 		pY = -pY * zY;
@@ -154,8 +154,8 @@ class Camera2d
 		pX += eng.width >> 1;
 		pY += eng.height >> 1;
 		
-		display.x = pX;
-		display.y = pY;
+		display.x = Math.round(pX);
+		display.y = Math.round(pY);
 		
 		//pX -= ;
 		//pX -= ;

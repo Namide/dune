@@ -29,7 +29,7 @@ class Settings
 	public var height:Int = 360;
 	public var renderProp:Float;
 	
-	public var textQuality:Float =  2;
+	public var textQuality:Float =  1;
 	//public static inline var FRAME_ANIM:UInt = 100;
 	
 	public function new() 

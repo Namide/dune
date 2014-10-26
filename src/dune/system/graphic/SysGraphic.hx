@@ -131,6 +131,8 @@ class SysGraphic
 			//entity.transform.moved = false;
 		}
 		
+		camera2d.refresh();
+		
 		engine.render(s3d);
 		//engine.begin(); ... render objects ... engine.end()
 	}

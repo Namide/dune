@@ -209,7 +209,7 @@ class DisplayFactory
 		var m:Matrix = new Matrix();
 		//m.createBox( textScale * quality, textScale * quality, 0, 0, 0 );
 		
-		var label:String = null;
+		var label:String = Std.string( Math.random );
 		var animData:AnimData = null;
 		
 		//var boundLimits = new Rectangle(Math.POSITIVE_INFINITY, Math.POSITIVE_INFINITY, Math.NEGATIVE_INFINITY, Math.NEGATIVE_INFINITY );
@@ -220,7 +220,6 @@ class DisplayFactory
 		for ( i in 0...mc.totalFrames )
 		{
 			mc.gotoAndStop(i + 1);
-			
 			if ( mc.currentLabel != label )
 			{
 				animData = new AnimData( mc.currentLabel, [] );
@@ -271,17 +270,54 @@ class DisplayFactory
 		return c;
 	}
 	
-	/*public static function assetMcToSprite( mcName:String, sm:SysManager, textScale:Float, quality:Float = null ):SpriteDatas
+	public static function mcToSprite( mc:MovieClip, sm:SysManager, textScale:Float, quality:Float = null ):h2d.Sprite
 	{
 		if ( quality == null ) quality = sm.settings.textQuality;
 		
-		var r:SpriteRes = Lambda.find( _resTiles, function( r:SpriteRes ):Bool { return r.mcName == mcName; } );
+		var r:AnimCache = Lambda.find( _cache, function( r:AnimCache ):Bool { return r.mcClassName == getName( mc ); } );
+		if ( r == null )
+		{
+			r = mcToCache( mc, textScale, quality );//new AnimCache();
+			r.mcClassName = getName( mc );
+			_cache.push( r );
+		}
+		
+		// NO ANIMATED
+		if ( r.animDatas.length < 2 && r.animDatas[0].frames.length < 2 )
+		{
+			//var sd = new SpriteDatas();
+			var sprite = new h2d.Sprite( sm.sysGraphic.s2d );
+			sprite.setScale( 1 / quality );
+			var bitmap = new h2d.Bitmap( r.animDatas[0].frames[0], sprite );
+			return sprite;
+		}
+		
+		// ANIMATED
+		var anim:Anim = new Anim( null, Lib.current.stage.frameRate , sm.sysGraphic.s2d );
+		anim.setScale( 1 / quality );
+		/*var a:Array<AnimData> = r.animDatas;
+		var d = new Display2dAnim( anim );
+		for ( ad in a )
+		{
+			d.pushAnimData( ad );
+		}
+		d.play( a[0].label );*/
+		anim.play( r.animDatas[0].frames );
+		return anim;
+		
+		
+		
+		
+		
+		/*if ( quality == null ) quality = sm.settings.textQuality;
+		
+		var r:SpriteRes = Lambda.find( _resTiles, function( r:SpriteRes ):Bool { return r.mcName == getName( mc ); } );
 		if ( r == null )
 		{
 			r = new SpriteRes();
 			r.mcName = mcName;
 			
-			var mc:MovieClip = Lib.attach( mcName );
+			var mc:MovieClip = mc;
 			var bmpd = new flash.display.BitmapData( Math.ceil(mc.width * textScale), Math.ceil(mc.height * textScale), true, 0x00FFFFFF );
 			var m = new Matrix();
 			m.createBox( textScale, textScale );
@@ -292,8 +328,8 @@ class DisplayFactory
 		var sd = new SpriteDatas();
 		sd.sprite = new h2d.Sprite( sm.sysGraphic.s2d );
 		sd.bitmap = new h2d.Bitmap(r.tile, sd.sprite);
-		return sd;
-	}*/
+		return sd;*/
+	}
 	
 	/*public static function assetMcToDisplay2d( mcName:String, sm:SysManager, textScale:Float, quality:Float = null ):Display2dSprite
 	{
@@ -326,26 +362,30 @@ class DisplayFactory
 		return anim;
 	}*/
 	
+	
+	
 	public static function assetMcToDisplay2dAnim( mcClassName:String, sm:SysManager, textScale:Float, quality:Float = null ):Display2dAnim
+	{
+		return mcToDisplay2dAnim( Lib.attach( mcClassName ), sm, textScale, quality );
+	}
+	
+	public static function mcToDisplay2dAnim( mc:MovieClip, sm:SysManager, textScale:Float, quality:Float = null ):Display2dAnim
 	{
 		if ( quality == null ) quality = sm.settings.textQuality;
 		var anim:Anim = new Anim( null, Lib.current.stage.frameRate , sm.sysGraphic.s2d );
 		anim.setScale( 1 / quality );
 		
-		var r:AnimCache = Lambda.find( _cache, function( r:AnimCache ):Bool { return r.mcClassName == mcClassName; } );
+		var r:AnimCache = Lambda.find( _cache, function( r:AnimCache ):Bool { return r.mcClassName == getName( mc ); } );
 		if ( r == null )
 		{
-			r = mcToCache( Lib.attach( mcClassName ), textScale, quality );//new AnimCache();
-			r.mcClassName = mcClassName;
-			//var mc:MovieClip = Lib.attach( mcName );
-			//r.width = mc.width;
-			//r.animDatas = 
+			r = mcToCache( mc, textScale, quality );//new AnimCache();
+			r.mcClassName = getName( mc );
 			_cache.push( r );
 		}
 		
 		var a:Array<AnimData> = r.animDatas;
 		
-		var d = new Display2dAnim( anim /*r.width * textScale*/ );
+		var d = new Display2dAnim( anim );
 		
 		for ( ad in a )
 		{
@@ -356,8 +396,6 @@ class DisplayFactory
 		
 		return d;
 	}
-	
-	
 	
 	/*public static function movieClipToDisplay2dAnim( mc:MovieClip, sm:SysManager, textScale:Float, quality:Float = null ):Display2dAnim
 	{
@@ -379,5 +417,10 @@ class DisplayFactory
 		
 		return d;
 	}*/
+	
+		static inline function getName( c:Dynamic ):String
+		{
+			return Type.getClassName( Type.getClass(c) );
+		}
 	
 }

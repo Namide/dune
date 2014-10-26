@@ -1,6 +1,7 @@
 package ;
 
 import dune.Game;
+import dune.GameLevel;
 
 #if (flash || openfl)
 
@@ -26,7 +27,7 @@ import dune.Game;
 
 class Main 
 {
-	static var game:Game;
+	static var game:GameLevel;
 	
 	static function main() 
 	{
@@ -48,7 +49,7 @@ class Main
 			Lib.current.addChild( s );
 		#end
 		
-		game = new Game();
+		game = new GameLevel();
 	}
 	
 }

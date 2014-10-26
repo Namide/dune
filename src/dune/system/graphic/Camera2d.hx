@@ -11,6 +11,9 @@ class Layer
 	public var y:Float;
 	public var z:Float;
 	
+	public var w:Int;
+	public var h:Int;
+	
 	public function new () { }
 }
 
@@ -22,12 +25,14 @@ class Camera2d
 {
 	public var display(default, null):Sprite;
 	
+	var _moved:Bool = false;
+	
 	public var x(default, set):Float = 0;
 	inline function set_x(val:Float):Float
 	{
 		if ( x == val ) return val;
 		x = val;
-		refresh();
+		_moved = true;
 		return val;
 	}
 	
@@ -36,7 +41,7 @@ class Camera2d
 	{
 		if ( y == val ) return val;
 		y = val;
-		refresh();
+		_moved = true;
 		return val;
 	}
 	
@@ -52,7 +57,7 @@ class Camera2d
 	{
 		if ( val == zoomX ) return val;
 		zoomX = val;
-		refresh();
+		_moved = true;
 		return val;
 	}
 	
@@ -61,7 +66,7 @@ class Camera2d
 	{
 		if ( val == zoomY ) return val;
 		zoomY = val;
-		refresh();
+		_moved = true;
 		return zoomY;
 	}
 	
@@ -94,7 +99,7 @@ class Camera2d
 		
 		_layers.push(layer);
 		
-		refresh();
+		_moved = true;
 	}
 	
 	var _sm:SysManager;
@@ -103,10 +108,16 @@ class Camera2d
 	{
 		_sm = sm;
 		display = new Sprite(parent);
+		_moved = true;
 	}
 	
-	function refresh():Void
+	public function refresh():Void
 	{
+		if ( !_moved ) return;
+		
+		var eng = _sm.sysGraphic.engine;
+		var set = _sm.settings;
+		
 		var zX = _stageZoom * zoomX;
 		var zY = _stageZoom * zoomY;
 		
@@ -116,33 +127,48 @@ class Camera2d
 			display.scaleY = zY;
 		}
 		
-		
 		var pX:Float = x;
 		var pY:Float = y;
 		
-		var eng = _sm.sysGraphic.engine;
-		var set = _sm.settings;
+		var scaleX:Float = (pX - (set.width >> 1)) / (Std.int(set.limitXMax - set.limitXMin) - set.width);
+		var scaleY:Float = (pY - (set.height >> 1)) / (Std.int(set.limitYMax - set.limitYMin) - set.height);
+		//trace(scaleX);
 		
 		if ( wallLimited && set.width > Std.int(set.limitXMax - set.limitXMin) )
 		{
-			pX = set.limitXMin - ( ( ( set.width - Std.int(set.limitXMax - set.limitXMin) ) >> 1 ) );
+			//pX = set.limitXMin - ( ( ( set.width - Std.int(set.limitXMax - set.limitXMin) ) >> 1 ) );
+			scaleX = 0.5;
 		}
 		else
 		{
-			pX = pX - (set.width >> 1);
+			scaleX = (scaleX<0)?0:(scaleX>1)?1:scaleX;
+			
+			var min = set.limitXMin + (set.width >> 1);
+			var max = set.limitXMax - (set.width >> 1);
+			
+			pX = min + scaleX * ( max - min ) - (set.width >> 1);
+			/*pX = pX - (set.width >> 1);
 			if ( pX < set.limitXMin ) pX = set.limitXMin;
-			if ( pX > Std.int(set.limitXMax) - set.width ) pX = Std.int(set.limitXMax) - set.width;
+			if ( pX > Std.int(set.limitXMax) - set.width ) pX = Std.int(set.limitXMax) - set.width;*/
 		}
 		
 		if ( wallLimited && set.height > Std.int(set.limitYMax - set.limitYMin) )
 		{
-			pY = set.limitYMin - ( ( ( set.height - Std.int(set.limitYMax - set.limitYMin) ) >> 1 ) );
+			//pY = set.limitYMin - ( ( ( set.height - Std.int(set.limitYMax - set.limitYMin) ) >> 1 ) );
+			scaleY = 0.5;
 		}
 		else
 		{
-			pY = pY - (set.height >> 1);
+			scaleY = (scaleY<0)?0:(scaleY>1)?1:scaleY;
+			
+			var min = set.limitYMin + (set.height >> 1);
+			var max = set.limitYMax - (set.height >> 1);
+			
+			pY = min + scaleY * ( max - min ) - (set.height >> 1);
+			
+			/*pY = pY - (set.height >> 1);
 			if ( pY < set.limitYMin ) pY = set.limitYMin;
-			if ( pY > Std.int(set.limitYMax) - set.height ) pY = Std.int(set.limitYMax) - set.height;
+			if ( pY > Std.int(set.limitYMax) - set.height ) pY = Std.int(set.limitYMax) - set.height;*/
 		}
 		
 		pX += set.width >> 1;
@@ -166,6 +192,8 @@ class Camera2d
 									-pY * layer.z + layer.y );
 			//layer.sprite.scale( 0.5 * (display.scaleX + display.scaleY) * layer.z );
 		}
+		
+		_moved = false;
 	}
 	
 	public inline function setPos( x:Float, y:Float ):Void
@@ -173,7 +201,6 @@ class Camera2d
 		this.x = x;
 		this.y = y;
 		//display.setPos( -x, -y );
-		refresh();
 	}
 	
 }

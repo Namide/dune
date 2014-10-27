@@ -20,7 +20,7 @@ class GameLevel
 	{
 		
 		var levelGen = new LevelFactory( sm );
-		levelGen.construct( flash.Lib.attach("Level1MC") );
+		levelGen.construct( cast( flash.Lib.attach("Level1MC"), MovieClipData ) );
 		sm.start();
 		
 	}

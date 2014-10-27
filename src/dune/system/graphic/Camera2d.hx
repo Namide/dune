@@ -9,7 +9,7 @@ class Layer
 	public var sprite:Sprite;
 	public var x:Float;
 	public var y:Float;
-	public var z:Float;
+	//public var z:Float;
 	
 	public var w:Int;
 	public var h:Int;
@@ -49,6 +49,7 @@ class Camera2d
 	{
 		zoomY = val;
 		zoomY = val;
+		_moved = true;
 		//display.scale(val);
 	}
 	
@@ -75,23 +76,28 @@ class Camera2d
 	{
 		if ( zoom == _stageZoom ) return;
 		_stageZoom = zoom;
-		refresh();
+		_moved = true;
 	}
 	
 	public var wallLimited(default, default):Bool = true;
 	
 	var _layers:Array<Layer> = [];
-	public function addLayer( layerDisplay:Sprite, z:Float ):Void
+	public function addLayer( layerDisplay:Sprite, w:Int, h:Int ):Void
 	{
 		var layer = new Layer();
-		layer.sprite = layerDisplay;
+		layer.sprite = new h2d.Sprite( _sm.sysGraphic.s2d );
 		layer.x = layerDisplay.x;
 		layer.y = layerDisplay.y;
-		layer.z = z;
+		
+		layer.w = w;
+		layer.h = h;
+		
+		//layer.z = z;
 		//trace( 0, display.parent.getChildIndex(display) );
 		//trace( 1, display.parent.numChildren );
 		//trace( display.parent.getChildIndex(display), display.parent.numChildren );
 		display.parent.addChild( layerDisplay );
+		layer.sprite.addChild( layerDisplay );
 		display.parent.addChild( display );
 		
 		//layerDisplay.parent.removeChild( layerDisplay ); //parent.remove();
@@ -115,85 +121,153 @@ class Camera2d
 	{
 		if ( !_moved ) return;
 		
+		//var eng = _sm.sysGraphic.engine;
+		var set = _sm.settings;
+		
+		var scaleX:Float = (x - (set.width >> 1)) / (Std.int(set.limitXMax - set.limitXMin) - set.width);
+		var scaleY:Float = (y - (set.height >> 1)) / (Std.int(set.limitYMax - set.limitYMin) - set.height);
+		scaleX = (scaleX < 0) ? 0 : (scaleX > 1) ? 1 : scaleX;
+		scaleY = (scaleY < 0) ? 0 : (scaleY > 1) ? 1 : scaleY;
+		
+		appliTransform( display, scaleX, scaleY, Math.floor(set.limitXMin), Math.floor(set.limitYMin), Math.ceil(set.limitXMax), Math.ceil(set.limitYMax) );
+		
+		//pX -= ;
+		//pX -= ;
+		for ( layer in _layers )
+		{
+			/*layer.sprite.setPos( 	-pX * layer.z + layer.x,
+									-pY * layer.z + layer.y );*/
+			appliLayerTransform( layer.sprite, scaleX, scaleY, layer.w, layer.h );
+		}
+		
+		_moved = false;
+	}
+	
+	public inline function appliLayerTransform( sprite:Sprite, scaleX:Float, scaleY:Float, maxX:Int, maxY:Int ):Void
+	{
 		var eng = _sm.sysGraphic.engine;
 		var set = _sm.settings;
 		
+		// SCALE
 		var zX = _stageZoom * zoomX;
 		var zY = _stageZoom * zoomY;
-		
-		if ( zX != display.scaleX && zY != display.scaleY )
+		if ( zX != sprite.scaleX && zY != sprite.scaleY )
 		{
-			display.scaleX = zX;
-			display.scaleY = zY;
+			sprite.scaleX = zX;
+			sprite.scaleY = zY;
 		}
 		
-		var pX:Float = x;
-		var pY:Float = y;
+		// POSITION
+		var realW:Int = Math.ceil( zX * maxX );
+		var realH:Int = Math.ceil( zY * maxY );
 		
-		var scaleX:Float = (pX - (set.width >> 1)) / (Std.int(set.limitXMax - set.limitXMin) - set.width);
-		var scaleY:Float = (pY - (set.height >> 1)) / (Std.int(set.limitYMax - set.limitYMin) - set.height);
-		//trace(scaleX);
+		var pX = Math.ceil( scaleX * ( (eng.width - realW) >> 1) );
+		var pY = Math.ceil( scaleY * ( (eng.height - realH) >> 1) );
 		
-		if ( wallLimited && set.width > Std.int(set.limitXMax - set.limitXMin) )
+		sprite.x = -pX;
+		sprite.y = -pY;
+		
+		/*var pX:Int = 0;
+		var pY:Int = 0;
+		
+		if ( wallLimited && set.width > maxX - minX )
 		{
-			//pX = set.limitXMin - ( ( ( set.width - Std.int(set.limitXMax - set.limitXMin) ) >> 1 ) );
 			scaleX = 0.5;
 		}
 		else
 		{
 			scaleX = (scaleX<0)?0:(scaleX>1)?1:scaleX;
 			
-			var min = set.limitXMin + (set.width >> 1);
-			var max = set.limitXMax - (set.width >> 1);
+			var min = minX + (set.width >> 1);
+			var max = maxX - (set.width >> 1);
 			
-			pX = min + scaleX * ( max - min ) - (set.width >> 1);
-			/*pX = pX - (set.width >> 1);
-			if ( pX < set.limitXMin ) pX = set.limitXMin;
-			if ( pX > Std.int(set.limitXMax) - set.width ) pX = Std.int(set.limitXMax) - set.width;*/
+			pX = min + Std.int(scaleX * ( max - min )) - (set.width >> 1);
 		}
 		
 		if ( wallLimited && set.height > Std.int(set.limitYMax - set.limitYMin) )
 		{
-			//pY = set.limitYMin - ( ( ( set.height - Std.int(set.limitYMax - set.limitYMin) ) >> 1 ) );
 			scaleY = 0.5;
 		}
 		else
 		{
 			scaleY = (scaleY<0)?0:(scaleY>1)?1:scaleY;
 			
-			var min = set.limitYMin + (set.height >> 1);
-			var max = set.limitYMax - (set.height >> 1);
+			var min = minY + (set.height >> 1);
+			var max = maxY - (set.height >> 1);
 			
-			pY = min + scaleY * ( max - min ) - (set.height >> 1);
-			
-			/*pY = pY - (set.height >> 1);
-			if ( pY < set.limitYMin ) pY = set.limitYMin;
-			if ( pY > Std.int(set.limitYMax) - set.height ) pY = Std.int(set.limitYMax) - set.height;*/
+			pY = min + Std.int(scaleY * ( max - min )) - (set.height >> 1);
 		}
 		
 		pX += set.width >> 1;
 		pY += set.height >> 1;
 		
-		pX = -pX * zX;
-		pY = -pY * zY;
+		pX = Math.round(-pX * zX);
+		pY = Math.round(-pY * zY);
 		
 		pX += eng.width >> 1;
 		pY += eng.height >> 1;
 		
-		display.x = Math.round(pX);
-		display.y = Math.round(pY);
+		sprite.x = pX;
+		sprite.y = pY;*/
+	}
+	
+	public inline function appliTransform( sprite:Sprite, scaleX:Float, scaleY:Float, minX:Int, minY:Int, maxX:Int, maxY:Int ):Void
+	{
+		var eng = _sm.sysGraphic.engine;
+		var set = _sm.settings;
 		
-		//pX -= ;
-		//pX -= ;
-		
-		for ( layer in _layers )
+		// SCALE
+		var zX = _stageZoom * zoomX;
+		var zY = _stageZoom * zoomY;
+		if ( zX != sprite.scaleX && zY != sprite.scaleY )
 		{
-			layer.sprite.setPos( 	-pX * layer.z + layer.x,
-									-pY * layer.z + layer.y );
-			//layer.sprite.scale( 0.5 * (display.scaleX + display.scaleY) * layer.z );
+			sprite.scaleX = zX;
+			sprite.scaleY = zY;
 		}
 		
-		_moved = false;
+		// POSITION
+		var pX:Int = 0;
+		var pY:Int = 0;
+		
+		if ( wallLimited && set.width > maxX - minX )
+		{
+			scaleX = 0.5;
+		}
+		else
+		{
+			scaleX = (scaleX<0)?0:(scaleX>1)?1:scaleX;
+			
+			var min = minX + (set.width >> 1);
+			var max = maxX - (set.width >> 1);
+			
+			pX = min + Std.int(scaleX * ( max - min )) - (set.width >> 1);
+		}
+		
+		if ( wallLimited && set.height > Std.int(set.limitYMax - set.limitYMin) )
+		{
+			scaleY = 0.5;
+		}
+		else
+		{
+			scaleY = (scaleY<0)?0:(scaleY>1)?1:scaleY;
+			
+			var min = minY + (set.height >> 1);
+			var max = maxY - (set.height >> 1);
+			
+			pY = min + Std.int(scaleY * ( max - min )) - (set.height >> 1);
+		}
+		
+		pX += set.width >> 1;
+		pY += set.height >> 1;
+		
+		pX = Math.round(-pX * zX);
+		pY = Math.round(-pY * zY);
+		
+		pX += eng.width >> 1;
+		pY += eng.height >> 1;
+		
+		sprite.x = pX;
+		sprite.y = pY;
 	}
 	
 	public inline function setPos( x:Float, y:Float ):Void

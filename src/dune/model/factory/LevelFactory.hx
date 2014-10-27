@@ -23,7 +23,7 @@ class LevelFactory
 		_sm = sm;
 	}
 	
-	public function construct( mc:MovieClip ):Void
+	public function construct( mc:MovieClipData ):Void
 	{
 		analyseObject( mc, _sm.sysGraphic.camera2d.display );
 	}
@@ -39,6 +39,14 @@ class LevelFactory
 				//if ( mc.dType != null ) trace( mc.dType );
 				
 				mcd.gotoAndStop(1);
+				if ( mcd.type == "level" )
+				{
+					//_sm.settings.autoLimit = false;
+					_sm.settings.limitXMin = mcd.x;
+					_sm.settings.limitYMin = mcd.y;
+					_sm.settings.limitXMax = mcd.x + mcd.datas.w;
+					_sm.settings.limitYMax = mcd.y + mcd.datas.h;
+				}
 				if ( mcd.type == "player" )
 				{
 					mcd.parent.removeChild( mcd );
@@ -172,7 +180,8 @@ class LevelFactory
 	{
 		var layer = DisplayFactory.mcToSprite( mc, _sm, 1 );
 		//target.addChild( layer );
-		_sm.sysGraphic.camera2d.addLayer( layer, mc.datas.z );
+		
+		_sm.sysGraphic.camera2d.addLayer( layer, mc.datas.w, mc.datas.h );
 		return layer;
 	}
 	

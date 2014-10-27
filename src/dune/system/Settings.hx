@@ -25,8 +25,8 @@ class Settings
 	
 	public var autoLimit:Bool = true;
 	
-	public var width:Int = 640;
-	public var height:Int = 360;
+	public var width:Int = 960;
+	public var height:Int = 540;
 	public var renderProp:Float;
 	
 	public var textQuality:Float =  1;

@@ -164,8 +164,8 @@ class Camera2d
 		var pX = Math.ceil( scaleX * ( (eng.width - realW) >> 1) );
 		var pY = Math.ceil( scaleY * ( (eng.height - realH) >> 1) );
 		
-		sprite.x = -pX;
-		sprite.y = -pY;
+		sprite.x = pX;
+		sprite.y = pY;
 		
 		/*var pX:Int = 0;
 		var pY:Int = 0;

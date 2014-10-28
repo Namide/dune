@@ -69,9 +69,8 @@ class LevelFactory
 				{
 					mcd.parent.removeChild( mcd );
 					var targetChild = constructLayer( mcd, target );
-					
 					var i = 0;
-					while ( i<mcd.numChildren )
+					while ( i < mcd.numChildren )
 					{
 						var childMC = mcd.getChildAt(i);
 						var isd = analyseObject( childMC, target );

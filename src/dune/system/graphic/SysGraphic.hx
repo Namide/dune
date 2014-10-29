@@ -28,8 +28,6 @@ class SysGraphic
 		engine = new h3d.Engine( true, 8 );
 		engine.onReady = function():Void { init(onInitCallback); };
 		
-		
-		
 		engine.init();
 	}
 	

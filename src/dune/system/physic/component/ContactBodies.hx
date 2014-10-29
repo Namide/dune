@@ -409,8 +409,8 @@ class ContactBodies
 		var pos:Int = 0;
 		
 		// to avoid float errors => 86.9999999999999 < 87
-		dX *= 1.1;
-		dY *= 1.1;
+		//dX *= 1.1;
+		//dY *= 1.1;
 		
 		if ( a.aabbXMin + dX >= b.aabbXMax ) { pos |= LEFT; }
 		if ( a.aabbXMax + dX <= b.aabbXMin ) { pos |= RIGHT; }

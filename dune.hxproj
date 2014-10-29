@@ -6,8 +6,8 @@
     <movie input="" />
     <movie path="bin\dune.swf" />
     <movie fps="50" />
-    <movie width="640" />
-    <movie height="360" />
+    <movie width="960" />
+    <movie height="540" />
     <movie version="11" />
     <movie minorVersion="8" />
     <movie platform="Flash Player" />

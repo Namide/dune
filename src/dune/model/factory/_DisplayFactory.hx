@@ -112,7 +112,7 @@ class _DisplayFactory
 	
 	public static function assetMcToSprite( mcName:String, sm:SysManager, textScale:Float, quality:Float = null ):SpriteDatas
 	{
-		if ( quality == null ) quality = sm.settings.textQuality;
+		if ( quality == null ) quality = sm.settings.textDefinition;
 		
 		var r:SpriteRes = Lambda.find( _resTiles, function( r:SpriteRes ):Bool { return r.mcName == mcName; } );
 		if ( r == null )
@@ -136,7 +136,7 @@ class _DisplayFactory
 	
 	public static function assetMcToDisplay2d( mcName:String, sm:SysManager, textScale:Float, quality:Float = null ):Display2dSprite
 	{
-		if ( quality == null ) quality = sm.settings.textQuality;
+		if ( quality == null ) quality = sm.settings.textDefinition;
 		
 		var spr = assetMcToSprite( mcName, sm, textScale, quality ).sprite;
 		var d = new Display2dSprite( spr );
@@ -145,7 +145,7 @@ class _DisplayFactory
 	
 	public static function assetMcToAnim( mcName:String, sm:SysManager, textScale:Float, labelNum:Int = 0 , quality:Float = null ):Anim
 	{
-		if ( quality == null ) quality = sm.settings.textQuality;
+		if ( quality == null ) quality = sm.settings.textDefinition;
 		var anim:Anim = new Anim( null, Lib.current.stage.frameRate , sm.sysGraphic.s2d );
 		anim.setScale( 1 / quality );
 		

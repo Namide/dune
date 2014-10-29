@@ -5,6 +5,7 @@ import dune.system.graphic.component.Display2dAnim;
 import dune.system.graphic.component.Display2dSprite;
 import dune.system.Settings;
 import dune.system.SysManager;
+import flash.display.StageQuality;
 import flash.geom.Matrix;
 import flash.geom.Point;
 import flash.Lib;
@@ -16,7 +17,11 @@ import h2d.Sprite;
 import h2d.Tile;
 import h2d.TileGroup;
 import h3d.impl.AllocPos;
+import h3d.mat.BlendMode;
+import h3d.mat.Data.MipMap;
+import h3d.mat.Data.Wrap;
 import hxd.BitmapData;
+import hxd.fmt.fbx.Filter;
 
 /*class AnimRes
 {
@@ -202,7 +207,7 @@ class DisplayFactory
 	
 	
 	
-	static function mcToCache( mc:MovieClip, textScale:Float, quality:Float ):AnimCache
+	static function mcToCache( mc:MovieClip, textScale:Float, quality:Float, sm:SysManager, forceSizeX:Int = -1, forceSizeY:Int = -1 ):AnimCache
 	{
 		var list:Array<AnimData> = [];
 		//quality = 1;
@@ -214,6 +219,9 @@ class DisplayFactory
 		
 		//var boundLimits = new Rectangle(Math.POSITIVE_INFINITY, Math.POSITIVE_INFINITY, Math.NEGATIVE_INFINITY, Math.NEGATIVE_INFINITY );
 		//var boundLimits = new DRect( 0xFFFFFF, 0xFFFFFF, -0xFFFFFF, -0xFFFFFF );
+		
+		forceSizeX = Math.floor(forceSizeX * textScale * quality);
+		forceSizeY = Math.floor(forceSizeY * textScale * quality);
 		
 		var bbs = new Array<DRect>();
 		var ts = new Array<Tile>();
@@ -239,12 +247,26 @@ class DisplayFactory
 			
 			bbs[i] = bb;
 			
-			var bd = new flash.display.BitmapData( Math.floor(bb.w * textScale * quality), Math.floor(bb.h * textScale * quality), true, 0x00FFFFFF );
-			m.createBox( textScale * quality, textScale * quality, 0, -Math.ceil(bb.x * quality), -Math.ceil(bb.y * quality) );
+			var sizeX:Int = ( forceSizeX > 0 ) ? forceSizeX : Math.floor(bb.w * textScale * quality);
+			var sizeY:Int = ( forceSizeY > 0 ) ? forceSizeY : Math.floor(bb.h * textScale * quality);
+			var decalX:Int = ( forceSizeX > 0 ) ? 0 : -Math.ceil(bb.x * quality);
+			var decalY:Int = ( forceSizeY > 0 ) ? 0 : -Math.ceil(bb.y * quality);
 			
-			bd.draw( mc, m );
+			//trace(forceSizeX, forceSizeY, sizeX, sizeY);
+			
+			var bd = new flash.display.BitmapData( sizeX, sizeY, true, 0x00FFFFFF );
+			m.createBox( textScale * quality, textScale * quality, 0, decalX, decalY );
+			
+			var q = Lib.current.stage.quality;
+			Lib.current.stage.quality = sm.settings.textQuality;
+			bd.draw( mc, m, null, null, null, false );
+			
 			var hbd = hxd.BitmapData.fromNative( bd );
 			var t:Tile = Tile.fromBitmap( hbd );
+			
+			Lib.current.stage.quality = q;
+			
+			//t.getTexture().filter = new hxd.fmt.fbx.Filter();
 			
 			//t.getTexture().resize( 60, 60 );
 			//t.setPos( -Math.ceil(bb.x), -Math.ceil(bb.y) );
@@ -270,14 +292,14 @@ class DisplayFactory
 		return c;
 	}
 	
-	public static function mcToSprite( mc:MovieClip, sm:SysManager, textScale:Float, quality:Float = null ):h2d.Sprite
+	public static function mcToSprite( mc:MovieClip, sm:SysManager, textScale:Float, quality:Float = null, forceSizeX:Int = -1, forceSizeY:Int = -1 ):h2d.Sprite
 	{
-		if ( quality == null ) quality = sm.settings.textQuality;
+		if ( quality == null ) quality = sm.settings.textDefinition;
 		
 		var r:AnimCache = Lambda.find( _cache, function( r:AnimCache ):Bool { return r.mcClassName == getName( mc ); } );
 		if ( r == null )
 		{
-			r = mcToCache( mc, textScale, quality );//new AnimCache();
+			r = mcToCache( mc, textScale, quality, sm, forceSizeX, forceSizeY );//new AnimCache();
 			r.mcClassName = getName( mc );
 			_cache.push( r );
 		}
@@ -288,8 +310,11 @@ class DisplayFactory
 			//var sd = new SpriteDatas();
 			var sprite = new h2d.Sprite( sm.sysGraphic.s2d );
 			sprite.setScale( 1 / quality );
+			
 			var bitmap = new h2d.Bitmap( r.animDatas[0].frames[0], sprite );
-			return sprite;
+			//bitmap.blendMode = h3d.mat.BlendMode.Alpha;
+			
+			return bitmap;
 		}
 		
 		// ANIMATED
@@ -364,21 +389,21 @@ class DisplayFactory
 	
 	
 	
-	public static function assetMcToDisplay2dAnim( mcClassName:String, sm:SysManager, textScale:Float, quality:Float = null ):Display2dAnim
+	public static function assetMcToDisplay2dAnim( mcClassName:String, sm:SysManager, textScale:Float, quality:Float = null, forceSizeX:Int = -1, forceSizeY:Int = -1 ):Display2dAnim
 	{
-		return mcToDisplay2dAnim( Lib.attach( mcClassName ), sm, textScale, quality );
+		return mcToDisplay2dAnim( Lib.attach( mcClassName ), sm, textScale, quality, forceSizeX, forceSizeY );
 	}
 	
-	public static function mcToDisplay2dAnim( mc:MovieClip, sm:SysManager, textScale:Float, quality:Float = null ):Display2dAnim
+	public static function mcToDisplay2dAnim( mc:MovieClip, sm:SysManager, textScale:Float, quality:Float = null, forceSizeX:Int = -1, forceSizeY:Int = -1 ):Display2dAnim
 	{
-		if ( quality == null ) quality = sm.settings.textQuality;
+		if ( quality == null ) quality = sm.settings.textDefinition;
 		var anim:Anim = new Anim( null, Lib.current.stage.frameRate , sm.sysGraphic.s2d );
 		anim.setScale( 1 / quality );
 		
 		var r:AnimCache = Lambda.find( _cache, function( r:AnimCache ):Bool { return r.mcClassName == getName( mc ); } );
 		if ( r == null )
 		{
-			r = mcToCache( mc, textScale, quality );//new AnimCache();
+			r = mcToCache( mc, textScale, quality, sm, forceSizeX, forceSizeY );//new AnimCache();
 			r.mcClassName = getName( mc );
 			_cache.push( r );
 		}

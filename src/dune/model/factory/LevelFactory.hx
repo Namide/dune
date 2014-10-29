@@ -6,7 +6,9 @@ import flash.display.DisplayObjectContainer;
 import flash.display.MovieClip;
 import flash.display.Shader;
 import flash.display.Shape;
+import h2d.Bitmap;
 import h2d.Sprite;
+import h3d.mat.BlendMode;
 
 /**
  * ...
@@ -83,7 +85,16 @@ class LevelFactory
 					return false;
 				}
 				
+				if ( mcd.attached )
+				{
+					return true;
+				}
+				
 			}
+			
+			
+			
+			
 			
 			var isDrawable = false;
 			
@@ -177,8 +188,17 @@ class LevelFactory
 	
 	function constructLayer( mc:MovieClipData, target:h2d.Sprite ):h2d.Sprite
 	{
-		var layer = DisplayFactory.mcToSprite( mc, _sm, 1 );
+		var layer = DisplayFactory.mcToSprite( mc, _sm, 1, null, mc.datas.w, mc.datas.h );
 		//target.addChild( layer );
+		//h2d.Bitmap.
+		if ( mc.datas.blendMode != null && Std.is( layer, h2d.Bitmap ) ) 
+		{
+			
+			cast( layer, h2d.Bitmap ).blendMode = (mc.datas.blendMode=="add") ? BlendMode.SoftAdd : BlendMode.None;
+			//trace("ok");
+			//layer
+		}
+		
 		
 		_sm.sysGraphic.camera2d.addLayer( layer, mc.datas.w, mc.datas.h );
 		return layer;

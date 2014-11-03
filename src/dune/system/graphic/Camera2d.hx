@@ -115,6 +115,18 @@ class Camera2d
 		_sm = sm;
 		display = new Sprite(parent);
 		_moved = true;
+		
+		//_sm.sysGraphic.s3d.camera.target.x =
+		//_sm.sysGraphic.s3d.camera.target.y = 0;
+		//_sm.sysGraphic.s3d.camera.target.z = ;
+		
+		
+		_sm.sysGraphic.s3d.camera.zNear = 1;
+		_sm.sysGraphic.s3d.camera.zFar = 1000;
+		
+		_sm.sysGraphic.s3d.camera.pos.set( 0, 0, 0, 1 );
+		_sm.sysGraphic.s3d.camera.target.set( 0, 0, -1000 );
+		_sm.sysGraphic.s3d.camera.up.set( 0, -100, 0 );
 	}
 	
 	public function refresh():Void
@@ -134,9 +146,13 @@ class Camera2d
 		
 		appliTransform( display, scaleX, scaleY, Math.floor(set.limitXMin), Math.floor(set.limitYMin), Math.ceil(set.limitXMax), Math.ceil(set.limitYMax) );
 		_sm.sysGraphic.s3d.camera.pos.x = 
-		_sm.sysGraphic.s3d.camera.target.x = scaleX * W;
+		_sm.sysGraphic.s3d.camera.target.x = (scaleX - 0.5) * W * 0.1;
+		
 		_sm.sysGraphic.s3d.camera.pos.y = 
-		_sm.sysGraphic.s3d.camera.target.y = scaleY * H;
+		_sm.sysGraphic.s3d.camera.target.y = (scaleY - 0.5) * H * 0.1;
+		
+		//_sm.sysGraphic.s3d.camera.target.x = (scaleX - 0.5) * W;
+		//_sm.sysGraphic.s3d.camera.target.y = (scaleY - 0.5) * H;
 		//trace( scaleX * set.width, scaleY * set.height, _sm.sysGraphic.s3d.camera.target.x );
 		
 		//pX -= ;

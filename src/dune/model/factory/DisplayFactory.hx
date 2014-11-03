@@ -13,40 +13,19 @@ import h2d.Anim;
 import flash.display.MovieClip;
 import h2d.Bitmap;
 import h2d.Drawable;
+import h2d.Graphics;
 import h2d.Sprite;
 import h2d.Tile;
 import h2d.TileGroup;
+import h3d.anim.Animation;
 import h3d.impl.AllocPos;
 import h3d.mat.BlendMode;
 import h3d.mat.Data.MipMap;
 import h3d.mat.Data.Wrap;
+import h3d.scene.Object;
 import hxd.BitmapData;
 import hxd.fmt.fbx.Filter;
-
-/*class AnimRes
-{
-	public var animDatas:Array<AnimData>;
-	public var mcName:String;
-	public var width:Float;
-	
-	public function new() { }
-}
-
-class SpriteRes
-{
-	public var tile:h2d.Tile;
-	public var mcName:String;
-	
-	public function new() { }
-}
-
-class SpriteDatas
-{
-	public var sprite:h2d.Sprite;
-	public var bitmap:h2d.Bitmap;
-	
-	public function new() { }
-}*/
+import hxd.Math;
 
 class AnimCache
 {
@@ -54,8 +33,6 @@ class AnimCache
 	public var mc:MovieClip;
 	
 	public var animDatas:Array<AnimData>;
-	//public var width:Float;
-	//public var bounds:DRect;
 	
 	public function new() { }
 }
@@ -67,13 +44,59 @@ class AnimCache
 class DisplayFactory
 {
 	static var _cache:Array<AnimCache> = [];
-	//static var _resTiles:Array<SpriteRes> = [];
-	//static var _res
 	
 	public static function clear():Void
 	{
 		_cache = [];
 	}
+	
+	public static function getBackground( sm:SysManager, w:Float, h:Float, p:Float ):h3d.scene.Object
+	{
+		var o = new h3d.scene.Object(sm.sysGraphic.s3d);
+		
+		
+		var floor = new h3d.prim.Cube(w, h, 0.1);
+		floor.addNormals();
+		floor.translate( -w*0.5, -h*0.5, -(0.1+p) );
+		var m = new h3d.scene.Mesh(floor, sm.sysGraphic.s3d );
+		m.material.color.set( 0.0, 0.5, 0.5 );
+		m.material.mainPass.enableLights = true;
+		m.material.shadows = true;
+
+		var sphere = new h3d.prim.Sphere(32,24);
+		var cube = new h3d.prim.Cube(1, 1, 1 );
+		
+		sphere.addNormals();
+		cube.addNormals();
+		var spheres  = [];
+		for ( i in 0...20 ) {
+			var isCube = Std.random(2) > 0;
+			var m = ( !isCube ) ? new h3d.scene.Mesh(sphere, o) : new h3d.scene.Mesh(cube, o);
+			m.scale(40 + Math.random() * 40);
+			m.x = hxd.Math.srand(w * 0.5) - m.scaleX * 0.5;
+			m.y = hxd.Math.srand(h * 0.5) - m.scaleY * 0.5;
+			//p.z = Math.random() * p.scaleX;
+			m.z = ( ( !isCube ) ? m.scaleZ : 0 ) - Math.round(p);
+			m.material.mainPass.enableLights = true;
+			m.material.shadows = true;
+			m.material.color.setColor( Std.random(0x1000000) );
+		}
+		
+		return o;
+	}
+	
+	public static function getRect( sm:SysManager, w:Float, h:Float, color:Int = -1 ):h2d.Graphics
+	{
+		if ( color < 0 ) color = Math.round( 0xFFFFFF * Math.random() );
+		
+		var g = new h2d.Graphics( sm.sysGraphic.s2d );
+		g.beginFill( color );
+		//g.lineStyle( 1, Math.round( 0xFFFFFF * Math.random() ) );
+		g.drawRect( 0, 0, w, h );
+		g.endFill();
+		return g;
+	}
+	
 	
 	public function new() 
 	{
@@ -202,10 +225,6 @@ class DisplayFactory
 		var ca:CompDisplay2dAnim = new CompDisplay2dAnim( spr );
 		ca.addAnim( );
 	}*/
-	
-	
-	
-	
 	
 	static function mcToCache( mc:MovieClip, textScale:Float, quality:Float, sm:SysManager, forceSizeX:Int = -1, forceSizeY:Int = -1 ):AnimCache
 	{

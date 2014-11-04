@@ -23,6 +23,8 @@ import h3d.mat.BlendMode;
 import h3d.mat.Data.MipMap;
 import h3d.mat.Data.TextureFlags;
 import h3d.mat.Data.Wrap;
+import h3d.mat.Material;
+import h3d.mat.MeshMaterial;
 import h3d.mat.Pass;
 import h3d.mat.Texture;
 import h3d.prim.Polygon;
@@ -30,6 +32,7 @@ import h3d.prim.Primitive;
 import h3d.prim.UV;
 import h3d.scene.Mesh;
 import h3d.scene.Object;
+import h3d.shader.BaseMesh;
 import h3d.shader.VertexColor;
 import hxd.BitmapData;
 import hxd.fmt.fbx.Filter;
@@ -68,10 +71,10 @@ class DisplayFactory
 		var floor = new h3d.prim.Cube(w, h, 0.1);
 		floor.addNormals();
 		floor.translate( -w*0.5, -h*0.5, -(0.1+p) );
-		var m = new h3d.scene.Mesh( floor, o );
-		m.material.color.set( 0.0, 0.5, 0.5 );
-		m.material.mainPass.enableLights = true;
-		m.material.shadows = true;
+		var floorMesh = new h3d.scene.Mesh( floor, o );
+		floorMesh.material.color.set( 0.0, 0.5, 0.5 );
+		floorMesh.material.mainPass.enableLights = true;
+		floorMesh.material.shadows = true;
 
 		
 		/*var pts = new Array<h3d.col.Point>();
@@ -110,7 +113,7 @@ class DisplayFactory
 		poly.uvs = uvs;*/
 		
 		var poly = new BgTest01( w, h, p, 100, 6 );
-		//poly.addUVs();
+		poly.addUVs();
 		poly.addNormals();
 		poly.translate( -w*0.5, -h*0.5, -p );
 		
@@ -120,14 +123,41 @@ class DisplayFactory
 		//bd.perlinNoise( 32, 32, 3, 0, false, true );
 		
 		
-		var mesh = new h3d.scene.Mesh( poly, o );
+		var m2 = new h3d.mat.MeshMaterial();
+		m2.color.setColor( 0x000000 );
+		var vc = new VertexColor();
+		//vc.additive = false;
+		
+		//m2.addPass( new Pass("vertexColor", new ShaderList( vc ), m2.mainPass ) );
+		//m2.mainPass = new Pass("vertexColor", new ShaderList( vc ), m2.mainPass );
+		for ( s in m2.mainPass.getShaders() )
+		{
+			m2.mainPass.removeShader( s );
+		}
+		m2.mainPass.addShader( vc );
+		m2.mainPass.addShader( new BaseMesh() );
+		
+		//m2.mainPass.addShader( new VertexColor() );
+		
+		
+		var mesh = new h3d.scene.Mesh( poly );
+		mesh.material = m2;
+		o.addChild( mesh );
+		
 		//mesh.material.blendMode = h3d.mat.BlendMode.;
 		//mesh.material.texture = h3d.mat.Texture.fromBitmap( hxd.BitmapData.fromNative(bd) );
 		//mesh.material.texture.mipMap = h3d.mat.MipMap.Linear;
+		
+		
+		/*var pass = new Pass( "vertexColor", new ShaderList( new VertexColor() ) );
 		mesh.material.mainPass.enableLights = true;
-		//var pass = new Pass( "vertexColor", new ShaderList( new VertexColor() ) );
-		//mesh.material.mainPass.addShader( new VertexColor() );
 		mesh.material.shadows = true;
+		for ( s in mesh.material.mainPass.getShaders() )
+		{
+			trace(s);
+		}*/
+		//mesh.material.mainPass. .addShader( new VertexColor() );
+		
 		//mesh.material.color.setColor( Std.random(0x1000000) );
 		
 		

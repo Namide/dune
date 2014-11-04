@@ -112,7 +112,7 @@ class DisplayFactory
 		poly.unindex();
 		poly.uvs = uvs;*/
 		
-		var poly = new BgTest01( w, h, p, 100, 6 );
+		var poly = new BgTest01( w, h, p );
 		poly.addUVs();
 		poly.addNormals();
 		poly.translate( -w*0.5, -h*0.5, -p );

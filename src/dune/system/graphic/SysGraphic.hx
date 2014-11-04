@@ -78,8 +78,6 @@ class SysGraphic
 		//trace(engine.driverName(true));
 		
 		
-		
-		
 		//s3d.camera.zNear = 2;
 		//s3d.camera.zFar = 15;
 		//s3d.camera.pos.set( 6 * Math.cos(time*0.3), 6 * Math.sin(time*0.3), 3 );

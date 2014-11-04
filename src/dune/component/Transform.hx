@@ -60,7 +60,7 @@ class Transform implements IComponent
 	
 	public function setXY( x:Float, y:Float ):Void
 	{
-		if ( x != this.x && y != this.y )
+		if ( x != this.x || y != this.y )
 		{
 			this.x = x;
 			this.y = y;

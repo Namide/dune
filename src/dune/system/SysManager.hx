@@ -187,8 +187,10 @@ class SysManager
 			
 			for ( e in _entitiesVelocity )
 			{
-				e.transform.x += e.transform.vX;
-				e.transform.y += e.transform.vY;
+				var t = e.transform;
+				e.transform.setXY( t.x + t.vX, t.y + t.vY );
+				/*e.transform.x += e.transform.vX;
+				e.transform.y += e.transform.vY;*/
 			}
 			
 			sysPhysic.space.testSleeping();

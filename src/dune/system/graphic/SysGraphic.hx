@@ -77,6 +77,29 @@ class SysGraphic
 		
 		//trace(engine.driverName(true));
 		
+		
+		//s3d.camera.zNear = 2;
+		//s3d.camera.zFar = 15;
+		//s3d.camera.pos.set( 6 * Math.cos(time*0.3), 6 * Math.sin(time*0.3), 3 );
+		//s3d.camera.movePosAxis( 0, 0, 1 );// .set( 6 * Math.cos(time * 0.3), 6 * Math.sin(time * 0.3), 3 );
+		//s3d.camera.pos.set( 0, 0, 0 );
+		//s3d.camera.moveTargetAxis( _sm.settings.width * 0.5, _sm.settings.height * 0.5, 0 );
+		//s3d.camera.m.prependRotate( Math.PI / 2, 0, 0 );
+		//s3d.camera.up.set( 0, 0, -1 );
+		/*s3d.camera.zNear = 1;
+		s3d.camera.zFar = 1000;
+		s3d.camera.target.set( 0, 0, -1 );
+		s3d.camera.up.set( 0, -1, 0 );*/
+		
+		s3d.lightSystem.ambientLight.set(0.5, 0.5, 0.5);
+		var dir = new h3d.scene.DirLight(new h3d.Vector(-0.3, -0.2, -1), s3d);
+
+		var shadow = cast(s3d.renderer.getPass("shadow"), h3d.pass.ShadowMap);
+		shadow.lightDirection = dir.direction;
+		shadow.blur.count = 3;
+		
+		
+		
 		onInitCallback();
 		
 		//onInit();

@@ -19,15 +19,13 @@ class EntityFactory
 		throw "this class is static!";
 	}
 	
-	public static function getSolidDisplay( sm:SysManager, w:Float, h:Float ):Display2dSprite
+	public static inline function getSolidDisplay( sm:SysManager, w:Float, h:Float, color:Int = -1 ):Display2dSprite
 	{
-		var g = new h2d.Graphics( sm.sysGraphic.s2d );
+		/*var g = new h2d.Graphics( sm.sysGraphic.s2d );
 		g.beginFill( Math.round( 0xFFFFFF * Math.random() ) );
-		//g.lineStyle( 1, Math.round( 0xFFFFFF * Math.random() ) );
 		g.drawRect( 0, 0, w, h );
-		g.endFill();
-		
-		return new Display2dSprite( g );
+		g.endFill();*/
+		return new Display2dSprite( DisplayFactory.getRect( sm, w, h, color ) );
 	}
 	
 	public static function addSolidEmpty( sm:SysManager, x:Float, y:Float, w:Float, h:Float, solidType:UInt = BodyType.SOLID_TYPE_WALL ):Entity

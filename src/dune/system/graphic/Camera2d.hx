@@ -115,6 +115,18 @@ class Camera2d
 		_sm = sm;
 		display = new Sprite(parent);
 		_moved = true;
+		
+		//_sm.sysGraphic.s3d.camera.target.x =
+		//_sm.sysGraphic.s3d.camera.target.y = 0;
+		//_sm.sysGraphic.s3d.camera.target.z = ;
+		
+		
+		_sm.sysGraphic.s3d.camera.zNear = 1;
+		_sm.sysGraphic.s3d.camera.zFar = 1000;
+		
+		_sm.sysGraphic.s3d.camera.pos.set( 0, 0, 0, 1 );
+		_sm.sysGraphic.s3d.camera.target.set( 0, 0, -1000 );
+		_sm.sysGraphic.s3d.camera.up.set( 0, -100, 0 );
 	}
 	
 	public function refresh():Void
@@ -124,12 +136,24 @@ class Camera2d
 		//var eng = _sm.sysGraphic.engine;
 		var set = _sm.settings;
 		
-		var scaleX:Float = (x - (set.width >> 1)) / (Std.int(set.limitXMax - set.limitXMin) - set.width);
-		var scaleY:Float = (y - (set.height >> 1)) / (Std.int(set.limitYMax - set.limitYMin) - set.height);
+		var W = Std.int(set.limitXMax - set.limitXMin);
+		var H = Std.int(set.limitYMax - set.limitYMin);
+		
+		var scaleX:Float = (x - (set.width >> 1)) / (W - set.width);
+		var scaleY:Float = (y - (set.height >> 1)) / (H - set.height);
 		scaleX = (scaleX < 0) ? 0 : (scaleX > 1) ? 1 : scaleX;
 		scaleY = (scaleY < 0) ? 0 : (scaleY > 1) ? 1 : scaleY;
 		
 		appliTransform( display, scaleX, scaleY, Math.floor(set.limitXMin), Math.floor(set.limitYMin), Math.ceil(set.limitXMax), Math.ceil(set.limitYMax) );
+		_sm.sysGraphic.s3d.camera.pos.x = 
+		_sm.sysGraphic.s3d.camera.target.x = (scaleX - 0.5) * W * 0.1;
+		
+		_sm.sysGraphic.s3d.camera.pos.y = 
+		_sm.sysGraphic.s3d.camera.target.y = (scaleY - 0.5) * H * 0.1;
+		
+		//_sm.sysGraphic.s3d.camera.target.x = (scaleX - 0.5) * W;
+		//_sm.sysGraphic.s3d.camera.target.y = (scaleY - 0.5) * H;
+		//trace( scaleX * set.width, scaleY * set.height, _sm.sysGraphic.s3d.camera.target.x );
 		
 		//pX -= ;
 		//pX -= ;
@@ -166,49 +190,6 @@ class Camera2d
 		
 		sprite.x = pX;
 		sprite.y = pY;
-		
-		/*var pX:Int = 0;
-		var pY:Int = 0;
-		
-		if ( wallLimited && set.width > maxX - minX )
-		{
-			scaleX = 0.5;
-		}
-		else
-		{
-			scaleX = (scaleX<0)?0:(scaleX>1)?1:scaleX;
-			
-			var min = minX + (set.width >> 1);
-			var max = maxX - (set.width >> 1);
-			
-			pX = min + Std.int(scaleX * ( max - min )) - (set.width >> 1);
-		}
-		
-		if ( wallLimited && set.height > Std.int(set.limitYMax - set.limitYMin) )
-		{
-			scaleY = 0.5;
-		}
-		else
-		{
-			scaleY = (scaleY<0)?0:(scaleY>1)?1:scaleY;
-			
-			var min = minY + (set.height >> 1);
-			var max = maxY - (set.height >> 1);
-			
-			pY = min + Std.int(scaleY * ( max - min )) - (set.height >> 1);
-		}
-		
-		pX += set.width >> 1;
-		pY += set.height >> 1;
-		
-		pX = Math.round(-pX * zX);
-		pY = Math.round(-pY * zY);
-		
-		pX += eng.width >> 1;
-		pY += eng.height >> 1;
-		
-		sprite.x = pX;
-		sprite.y = pY;*/
 	}
 	
 	public inline function appliTransform( sprite:Sprite, scaleX:Float, scaleY:Float, minX:Int, minY:Int, maxX:Int, maxY:Int ):Void

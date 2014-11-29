@@ -13,40 +13,32 @@ import h2d.Anim;
 import flash.display.MovieClip;
 import h2d.Bitmap;
 import h2d.Drawable;
+import h2d.Graphics;
 import h2d.Sprite;
 import h2d.Tile;
 import h2d.TileGroup;
+import h3d.anim.Animation;
 import h3d.impl.AllocPos;
 import h3d.mat.BlendMode;
 import h3d.mat.Data.MipMap;
+import h3d.mat.Data.TextureFlags;
 import h3d.mat.Data.Wrap;
+import h3d.mat.Material;
+import h3d.mat.MeshMaterial;
+import h3d.mat.Pass;
+import h3d.mat.Texture;
+import h3d.prim.Polygon;
+import h3d.prim.Primitive;
+import h3d.prim.UV;
+import h3d.scene.Mesh;
+import h3d.scene.Object;
+import h3d.shader.BaseMesh;
+import h3d.shader.VertexColor;
 import hxd.BitmapData;
 import hxd.fmt.fbx.Filter;
-
-/*class AnimRes
-{
-	public var animDatas:Array<AnimData>;
-	public var mcName:String;
-	public var width:Float;
-	
-	public function new() { }
-}
-
-class SpriteRes
-{
-	public var tile:h2d.Tile;
-	public var mcName:String;
-	
-	public function new() { }
-}
-
-class SpriteDatas
-{
-	public var sprite:h2d.Sprite;
-	public var bitmap:h2d.Bitmap;
-	
-	public function new() { }
-}*/
+import hxd.IndexBuffer;
+import hxd.Math;
+import hxsl.ShaderList;
 
 class AnimCache
 {
@@ -54,8 +46,6 @@ class AnimCache
 	public var mc:MovieClip;
 	
 	public var animDatas:Array<AnimData>;
-	//public var width:Float;
-	//public var bounds:DRect;
 	
 	public function new() { }
 }
@@ -67,13 +57,143 @@ class AnimCache
 class DisplayFactory
 {
 	static var _cache:Array<AnimCache> = [];
-	//static var _resTiles:Array<SpriteRes> = [];
-	//static var _res
 	
 	public static function clear():Void
 	{
 		_cache = [];
 	}
+	
+	public static function getBackground( sm:SysManager, w:Float, h:Float, p:Float ):h3d.scene.Object
+	{
+		var o = new h3d.scene.Object(sm.sysGraphic.s3d);
+		
+		
+		var floor = new h3d.prim.Cube(w, h, 0.1);
+		floor.addNormals();
+		floor.translate( -w*0.5, -h*0.5, -(0.1+p) );
+		var floorMesh = new h3d.scene.Mesh( floor, o );
+		floorMesh.material.color.set( 0.0, 0.5, 0.5 );
+		floorMesh.material.mainPass.enableLights = true;
+		floorMesh.material.shadows = true;
+
+		
+		/*var pts = new Array<h3d.col.Point>();
+		var idx = new hxd.IndexBuffer();
+		var uvs = new Array<h3d.prim.UV>();
+		
+		var uv00 = new h3d.prim.UV(0, 0);
+		var uv01 = new h3d.prim.UV(0, 1);
+		var uv10 = new h3d.prim.UV(1, 0);
+		var uv11 = new h3d.prim.UV(1, 1);
+		
+		var s:Float = 6;
+		for ( i in 0...1 )
+		{
+			var x = Math.random( w );
+			var y = Math.random( h );
+			var z = Math.random( p );
+			
+			var i = pts.length;
+			
+			pts.push( new h3d.col.Point( x, 	y, 		z ) );
+			pts.push( new h3d.col.Point( x + s, y, 		z ) );
+			pts.push( new h3d.col.Point( x + s, y + s, 	z ) );
+			pts.push( new h3d.col.Point( x, 	y + s, 	z ) );
+			
+			idx.push( i ); 		idx.push( i + 1 ); 	idx.push( i + 2 );
+			idx.push( i + 2 ); 	idx.push( i + 3 );	idx.push( i );
+			
+			uvs.push( uv00 ); uvs.push( uv10 ); uvs.push( uv11 );
+			uvs.push( uv11 ); uvs.push( uv01 ); uvs.push( uv00 );
+		}
+		
+		
+		var poly = new h3d.prim.Polygon( pts, idx );
+		poly.unindex();
+		poly.uvs = uvs;*/
+		
+		var poly = new BgTest01( w, h, p );
+		poly.addUVs();
+		poly.addNormals();
+		poly.translate( -w*0.5, -h*0.5, -p );
+		
+		var mc = Lib.attach("LightUI");
+		var bd = new flash.display.BitmapData( Math.round(mc.width), Math.round(mc.height), true, 0x00FFFF00 );
+		bd.draw( mc );
+		//bd.perlinNoise( 32, 32, 3, 0, false, true );
+		
+		
+		var m2 = new h3d.mat.MeshMaterial();
+		m2.color.setColor( 0x000000 );
+		var vc = new VertexColor();
+		//vc.additive = false;
+		
+		//m2.addPass( new Pass("vertexColor", new ShaderList( vc ), m2.mainPass ) );
+		//m2.mainPass = new Pass("vertexColor", new ShaderList( vc ), m2.mainPass );
+		for ( s in m2.mainPass.getShaders() )
+		{
+			m2.mainPass.removeShader( s );
+		}
+		m2.mainPass.addShader( vc );
+		m2.mainPass.addShader( new BaseMesh() );
+		
+		//m2.mainPass.addShader( new VertexColor() );
+		
+		
+		var mesh = new h3d.scene.Mesh( poly );
+		mesh.material = m2;
+		o.addChild( mesh );
+		
+		//mesh.material.blendMode = h3d.mat.BlendMode.;
+		//mesh.material.texture = h3d.mat.Texture.fromBitmap( hxd.BitmapData.fromNative(bd) );
+		//mesh.material.texture.mipMap = h3d.mat.MipMap.Linear;
+		
+		
+		/*var pass = new Pass( "vertexColor", new ShaderList( new VertexColor() ) );
+		mesh.material.mainPass.enableLights = true;
+		mesh.material.shadows = true;
+		for ( s in mesh.material.mainPass.getShaders() )
+		{
+			trace(s);
+		}*/
+		//mesh.material.mainPass. .addShader( new VertexColor() );
+		
+		//mesh.material.color.setColor( Std.random(0x1000000) );
+		
+		
+		
+		/*var sphere = new h3d.prim.Sphere(32,24);
+		var cube = new h3d.prim.Cube(1, 1, 1 );
+		sphere.addNormals();
+		cube.addNormals();
+		var spheres  = [];
+		for ( i in 0...50 ) {
+			var isCube = Std.random(2) > 0;
+			var m = ( !isCube ) ? new h3d.scene.Mesh(sphere, o) : new h3d.scene.Mesh(cube, o);
+			m.scale(40 + Math.random() * 40);
+			m.x = hxd.Math.srand(w * 0.5) - m.scaleX * 0.5;
+			m.y = hxd.Math.srand(h * 0.5) - m.scaleY * 0.5;
+			m.z = ( ( !isCube ) ? m.scaleZ : 0 ) - ( Math.round(p) - Math.random() * p );
+			m.material.mainPass.enableLights = true;
+			m.material.shadows = true;
+			m.material.color.setColor( Std.random(0x1000000) );
+		}*/
+		
+		return o;
+	}
+	
+	public static function getRect( sm:SysManager, w:Float, h:Float, color:Int = -1 ):h2d.Graphics
+	{
+		if ( color < 0 ) color = Math.round( 0xFFFFFF * Math.random() );
+		
+		var g = new h2d.Graphics( sm.sysGraphic.s2d );
+		g.beginFill( color );
+		//g.lineStyle( 1, Math.round( 0xFFFFFF * Math.random() ) );
+		g.drawRect( 0, 0, w, h );
+		g.endFill();
+		return g;
+	}
+	
 	
 	public function new() 
 	{
@@ -202,10 +322,6 @@ class DisplayFactory
 		var ca:CompDisplay2dAnim = new CompDisplay2dAnim( spr );
 		ca.addAnim( );
 	}*/
-	
-	
-	
-	
 	
 	static function mcToCache( mc:MovieClip, textScale:Float, quality:Float, sm:SysManager, forceSizeX:Int = -1, forceSizeY:Int = -1 ):AnimCache
 	{

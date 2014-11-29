@@ -74,9 +74,17 @@ function DuneGamepad( swfId )
 		var swfFct = document.getElementById(dgp.swfId).getControllers;
 		if ( document.getElementById(dgp.swfId).getControllers != undefined )
 		{
-			document.getElementById(dgp.swfId).getControllers( dgp.jsonList );
+			/*try
+			{*/
+				document.getElementById(dgp.swfId).getControllers( dgp.jsonList );
+			/*}
+			catch(e)
+			{
+				console.log( e );
+			}*/
+			
 		}
-		//console.log(  );
+		
 		//
 		//console.log("a");
 	}

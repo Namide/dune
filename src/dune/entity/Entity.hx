@@ -7,6 +7,7 @@ import dune.component.Transform;
 import dune.helper.core.ArrayUtils;
 import dune.component.Controller;
 import dune.system.physic.component.Body;
+import dune.system.SysManager;
 
 /**
  * ...
@@ -14,6 +15,8 @@ import dune.system.physic.component.Body;
  */
 class Entity
 {
+	public var sm(default, default):SysManager;
+	
 	public var name(default, default):String;
 	public var type(default, default):UInt;
 	
@@ -57,11 +60,31 @@ class Entity
 	{
 		body.entity = this;
 		bodies.push( body );
+		if ( sm != null )
+			sm.sysPhysic.space.addBody( body );
 	}
 	
 	public function addController( cont:Controller ):Void
 	{
 		cont.entity = this;
 		controllers.push( cont );
+		if ( sm != null )
+			sm.sysController.addController( cont );
+	}
+	
+	public function removeBody( body:Body ):Void
+	{
+		body.entity = null;
+		bodies.remove( body );
+		if ( sm != null )
+			sm.sysPhysic.space.removeBody( body );
+	}
+	
+	public function removeController( cont:Controller ):Void
+	{
+		cont.entity = null;
+		controllers.remove( cont );
+		if ( sm != null )
+			sm.sysController.removeController( cont );
 	}
 }

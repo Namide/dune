@@ -17,9 +17,8 @@ import h3d.mat.BlendMode;
 class LevelFactory
 {
 	var _sm:SysManager;
+	public var player:Entity;
 
-	
-	
 	public function new( sm:SysManager ) 
 	{
 		_sm = sm;
@@ -92,12 +91,7 @@ class LevelFactory
 				
 			}
 			
-			
-			
-			
-			
 			var isDrawable = false;
-			
 			var objCont = cast( obj, flash.display.DisplayObjectContainer );
 			
 			var i = 0;
@@ -174,6 +168,7 @@ class LevelFactory
 			
 			
 		_sm.addEntity( p );
+		player = p;
 	}
 	
 	function constructWall( mc:MovieClip ):Void

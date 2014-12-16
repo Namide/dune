@@ -47,6 +47,25 @@ class BodyType
 	 */
 	public inline static var SOLID_TYPE_EATER:UInt = 32;
 	
+	/**
+	 * Direction of the platform
+	 */
+	public inline static var PLATFORM_DIR_UP:UInt = 0;
+	
+	/**
+	 * Direction of the platform
+	 */
+	public inline static var PLATFORM_DIR_DOWN:UInt = 1;
+	
+	/**
+	 * Direction of the platform
+	 */
+	public inline static var PLATFORM_DIR_LEFT:UInt = 2;
+	
+	/**
+	 * Direction of the platform
+	 */
+	public inline static var PLATFORM_DIR_RIGHT:UInt = 4;
 	
 	public function new() 
 	{

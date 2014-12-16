@@ -117,9 +117,9 @@ class DisplayFactory
 		poly.addNormals();
 		poly.translate( -w*0.5, -h*0.5, -p );
 		
-		var mc = Lib.attach("LightUI");
+		/*var mc = Lib.attach("LightUI");
 		var bd = new flash.display.BitmapData( Math.round(mc.width), Math.round(mc.height), true, 0x00FFFF00 );
-		bd.draw( mc );
+		bd.draw( mc );*/
 		//bd.perlinNoise( 32, 32, 3, 0, false, true );
 		
 		

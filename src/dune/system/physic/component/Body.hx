@@ -35,6 +35,7 @@ class Body implements IComponent
 	
 	public var typeOfCollision(default, default):UInt;
 	public var typeOfSolid(default, default):UInt;
+	public var typeOfPlatform(default, default):UInt;
 	
 	public var insomniac(default, default):Bool = false;
 	

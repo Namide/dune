@@ -337,14 +337,11 @@ class SpaceGrid implements ISpace
 				var set = _sm.settings;
 				var sh = body.shape;
 				sh.updateAABB( body.entity.transform );
-				
-				if ( sh.aabbXMin < set.limitXMin )		set.limitXMin = sh.aabbXMin;
-				if ( sh.aabbYMin < set.limitYMin )		set.limitYMin = sh.aabbYMin;
+				if ( sh.aabbXMin < set.limitXMin )	set.limitXMin = sh.aabbXMin;
+				if ( sh.aabbYMin < set.limitYMin )	set.limitYMin = sh.aabbYMin;
 				if ( sh.aabbXMax > set.limitXMax )	set.limitXMax = sh.aabbXMax;
-				if ( sh.aabbYMax > set.limitYMax )		set.limitYMax = sh.aabbYMax;
+				if ( sh.aabbYMax > set.limitYMax )	set.limitYMax = sh.aabbYMax;
 			}
-			
-			
 			_passive.push( node );
 		}
 		else

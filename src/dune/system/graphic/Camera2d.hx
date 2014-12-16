@@ -151,6 +151,8 @@ class Camera2d
 		_sm.sysGraphic.s3d.camera.pos.y = 
 		_sm.sysGraphic.s3d.camera.target.y = (scaleY - 0.5) * H * 0.1;
 		
+		//trace( scaleX, scaleY );
+		
 		//_sm.sysGraphic.s3d.camera.target.x = (scaleX - 0.5) * W;
 		//_sm.sysGraphic.s3d.camera.target.y = (scaleY - 0.5) * H;
 		//trace( scaleX * set.width, scaleY * set.height, _sm.sysGraphic.s3d.camera.target.x );
@@ -218,10 +220,10 @@ class Camera2d
 		{
 			scaleX = (scaleX<0)?0:(scaleX>1)?1:scaleX;
 			
-			var min = minX + (set.width >> 1);
-			var max = maxX - (set.width >> 1);
+			var min = minX + (set.height >> 1);
+			var max = maxX - (set.height >> 1);
 			
-			pX = min + Std.int(scaleX * ( max - min )) - (set.width >> 1);
+			pX = min + Std.int(scaleX * ( max - min )) - (set.height >> 1);
 		}
 		
 		if ( wallLimited && set.height > Std.int(set.limitYMax - set.limitYMin) )

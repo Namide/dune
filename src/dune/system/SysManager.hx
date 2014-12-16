@@ -14,7 +14,7 @@ import dune.system.physic.SysPhysic;
 class SysManager
 {
 	
-	public var settings:Settings;
+	public var settings(default, default):Settings;
 	
 	public var _entities:Array<Entity>;
 	public var _entitiesVelocity:Array<Entity>;
@@ -31,9 +31,9 @@ class SysManager
 		var _sceneHitBox:flash.display.Sprite;
 	#end
 	
-	public function new( onInitCallback:Void->Void ) 
+	public function new( onInitCallback:Void->Void, settings:Settings ) 
 	{
-		settings = new Settings();
+		this.settings = (settings!=null) ? settings : new Settings();
 		
 		//trace("init sm");
 		_entities = [];
@@ -78,7 +78,11 @@ class SysManager
 	
 	public function addEntity( entity:Entity ):Void
 	{
+		//if ( entity.sm == this ) return;
+		
 		removeEntity( entity );
+		
+		entity.sm = this;
 		
 		_entities.push( entity );
 		if ( entity.transform.vActive ) { _entitiesVelocity.push( entity ); }
@@ -95,13 +99,20 @@ class SysManager
 	
 	public function removeEntity( entity:Entity ):Void
 	{
-		if ( !Lambda.has( _entities, entity ) ) return;
+		if ( !Lambda.has( _entities, entity ) )
+			return;
 		
+		entity.sm = null;
+			
 		_entities.remove( entity );
-		if ( _entitiesVelocity.indexOf( entity ) > -1 ) { _entitiesVelocity.remove( entity ); }
+		if ( _entitiesVelocity.indexOf( entity ) > -1 ) 
+			_entitiesVelocity.remove( entity );
 		
-		for ( i in entity.controllers ) { sysController.removeController( i ); }
-		for ( b in entity.bodies ) { sysPhysic.space.removeBody( b ); }
+		for ( i in entity.controllers )
+			sysController.removeController( i );
+		for ( b in entity.bodies )
+			sysPhysic.space.removeBody( b );
+		
 		sysGraphic.remove( entity );
 		
 		entity.transform.onMoved = function() { };

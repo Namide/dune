@@ -540,17 +540,73 @@ class ContactBodies
 		if ( BitUtils.has( parent.typeOfSolid, BodyType.SOLID_TYPE_MOVER ) )
 		{
 			var shape:ShapePoint = body.shape;
-			if ( reac == BOTTOM && BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_PLATFORM ) )
+			if ( 	//(reac == BOTTOM /*|| reac == ON*/) &&
+					BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_PLATFORM ) )
 			{
-				parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
+				/*parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
 				if ( _vY > body.entity.transform.vY )
 				{
 					_vY = body.entity.transform.vY;
-					
-					/*for ( fct in parent.onCollideWall )
+				}*/
+				if ( 	reac == BOTTOM &&
+						BitUtils.has( body.typeOfPlatform, BodyType.PLATFORM_DIR_DOWN ) )
+				{
+					//if ( BitUtils.has(reac, TOP) ) { isCrush = true; return; }
+					parent.entity.transform.y = shape.aabbYMin - ShapeUtils.getPosToBottom( parent.shape );
+					if ( _vY > body.entity.transform.vY )
 					{
-						fct( body );
-					}*/
+						_vY = body.entity.transform.vY;
+						/*for ( fct in parent.onCollideWall )
+						{
+							fct( body );
+						}*/
+					}
+					//moveInDirection |= BOTTOM;
+				}
+				else if ( 	reac == TOP &&
+							BitUtils.has( body.typeOfPlatform, BodyType.PLATFORM_DIR_UP ) )
+				{
+					//if ( BitUtils.has(reac, BOTTOM) ) { isCrush = true; return; }
+					parent.entity.transform.y = shape.aabbYMax - ShapeUtils.getPosToTop( parent.shape );
+					if ( _vY < body.entity.transform.vY )
+					{
+						_vY = body.entity.transform.vY;
+						/*for ( fct in parent.onCollideWall )
+						{
+							fct( body );
+						}*/
+					}
+					//moveInDirection |= TOP;
+				}
+				else if (	reac == RIGHT &&
+							BitUtils.has( body.typeOfPlatform, BodyType.PLATFORM_DIR_LEFT ) )
+				{
+					//if ( BitUtils.has(reac, LEFT) ) { isCrush = true; return; }
+					parent.entity.transform.x = shape.aabbXMin - ShapeUtils.getPosToRight( parent.shape );
+					if ( _vX > body.entity.transform.vX )
+					{
+						_vX = body.entity.transform.vX;
+						/*for ( fct in parent.onCollideWall )
+						{
+							fct( body );
+						}*/
+					}
+					//moveInDirection |= RIGHT;
+				}
+				else if ( 	reac == LEFT &&
+							BitUtils.has( body.typeOfPlatform, BodyType.PLATFORM_DIR_RIGHT ) )
+				{
+					//if ( BitUtils.has(reac, RIGHT) ) { isCrush = true; return; }
+					parent.entity.transform.x = shape.aabbXMax - ShapeUtils.getPosToLeft( parent.shape );
+					//moveInDirection |= LEFT;
+					if ( _vX < body.entity.transform.vX )
+					{
+						_vX = body.entity.transform.vX;
+						/*for ( fct in parent.onCollideWall )
+						{
+							fct( body );
+						}*/
+					}
 				}
 			}
 			else if ( BitUtils.has( body.typeOfSolid, BodyType.SOLID_TYPE_WALL ) )

@@ -34,8 +34,11 @@ class Settings
 	//public var 
 	//public static inline var FRAME_ANIM:UInt = 100;
 	
-	public function new() 
+	public function new( w:Int = 960, h:Int = 540) 
 	{
+		width = w;
+		height = h;
+		
 		renderProp = width/height;
 		
 		//throw "Static class!";
